@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, ChevronLeft, ChevronRight, Maximize2, X, Layers, Code, Cpu } from 'lucide-react';
 import { PROJECTS } from '../constants';
-import { Project } from '../types';
+import type { Project } from '../types';
 
 const Projects: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);

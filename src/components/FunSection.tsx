@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+//import { motion } from 'framer-motion';
 import { MousePointer2, ShieldAlert, Zap, Crosshair } from 'lucide-react';
 
 interface Bot {
@@ -15,7 +15,7 @@ interface Bot {
 const FunSection: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mode, setMode] = useState<'gather' | 'orbit' | 'scatter'>('gather');
-  const [botCount, setBotCount] = useState(100);
+  const [botCount] = useState(100);
   
   useEffect(() => {
     const canvas = canvasRef.current;

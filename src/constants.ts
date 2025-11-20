@@ -1,5 +1,5 @@
 
-import { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement } from './types';
+import type { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement } from './types';
 
 export const SYSTEM_INSTRUCTION = `You are Kaveesha Dhananjaya's digital twin, a professional AI assistant on his portfolio website. 
 Your goal is to represent Kaveesha and answer questions about his engineering background, projects, and skills based on his portfolio data.

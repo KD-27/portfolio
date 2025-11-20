@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
+//import { motion } from 'framer-motion';
 import { PenTool, Cpu, Code, Layers, Bot, Eye, Wrench } from 'lucide-react';
 import { SKILLS } from '../constants';
-import { SkillCategory } from '../types';
+import type { SkillCategory } from '../types';
 
 const icons: Record<string, React.ReactNode> = {
   PenTool: <PenTool size={18} />,
@@ -15,7 +15,7 @@ const icons: Record<string, React.ReactNode> = {
   Wrench: <Wrench size={18} />
 };
 
-const SkillCard: React.FC<{ category: SkillCategory; index: number }> = ({ category, index }) => {
+const SkillCard: React.FC<{ category: SkillCategory; index: number }> = ({ category }) => {
   return (
     <div className="bg-[#0f0f13] border border-white/5 p-6 rounded-sm hover:border-white/20 transition-colors duration-300 h-full">
       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
