@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, ChevronLeft, ChevronRight, Maximize2, X, Layers, Code, Cpu } from 'lucide-react';
+import { ExternalLink, ChevronLeft, ChevronRight, Maximize2, X, Layers, Code, Cpu, PlayCircle } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import type { Project } from '../types';
 
@@ -80,6 +80,13 @@ const Projects: React.FC = () => {
     return { position, style: styles[position as keyof typeof styles] };
   };
 
+  const isYoutube = (url: string) => url.includes('youtube.com') || url.includes('youtu.be');
+  const getEmbedUrl = (url: string) => {
+    if (url.includes('watch?v=')) return url.replace('watch?v=', 'embed/');
+    if (url.includes('youtu.be/')) return url.replace('youtu.be/', 'www.youtube.com/embed/');
+    return url;
+  };
+
   return (
     <section id="projects" className="py-24 bg-mech-dark relative overflow-hidden flex flex-col items-center justify-center min-h-[800px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 relative">
@@ -155,6 +162,11 @@ const Projects: React.FC = () => {
                         <Maximize2 size={20} />
                       </div>
                     )}
+                    {isCenter && project.video && (
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-white/80 hover:text-neon-blue transition-colors">
+                        <PlayCircle size={48} className="drop-shadow-lg" />
+                      </div>
+                    )}
                   </div>
 
                   {/* Content Section */}
@@ -223,13 +235,36 @@ const Projects: React.FC = () => {
                  
                  {/* Left: Visuals (Scrollable on mobile, sticky on desktop) */}
                  <div className="w-full md:w-1/2 bg-black relative flex flex-col">
-                    <div className="h-64 md:h-[50%] w-full">
-                       <img 
-                         src={selectedProject.image} 
-                         alt={selectedProject.title} 
-                         className="w-full h-full object-cover opacity-90"
-                       />
-                       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-mech-surface/90 md:to-transparent md:bg-gradient-to-t" />
+                    <div className="h-64 md:h-[50%] w-full bg-black flex items-center justify-center">
+                       {selectedProject.video ? (
+                         isYoutube(selectedProject.video) ? (
+                           <iframe 
+                             src={getEmbedUrl(selectedProject.video)} 
+                             title={selectedProject.title}
+                             className="w-full h-full"
+                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                             allowFullScreen
+                           />
+                         ) : (
+                           <video 
+                             src={selectedProject.video} 
+                             controls 
+                             autoPlay 
+                             muted 
+                             loop
+                             className="w-full h-full object-contain"
+                           />
+                         )
+                       ) : (
+                         <>
+                           <img 
+                             src={selectedProject.image} 
+                             alt={selectedProject.title} 
+                             className="w-full h-full object-cover opacity-90"
+                           />
+                           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-mech-surface/90 md:to-transparent md:bg-gradient-to-t" />
+                         </>
+                       )}
                     </div>
                     
                     {/* Gallery Grid */}

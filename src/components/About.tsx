@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Download, Github, Linkedin, Mail } from 'lucide-react';
+import { SOCIAL_LINKS } from '../constants';
 
 const About: React.FC = () => {
   return (
@@ -19,13 +21,36 @@ const About: React.FC = () => {
               </p>
               
               <div className="flex flex-wrap gap-4">
-                <button className="flex items-center gap-2 px-6 py-2 bg-white text-black font-bold rounded hover:bg-gray-200 transition-colors">
+                <a 
+                  href={SOCIAL_LINKS.resume} 
+                  download 
+                  className="flex items-center gap-2 px-6 py-2 bg-white text-black font-bold rounded hover:bg-gray-200 transition-colors cursor-pointer"
+                >
                   <Download size={18} /> RESUME
-                </button>
+                </a>
                 <div className="flex gap-4 ml-auto">
-                  <a href="#" className="p-2 bg-gray-800 rounded-full text-white hover:bg-neon-blue hover:text-black transition-all"><Github size={20} /></a>
-                  <a href="#" className="p-2 bg-gray-800 rounded-full text-white hover:bg-neon-blue hover:text-black transition-all"><Linkedin size={20} /></a>
-                  <a href="#" className="p-2 bg-gray-800 rounded-full text-white hover:bg-neon-blue hover:text-black transition-all"><Mail size={20} /></a>
+                  <a 
+                    href={SOCIAL_LINKS.github} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="p-2 bg-gray-800 rounded-full text-white hover:bg-neon-blue hover:text-black transition-all"
+                  >
+                    <Github size={20} />
+                  </a>
+                  <a 
+                    href={SOCIAL_LINKS.linkedin} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="p-2 bg-gray-800 rounded-full text-white hover:bg-neon-blue hover:text-black transition-all"
+                  >
+                    <Linkedin size={20} />
+                  </a>
+                  <a 
+                    href={`mailto:${SOCIAL_LINKS.email}`} 
+                    className="p-2 bg-gray-800 rounded-full text-white hover:bg-neon-blue hover:text-black transition-all"
+                  >
+                    <Mail size={20} />
+                  </a>
                 </div>
               </div>
             </div>

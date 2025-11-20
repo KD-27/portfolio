@@ -6,6 +6,7 @@ export interface Project {
   longDescription?: string;
   tags: string[];
   image: string;
+  video?: string; // New optional field for YouTube URL or local file path
   gallery?: string[];
   details: string[];
   link?: string;
@@ -39,9 +40,4 @@ export interface Achievement {
   id: string;
   title: string;
   image: string;
-}
-
-export interface ChatMessage {
-  role: 'user' | 'model';
-  text: string;
 }

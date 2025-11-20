@@ -1,24 +1,40 @@
 
+/*
+ * ====================================================================================
+ * 🛒 CONTENT DATABASE
+ * ====================================================================================
+ * 
+ * HOW TO ADD YOUR OWN IMAGES:
+ * 1. Create a folder named "public" in your main project folder (next to src, package.json, etc).
+ * 2. Drag and drop your image files (e.g., "my-face.jpg", "robot.png") into that "public" folder.
+ * 3. In this file below, change the image path to just the filename with a slash:
+ *    Example: image: '/my-face.jpg'
+ * 
+ * HOW TO ADD VIDEOS:
+ * 1. You can use a YouTube link OR a local file in the public folder.
+ * 2. Add the 'video' property to your project object.
+ *    Example: video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+ *    Example: video: '/my-robot-demo.mp4'
+ * 
+ * HOW TO ADD RESUME:
+ * 1. Put your PDF file in the "public" folder (e.g., "resume.pdf").
+ * 2. Update the 'resume' field in SOCIAL_LINKS below to '/resume.pdf'.
+ *
+ * HOW TO UPDATE SITE:
+ * ⚠️ IMPORTANT: After changing this file, you MUST run 'npm run deploy' for changes to appear online.
+ */
+
 import type { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement } from './types';
 
-export const SYSTEM_INSTRUCTION = `You are Kaveesha Dhananjaya's digital twin, a professional AI assistant on his portfolio website. 
-Your goal is to represent Kaveesha and answer questions about his engineering background, projects, and skills based on his portfolio data.
-
-Profile:
-- Mechatronics Engineer combining mechanical design, electronics, and software.
-- Expertise: SolidWorks, PCB Design, ROS2, Python/C++, Control Theory.
-
-Key Projects:
-1. Autonomous Delivery Rover: Outdoor rover with SLAM and custom suspension.
-2. Haptic Feedback Exoskeleton: Teleoperation arm with force feedback.
-3. Industrial Pick & Place Cell: Vision-guided SCARA robot.
-4. Quadruped Robot Dog: 12-DOF legged robot with dynamic balancing.
-5. Underwater ROV: Deep-sea inspection vehicle.
-6. Smart Prosthetic Hand: EMG-controlled prosthetic using ML.
-7. Vertical Farming IoT: Automated aeroponic system.
-
-Tone: Professional, technical yet accessible, and enthusiastic about robotics.
-If asked about contact info, refer to the contact section or hello@example.com.`;
+// =========================================
+// 👤 PERSONAL LINKS & CONTACT
+// =========================================
+export const SOCIAL_LINKS = {
+  email: 'kaveeshadhananjaya2002@gmail.com', // Put your actual email here
+  linkedin: 'https://www.linkedin.com/in/kaveesha-dhananjaya/', // Your LinkedIn URL
+  github: 'https://github.com/kaveesha', // Your GitHub URL
+  resume: '/resume.pdf' // The filename of your PDF in the public folder
+};
 
 export const HERO_DATA = {
   name: "KAVEESHA DHANANJAYA",
@@ -68,6 +84,7 @@ export const PROJECTS: Project[] = [
     longDescription: 'Designed to tackle the "last-mile" delivery challenge in suburban environments, this rover utilizes a custom rocker-bogie suspension system to climb curbs and traverse rough terrain. The core intelligence is powered by an NVIDIA Jetson Nano running ROS2 Galactic, processing data from a LiDAR and stereo camera setup to perform real-time SLAM and obstacle avoidance.',
     tags: ['ROS2', 'Python', 'SolidWorks', 'NVIDIA Jetson'],
     image: 'https://picsum.photos/id/1/800/600',
+    video: 'https://www.youtube.com/watch?v=lxIFMMsCTfA', // Example YouTube Link
     gallery: [
       'https://picsum.photos/id/101/400/300',
       'https://picsum.photos/id/102/400/300',

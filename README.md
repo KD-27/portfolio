@@ -1,73 +1,127 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Mechatronics Portfolio - Kaveesha Dhananjaya
 
-Currently, two official plugins are available:
+A responsive, interactive, and modern portfolio website designed for Mechatronics and Robotics engineers. Built with React, TypeScript, and Tailwind CSS.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📁 Project Structure
 
-## React Compiler
+The project is built as a single-page application. Here is where the important files are located:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **`App.tsx`**: The main container that stacks all the sections together.
+- **`constants.ts`**: **(CRITICAL)** This is the "Database" of the site. All text, project details, research papers, and skill data are stored here.
+- **`types.ts`**: Defines the data structures used in the app.
+- **`components/`**: Contains the visual code for each section.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🖼 How to Add Your Own Images (Step-by-Step)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+The easiest way to add your own pictures (for Projects, Profile, Achievements) is using the **public** folder method.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 1. Create the Folder
+In your main project folder (where `package.json` and `index.html` are), create a new folder named **`public`**.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 2. Add Your Files
+Copy your images (e.g., `my-photo.jpg`, `robot-v2.png`) into this new `public` folder.
+
+### 3. Link in Code
+Open **`constants.ts`**. When you see an `image` field, start with a forward slash `/` followed by your filename.
+
+**Example:**
+If your file is `public/robot-v2.png`:
+```typescript
+// inside constants.ts
+image: '/robot-v2.png',
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📄 How to Add Your Resume & Links
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Add Resume PDF
+1. Rename your resume file to something simple, like `resume.pdf`.
+2. Drag and drop it into the **`public`** folder.
+
+### 2. Update Links in `constants.ts`
+Open **`constants.ts`** and find `SOCIAL_LINKS` at the top.
+
+```typescript
+export const SOCIAL_LINKS = {
+  email: 'yourname@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/yourname/',
+  github: 'https://github.com/yourname',
+  resume: '/resume.pdf' // MUST match your file name in public folder
+};
 ```
+
+---
+
+## 🎥 How to Add Videos
+
+You can add videos to any project card. When a user clicks the project, the video will play at the top of the expanded view.
+
+1. Open **`constants.ts`**.
+2. Find the project you want to edit in the `PROJECTS` array.
+3. Add a `video` line:
+   
+   **Option A: YouTube**
+   ```typescript
+   video: 'https://www.youtube.com/watch?v=YOUR_VIDEO_ID',
+   ```
+
+   **Option B: Local File (MP4)**
+   1. Put your `.mp4` file in the `public` folder.
+   2. Link it like this:
+   ```typescript
+   video: '/my-robot-demo.mp4',
+   ```
+
+---
+
+## 🛠 How to Edit Text & Data
+
+You do not need to touch the complex React code to change text. **Everything is controlled via `constants.ts`**.
+
+### 1. Changing Personal Info
+Open `constants.ts` and look for `HERO_DATA`.
+```typescript
+export const HERO_DATA = {
+  name: "KAVEESHA DHANANJAYA", // Change Name
+  title: "MECHATRONICS ENGINEER", // Change Title
+  tagline: "...", 
+  intro: "..."
+};
+```
+
+### 2. Updating Projects
+In `constants.ts`, find the `PROJECTS` array. Each project looks like this:
+```typescript
+{
+  id: '1',
+  title: 'Your Project Title',
+  description: 'Short description shown on the card',
+  longDescription: 'Longer text shown when the card is clicked (The Modal)',
+  tags: ['ROS2', 'Python'], // The tech stack chips
+  image: '/my-project-image.jpg', // Change this to your image path
+  details: [ ... ] // Bullet points for the "System Architecture" section
+}
+```
+
+### 3. Updating Achievements
+In `constants.ts`, edit the `ACHIEVEMENTS` array. The scrolling banner updates automatically.
+
+---
+
+## 🚀 Deploying to GitHub Pages
+
+**⚠️ IMPORTANT: You must redeploy every time you make a change!**
+
+Since this is a static site, your changes are only "baked in" when you run the build command.
+
+1. Make your changes in the code (text, images, videos).
+2. Open your terminal.
+3. Run the deploy command:
+   ```bash
+   npm run deploy
+   ```
+4. Wait 2-3 minutes, and your live website will update.
