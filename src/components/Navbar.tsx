@@ -5,11 +5,20 @@ import { Menu, X, Cpu, Zap } from 'lucide-react';
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
+      // Handle background change
       setScrolled(window.scrollY > 50);
+
+      // Handle Progress Bar
+      const totalScroll = document.documentElement.scrollTop;
+      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scroll = `${totalScroll / windowHeight}`;
+      setScrollProgress(Number(scroll));
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -66,6 +75,9 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Scroll Progress Bar */}
+      <div className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-neon-blue via-neon-purple to-neon-green transition-all duration-100 ease-out" style={{ width: `${scrollProgress * 100}%` }}></div>
 
       {/* Mobile menu */}
       {isOpen && (

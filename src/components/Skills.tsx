@@ -1,9 +1,9 @@
 
 import React from 'react';
-//import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { PenTool, Cpu, Code, Layers, Bot, Eye, Wrench } from 'lucide-react';
 import { SKILLS } from '../constants';
-import type { SkillCategory } from '../types';
+import { SkillCategory } from '../types';
 
 const icons: Record<string, React.ReactNode> = {
   PenTool: <PenTool size={18} />,
@@ -15,9 +15,15 @@ const icons: Record<string, React.ReactNode> = {
   Wrench: <Wrench size={18} />
 };
 
-const SkillCard: React.FC<{ category: SkillCategory; index: number }> = ({ category }) => {
+const SkillCard: React.FC<{ category: SkillCategory; index: number }> = ({ category, index }) => {
   return (
-    <div className="bg-[#0f0f13] border border-white/5 p-6 rounded-sm hover:border-white/20 transition-colors duration-300 h-full">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      className="bg-[#0f0f13] border border-white/5 p-6 rounded-sm hover:border-white/20 transition-colors duration-300 h-full"
+    >
       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
         <div className="text-gray-500">
           {icons[category.icon]}
@@ -32,17 +38,20 @@ const SkillCard: React.FC<{ category: SkillCategory; index: number }> = ({ categ
               <span className="text-gray-400">{skill.name}</span>
               <span className="text-gray-600">{skill.level}%</span>
             </div>
-            {/* Static, clean progress bar */}
-            <div className="h-1 w-full bg-gray-900">
-              <div 
+            {/* Animated Progress Bar */}
+            <div className="h-1 w-full bg-gray-900 overflow-hidden">
+              <motion.div 
                 className="h-full bg-gray-500" 
-                style={{ width: `${skill.level}%` }}
+                initial={{ width: 0 }}
+                whileInView={{ width: `${skill.level}%` }}
+                transition={{ duration: 1.5, ease: "circOut", delay: idx * 0.1 }}
+                viewport={{ once: true }}
               />
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

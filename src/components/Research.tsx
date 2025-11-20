@@ -67,11 +67,19 @@ const Research: React.FC = () => {
                   </p>
 
                   <div className="flex items-center justify-between mt-auto">
-                     <div className="flex gap-2">
-                        {paper.tags.map(tag => (
-                          <span key={tag} className="text-xs text-gray-500 font-mono border border-gray-800 px-2 py-1 rounded">
+                     <div className="flex gap-2 flex-wrap">
+                        {paper.tags.map((tag, tagIndex) => (
+                          <motion.span 
+                            key={tag}
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            // Calculate delay: Base card delay + 0.4s pause + staggered index
+                            transition={{ delay: (index * 0.1) + 0.4 + (tagIndex * 0.1), duration: 0.3 }}
+                            className="text-xs text-gray-500 font-mono border border-gray-800 px-2 py-1 rounded"
+                          >
                             {tag}
-                          </span>
+                          </motion.span>
                         ))}
                      </div>
                      <a 
