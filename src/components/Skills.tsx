@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PenTool, Cpu, Code, Layers, Bot, Eye, Wrench } from 'lucide-react';
 import { SKILLS } from '../constants';
-import { SkillCategory } from '../types';
+import type { SkillCategory } from '../types';
 
 const icons: Record<string, React.ReactNode> = {
   PenTool: <PenTool size={18} />,

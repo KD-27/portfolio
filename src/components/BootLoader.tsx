@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Terminal, Cpu, CheckCircle2 } from 'lucide-react';
+import { Cpu, CheckCircle2 } from 'lucide-react';
 
 const BootLoader: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);

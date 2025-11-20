@@ -17,7 +17,7 @@ interface Bot {
 const FunSection: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mode, setMode] = useState<'gather' | 'orbit' | 'scatter' | 'flock' | 'predator'>('flock');
-  const [botCount, setBotCount] = useState(60);
+  const [botCount] = useState(60);
   const [networkDensity, setNetworkDensity] = useState(0);
   
   useEffect(() => {
