@@ -32,7 +32,7 @@ import type { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement } 
 export const SOCIAL_LINKS = {
   email: 'kaveeshadhananjaya2002@gmail.com', // Put your actual email here
   linkedin: 'https://www.linkedin.com/in/kaveesha-dhananjaya/', // Your LinkedIn URL
-  github: 'https://github.com/kaveesha', // Your GitHub URL
+  github: 'https://github.com/KD-27', // Your GitHub URL
   resume: '/resume.pdf' // The filename of your PDF in the public folder
 };
 
@@ -216,23 +216,23 @@ export const PROJECTS: Project[] = [
 export const RESEARCH_PAPERS: ResearchPaper[] = [
   {
     id: 'p1',
-    title: 'Soft Robotic Grippers for Delicate Harvesting',
-    abstract: 'Investigation into pneumatically actuated silicone elastomers for handling agricultural produce. The paper proposes a novel finger geometry that reduces contact pressure by 40% while maintaining grip strength, demonstrating success with ripe tomatoes and berries.',
-    image: 'https://picsum.photos/id/445/600/400',
-    link: '#',
-    publisher: 'IEEE Robotics and Automation Letters',
-    date: '2023',
-    tags: ['Soft Robotics', 'Agriculture', 'Materials']
+    title: 'Prediction of Coronary Artery Disease Using Artificial Neural Network',
+    abstract: 'An ANN for early CAD diagnosis achieved ~90% accuracy using SMOTE, expert-guided feature selection, optimized hyperparameters, and stratified k-fold validation. The model showed strong reliability and clinical relevance, outperforming conventional machine-learning methods',
+    image: '/CAD_Diagnosis.png',
+    link: 'https://scholar.google.com/citations?view_op=view_citation&hl=en&user=s9AT2TYAAAAJ&citation_for_view=s9AT2TYAAAAJ:9yKSN-GCB0IC',
+    publisher: 'International Research Conference (KDU IRC)',
+    date: '2024',
+    tags: ['Neural Networks', 'Coranary Artery Disease', 'SMOTE']
   },
   {
     id: 'p2',
-    title: 'Decentralized Swarm Navigation in GPS-Denied Environments',
-    abstract: 'A robust algorithm for coordinating a fleet of 10+ mobile robots without global positioning. Utilizing ultra-wideband (UWB) ranging and local mesh networking, the swarm achieves target convergence with a 98% success rate in cluttered indoor environments.',
-    image: 'https://picsum.photos/id/88/600/400',
-    link: '#',
-    publisher: 'International Conference on Robotics and Automation (ICRA)',
-    date: '2022',
-    tags: ['Swarm Intelligence', 'UWB', 'Navigation']
+    title: 'Development of an automated clothesline system',
+    abstract: 'An automated clothes-drying system integrates sensors and actuators to detect rain and darkness, automatically sheltering garments while offering manual and remote control. It reduces household inconvenience, protects clothes from weather, and demonstrates how smart technology streamlines everyday domestic tasks.',
+    image: '/Automated_Clothesline.png',
+    link: 'https://scholar.google.com/citations?view_op=view_citation&hl=en&user=s9AT2TYAAAAJ&citation_for_view=s9AT2TYAAAAJ:u5HHmVD_uO8C',
+    publisher: 'International Research Conference (KDU IRC)',
+    date: '2023',
+    tags: ['Automation', 'Clothesline', 'Smart']
   }
 ];
 
