@@ -216,19 +216,29 @@ export const PROJECTS: Project[] = [
 export const RESEARCH_PAPERS: ResearchPaper[] = [
   {
     id: 'p1',
+    title: 'Design & Development of a Quadruped Robot for Inspection in Human-Inaccessible Structured Areas',
+    abstract: 'A quadruped robot using a five-bar leg mechanism was developed for inspection in structured, inaccessible areas. Its optimized kinematics, stable locomotion, long-range ESP-NOW communication, and ROS2/MicroROS control architecture enable accurate, reliable, and modular operation on flat terrains.',
+    image: `${import.meta.env.BASE_URL}Quadruped_Robot.png`,
+    link: '#',
+    publisher: 'International Journal of Control, Automation, and System (ICROS KIEE)',
+    date: 'In Progress',
+    tags: ['Quadruped robot', 'Five-bar parallel mechanism', 'Trajectory optimization']
+  },
+  {
+    id: 'p2',
     title: 'Prediction of Coronary Artery Disease Using Artificial Neural Network',
     abstract: 'An ANN for early CAD diagnosis achieved ~90% accuracy using SMOTE, expert-guided feature selection, optimized hyperparameters, and stratified k-fold validation. The model showed strong reliability and clinical relevance, outperforming conventional machine-learning methods',
-    image: `${import.meta.env.BASE_URL}/CAD_Diagnosis.png`,
+    image: `${import.meta.env.BASE_URL}CAD_Diagnosis.png`,
     link: 'https://scholar.google.com/citations?view_op=view_citation&hl=en&user=s9AT2TYAAAAJ&citation_for_view=s9AT2TYAAAAJ:9yKSN-GCB0IC',
     publisher: 'International Research Conference (KDU IRC)',
     date: '2024',
     tags: ['Neural Networks', 'Coranary Artery Disease', 'SMOTE']
   },
   {
-    id: 'p2',
+    id: 'p3',
     title: 'Development of an automated clothesline system',
     abstract: 'An automated clothes-drying system integrates sensors and actuators to detect rain and darkness, automatically sheltering garments while offering manual and remote control. It reduces household inconvenience, protects clothes from weather, and demonstrates how smart technology streamlines everyday domestic tasks.',
-    image: `${import.meta.env.BASE_URL}/Automated_Clothesline.png`,
+    image: `${import.meta.env.BASE_URL}Automated_Clothesline.png`,
     link: 'https://scholar.google.com/citations?view_op=view_citation&hl=en&user=s9AT2TYAAAAJ&citation_for_view=s9AT2TYAAAAJ:u5HHmVD_uO8C',
     publisher: 'International Research Conference (KDU IRC)',
     date: '2023',

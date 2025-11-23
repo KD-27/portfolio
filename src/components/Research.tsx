@@ -83,11 +83,14 @@ const Research: React.FC = () => {
                         ))}
                      </div>
                      <a 
-                       href={paper.link} 
-                       className="flex items-center gap-2 text-sm font-bold text-white hover:text-neon-purple transition-colors"
-                     >
-                       READ PAPER <ExternalLink size={16} />
-                     </a>
+                      href={paper.link}
+                      onClick={(e) => { if (paper.link === '#') e.preventDefault(); }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm font-bold text-white hover:text-neon-purple transition-colors"
+                    >
+                      READ PAPER <ExternalLink size={16} />
+                    </a>
                   </div>
                 </div>
               </div>
