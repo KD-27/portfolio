@@ -22,13 +22,13 @@ const SkillCard: React.FC<{ category: SkillCategory; index: number }> = ({ categ
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="bg-[#0f0f13] border border-white/5 p-6 rounded-sm hover:border-white/20 transition-colors duration-300 h-full"
+      className="group bg-[#0f0f13] border border-white/5 p-6 rounded-sm hover:border-neon-blue/50 transition-colors duration-300 h-full"
     >
       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
-        <div className="text-gray-500">
+        <div className="text-gray-500 group-hover:text-neon-blue transition-colors">
           {icons[category.icon]}
         </div>
-        <h3 className="font-mono text-sm font-bold text-gray-200 tracking-widest uppercase">{category.title}</h3>
+        <h3 className="font-mono text-sm font-bold text-gray-200 group-hover:text-neon-blue tracking-widest uppercase transition-colors">{category.title}</h3>
       </div>
 
       <div className="space-y-6">
@@ -41,7 +41,7 @@ const SkillCard: React.FC<{ category: SkillCategory; index: number }> = ({ categ
             {/* Animated Progress Bar */}
             <div className="h-1 w-full bg-gray-900 overflow-hidden">
               <motion.div 
-                className="h-full bg-gray-500" 
+                className="h-full bg-gray-500 group-hover:bg-neon-blue transition-colors" 
                 initial={{ width: 0 }}
                 whileInView={{ width: `${skill.level}%` }}
                 transition={{ duration: 1.5, ease: "circOut", delay: idx * 0.1 }}

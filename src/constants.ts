@@ -33,7 +33,7 @@ export const SOCIAL_LINKS = {
   email: 'kaveeshadhananjaya2002@gmail.com', // Put your actual email here
   linkedin: 'https://www.linkedin.com/in/kaveesha-dhananjaya/', // Your LinkedIn URL
   github: 'https://github.com/KD-27', // Your GitHub URL
-  resume: '/resume.pdf' // The filename of your PDF in the public folder
+  resume: `${import.meta.env.BASE_URL}resume.pdf` // The filename of your PDF in the public folder
 };
 
 export const HERO_DATA = {
@@ -262,7 +262,7 @@ export const SKILLS: SkillCategory[] = [
     icon: 'Cpu',
     skills: [
       { name: 'C / C++', level: 90 },
-      { name: 'STM32 / ARM', level: 85 },
+      { name: 'ESP32 / Arduino', level: 85 },
       { name: 'RTOS', level: 80 },
       { name: 'Motor Control (FOC)', level: 95 }
     ]
@@ -281,7 +281,7 @@ export const SKILLS: SkillCategory[] = [
     title: 'Robotics Software',
     icon: 'Bot',
     skills: [
-      { name: 'ROS 2 (Galactic)', level: 90 },
+      { name: 'ROS 2 (Humble)', level: 90 },
       { name: 'Navigation Stack', level: 85 },
       { name: 'MoveIt Planning', level: 80 },
       { name: 'Gazebo / Ignition', level: 85 }
@@ -301,7 +301,7 @@ export const SKILLS: SkillCategory[] = [
     title: 'Rapid Prototyping',
     icon: 'Wrench',
     skills: [
-      { name: '3D Printing (FDM/SLA)', level: 100 },
+      { name: '3D Printing (FDM)', level: 100 },
       { name: 'Laser Cutting', level: 95 },
       { name: 'CNC Machining', level: 70 },
       { name: 'Silicon Casting', level: 80 }
@@ -311,27 +311,27 @@ export const SKILLS: SkillCategory[] = [
 
 export const PROCESS_STEPS: ProcessStep[] = [
   {
-    title: 'Concept & CAD',
-    year: 'Phase 1',
-    description: 'Iterative design using Fusion 360 to validate mechanics before cutting metal.',
-    image: 'https://picsum.photos/400/300?random=1'
+    title: 'The Spark',
+    year: '2018',
+    description: 'Built my first Arduino project — a line-following robot. Discovered the magic of making things move with code.',
+    image: ''
   },
   {
-    title: 'Electronics & Firmware',
-    year: 'Phase 2',
-    description: 'Breadboarding sensors, designing custom PCBs, and writing driver code.',
-    image: 'https://picsum.photos/400/300?random=2'
+    title: 'Going Deeper',
+    year: '2020',
+    description: 'Dove into ROS and computer vision. Started building autonomous systems and understanding sensor fusion.',
+    image: ''
   },
   {
-    title: 'Integration & Test',
-    year: 'Phase 3',
-    description: 'Putting it all together. Smoke testing, debugging, and system tuning.',
-    image: 'https://picsum.photos/400/300?random=3'
+    title: 'Hardware Meets AI',
+    year: '2022',
+    description: 'Integrated NVIDIA Jetson with robotics. Learned to bridge the gap between machine learning and real-world hardware.',
+    image: ''
   },
   {
-    title: 'Deployment',
-    year: 'Phase 4',
-    description: 'Field testing and final optimizations for real-world environments.',
-    image: 'https://picsum.photos/400/300?random=4'
+    title: 'Building Manriix',
+    year: '2024',
+    description: 'Creating an autonomous photography robot — combining everything I\'ve learned into one ambitious project.',
+    image: ''
   }
 ];

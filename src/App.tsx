@@ -10,6 +10,7 @@ import Achievements from './components/Achievements';
 import About from './components/About';
 import Contact from './components/Contact';
 import BootLoader from './components/BootLoader';
+import Process from './components/Process';
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -30,6 +31,7 @@ const App: React.FC = () => {
             <Hero />
             <Projects />
             <Research />
+            <Process />
             <Skills />
             <FunSection />
             <Achievements />
