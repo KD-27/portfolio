@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
             <Cpu className="h-8 w-8 text-neon-blue animate-spin-slow" />
-            <span className="font-mono font-bold text-xl tracking-wider text-white">DHANANJAYA<span className="text-neon-blue">.DEV</span></span>
+            <span className="font-mono font-bold text-xl tracking-wider text-white">KD<span className="text-neon-blue">.DEV</span></span>
           </div>
           
           <div className="hidden md:flex items-center gap-8">

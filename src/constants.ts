@@ -251,87 +251,99 @@ export const SKILLS: SkillCategory[] = [
     title: 'Mechanical Design',
     icon: 'PenTool',
     skills: [
-      { name: 'SolidWorks', level: 95 },
-      { name: 'Fusion 360', level: 90 },
-      { name: 'FEA Simulation', level: 80 },
-      { name: 'GD&T / Drafting', level: 85 }
-    ]
-  },
-  {
-    title: 'Embedded Firmware',
-    icon: 'Cpu',
-    skills: [
-      { name: 'C / C++', level: 90 },
-      { name: 'ESP32 / Arduino', level: 85 },
-      { name: 'RTOS', level: 80 },
-      { name: 'Motor Control (FOC)', level: 95 }
+      { name: 'SolidWorks', level: 90 },
+      { name: 'Fusion 360', level: 75 },
+      { name: 'ANSYS', level: 70 },
+      { name: 'MATLAB/Simulink', level: 85 }
     ]
   },
   {
     title: 'PCB & Electronics',
     icon: 'Layers',
     skills: [
-      { name: 'Altium Designer', level: 85 },
-      { name: 'KiCad', level: 90 },
-      { name: 'High Speed Layout', level: 75 },
-      { name: 'SMD Soldering', level: 100 }
+      { name: 'KiCAD', level: 90 },
+      { name: 'EasyEDA', level: 75 },
+      { name: 'Proteus', level: 80 },
+      { name: 'LTSpice', level: 80 }
     ]
   },
   {
-    title: 'Robotics Software',
+    title: 'Robotics',
     icon: 'Bot',
     skills: [
-      { name: 'ROS 2 (Humble)', level: 90 },
-      { name: 'Navigation Stack', level: 85 },
-      { name: 'MoveIt Planning', level: 80 },
-      { name: 'Gazebo / Ignition', level: 85 }
+      { name: 'ROS2', level: 80 },
+      { name: 'Gazebo Simulation', level: 85 },
+      { name: 'Kinematic Modeling', level: 85 },
+      { name: 'SLAM/Navigation', level: 80 }
+    ]
+  },
+    {
+    title: 'Programming & AI',
+    icon: 'Code',
+    skills: [
+      { name: 'Python', level: 85 },
+      { name: 'C++', level: 80 },
+      { name: 'Machine Learning', level: 75 },
+      { name: 'CNN/Computer Vision', level: 75 }
     ]
   },
   {
-    title: 'Computer Vision & AI',
-    icon: 'Eye',
+    title: 'PLC & Automation',
+    icon: 'Cpu',
     skills: [
-      { name: 'OpenCV / Python', level: 85 },
-      { name: 'TensorFlow Lite', level: 70 },
-      { name: 'YOLO Object Detect', level: 80 },
-      { name: 'Point Cloud (PCL)', level: 75 }
+      { name: 'ISPSoft', level: 85 },
+      { name: 'SIMATIC STEP7', level: 80 },
+      { name: 'HMI Programming', level: 80 },
+      { name: 'Nextion IDE', level: 75 }
     ]
   },
   {
     title: 'Rapid Prototyping',
     icon: 'Wrench',
     skills: [
-      { name: '3D Printing (FDM)', level: 100 },
-      { name: 'Laser Cutting', level: 95 },
-      { name: 'CNC Machining', level: 70 },
-      { name: 'Silicon Casting', level: 80 }
+      { name: '3D Printing', level: 90 },
+      { name: 'Laser Cutting', level: 85 },
+      { name: 'Electronics Assembly', level: 85 },
+      { name: 'System Integration', level: 80 }
     ]
   }
 ];
 
 export const PROCESS_STEPS: ProcessStep[] = [
   {
-    title: 'The Spark',
-    year: '2018',
-    description: 'Built my first Arduino project — a line-following robot. Discovered the magic of making things move with code.',
+    title: 'BSc (Hons) Mechatronics Engineering',
+    year: '2021 - 2025',
+    description: 'Graduated from General Sir John Kotelawela Defense University with First class : 3.91 CGPA. Awarded for the Best Academic Performance in Mechatronics Engineering',
     image: ''
   },
   {
-    title: 'Going Deeper',
-    year: '2020',
-    description: 'Dove into ROS and computer vision. Started building autonomous systems and understanding sensor fusion.',
+    title: 'Intern | Autonomation Engineer',
+    year: '2023 - 2024',
+    description: 'Developed self driven sewing machines and designed autonomus pipeline systems at Autonomation Lab, MAS Capital (Pvt) Ltd, Ratmalana. ',
     image: ''
   },
   {
-    title: 'Hardware Meets AI',
-    year: '2022',
-    description: 'Integrated NVIDIA Jetson with robotics. Learned to bridge the gap between machine learning and real-world hardware.',
+    title: 'STEM Tutor | Engineer',
+    year: '2023 - 2024',
+    description: 'Delivered robotics courses in schools,designed STEM kits and led workshops to engage students aged 5–20 in STEM concepts at 360Labs, Borelasgamuwa.',
     image: ''
   },
   {
-    title: 'Building Manriix',
-    year: '2024',
-    description: 'Creating an autonomous photography robot — combining everything I\'ve learned into one ambitious project.',
+    title: '3D Modeling & Printing | Freelancer',
+    year: '2024 - 2025',
+    description: 'Designed mechanical models and gave it life using my ENDER 3 PRO (FDM Printer) ',
+    image: ''
+  },
+  {
+    title: 'Product Development Engineer',
+    year: '2025',
+    description: 'Fabricated and Developed Mechanical systems to enhance process Efficiency and researched on new technologies to Develop Product at Innovation, MAS Capital (Pvt) Ltd, Biyagama ',
+    image: ''
+  },
+  {
+    title: 'Senior Robotics Engineer',
+    year: '2025',
+    description: 'Developed a four-wheel AI-driven robot, explore rover and drone concepts, and build a mic array with an audio-processing pipeline at Hype Insight (Pty) Ltd.',
     image: ''
   }
 ];

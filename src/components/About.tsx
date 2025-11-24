@@ -15,7 +15,7 @@ const About: React.FC = () => {
             </div>
             <div className="text-left">
               <p className="text-gray-300 mb-6 text-lg leading-relaxed">
-                I am a multidisciplinary engineer obsessed with making things move. With a background in both Mechanical Engineering and Computer Science, I thrive in the "messy middle" where hardware meets software.
+                I am a multidisciplinary engineer obsessed with making things move. With a background in Mechatronic Engineering, I thrive in the "messy middle" where hardware meets software.
                 <br/><br/>
                 My goal is to build robust, intelligent robotic systems that solve real-world problems. Whether it's designing a custom PCB, machining a chassis, or writing ROS nodes, I love every step of the process.
               </p>
