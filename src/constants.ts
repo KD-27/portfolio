@@ -46,57 +46,62 @@ export const HERO_DATA = {
 export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'a1',
-    title: 'National Robotics Champion 2023',
-    image: 'https://picsum.photos/id/146/300/200',
+    title: 'Best Academic Performance | Mechatronic Engineering',
+    image: `${import.meta.env.BASE_URL}academic_p.jpg`,
   },
   {
     id: 'a2',
-    title: 'Best Innovation Award - TechExpo',
-    image: 'https://picsum.photos/id/250/300/200',
+    title: 'Publication at KDU IRC 2024',
+    image: `${import.meta.env.BASE_URL}KDUIRC24.jpg`,
   },
   {
     id: 'a3',
-    title: 'IEEE Publication of the Year',
-    image: 'https://picsum.photos/id/366/300/200',
+    title: 'Genesis 23 - Research In Charge',
+    image: `${import.meta.env.BASE_URL}genisis23.jpg`,
   },
   {
     id: 'a4',
-    title: 'Dean\'s List - Engineering',
-    image: 'https://picsum.photos/id/454/300/200',
+    title: 'Genesis 22 - PR Team',
+    image: `${import.meta.env.BASE_URL}genisis22.jpg`,
   },
   {
     id: 'a5',
-    title: 'Patent: Soft Gripper Mechanism',
-    image: 'https://picsum.photos/id/534/300/200',
+    title: 'MATRIX 24 | Champions',
+    image: `${import.meta.env.BASE_URL}Quadruped_Robot.png`,
   },
   {
     id: 'a6',
-    title: 'Hackathon Winner: Smart City',
-    image: 'https://picsum.photos/id/674/300/200',
+    title: 'Ignition Exhibition',
+    image: `${import.meta.env.BASE_URL}Quadruped_Robot.png`,
+  },
+  {
+    id: 'a7',
+    title: 'MSD Competition | Champions',
+    image: `${import.meta.env.BASE_URL}box_p_robot.jpg`,
   }
 ];
 
 export const PROJECTS: Project[] = [
   {
-    id: '1',
-    title: 'Autonomous Delivery Rover',
-    description: 'A 6-wheeled outdoor rover capable of navigating unstructured environments using SLAM.',
-    longDescription: 'Designed to tackle the "last-mile" delivery challenge in suburban environments, this rover utilizes a custom rocker-bogie suspension system to climb curbs and traverse rough terrain. The core intelligence is powered by an NVIDIA Jetson Nano running ROS2 Galactic, processing data from a LiDAR and stereo camera setup to perform real-time SLAM and obstacle avoidance.',
-    tags: ['ROS2', 'Python', 'SolidWorks', 'NVIDIA Jetson'],
-    image: 'https://picsum.photos/id/1/800/600',
-    video: 'https://www.youtube.com/watch?v=lxIFMMsCTfA', // Example YouTube Link
-    gallery: [
-      'https://picsum.photos/id/101/400/300',
-      'https://picsum.photos/id/102/400/300',
-      'https://picsum.photos/id/103/400/300'
-    ],
-    details: [
-      'Designed rocker-bogie suspension in SolidWorks for stability on 30-degree inclines',
-      'Implemented EKF sensor fusion (IMU + Odometry + LiDAR) for precise localization',
-      'Designed custom PCB for power distribution and high-current motor control',
-      'Developed global and local path planning using Nav2 stack'
-    ]
-  },
+  id: '1',
+  title: 'Elissa 1.0 - Quadruped Inspection Robot',
+  description: 'A quadruped robot built to inspect human-inaccessible and hazardous environments.',
+  longDescription: 'Elissa 1.0 is a quadruped robot built for hazardous or hard-to-reach environments. It uses a distributed control architecture with a Raspberry Pi and ESP32 modules connected through ROS2, enabling synchronized actuation and modular expansion. Remote operation relies on ESP-NOW for low-latency, real-time responsiveness. The robot features a custom five-bar parallel leg mechanism designed for stability, reduced actuator load, and accurate foot placement. MATLAB Simulink and Simscape supported kinematic analysis and control tuning, while a Tkinter GUI allows quick creation and deployment of custom foot trajectories. Designed for inspection, rescue, and industrial tasks, Elissa 1.0 blends robust mechanics, electronics, and software into a capable field robot.',
+  tags: ['ROS2', 'ESP32', 'MATLAB', 'Quadruped'],
+  image: 'https://picsum.photos/id/1/800/600',
+  video: 'https://www.youtube.com/watch?v=lxIFMMsCTfA',
+  gallery: [
+    'https://picsum.photos/id/101/400/300',
+    'https://picsum.photos/id/102/400/300',
+    'https://picsum.photos/id/103/400/300'
+  ],
+  details: [
+    'Distributed Raspberry Pi + ESP32 control network using ROS2',
+    'Low-latency ESP-NOW remote operation',
+    'Custom five-bar parallel leg mechanism for stability and load efficiency',
+    'Tkinter GUI for generating and customizing foot trajectories'
+  ]
+},
   {
     id: '2',
     title: 'Haptic Feedback Exoskeleton',

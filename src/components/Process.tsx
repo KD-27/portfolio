@@ -6,7 +6,7 @@ import { PROCESS_STEPS } from '../constants';
 const Process: React.FC = () => {
   return (
     <section id="process" className="py-20 bg-mech-surface">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold font-mono text-white mb-4">
             MY <span className="text-neon-green">JOURNEY</span>
@@ -52,12 +52,12 @@ const Process: React.FC = () => {
                       </span>
                       
                       {/* Title */}
-                      <h3 className="text-xl md:text-2xl font-bold text-white mt-1 mb-3 group-hover:text-neon-green transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-white mt-1 mb-3 group-hover:text-neon-green transition-colors whitespace-normal">
                         {step.title}
                       </h3>
                       
                       {/* Description */}
-                      <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-sm inline-block">
+                      <p className="text-gray-400 text-sm md:text-base leading-relaxed text-justify">
                         {step.description}
                       </p>
                     </motion.div>
