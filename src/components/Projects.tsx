@@ -1,13 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, ChevronLeft, ChevronRight, Maximize2, X, Layers, Code, Cpu, PlayCircle } from 'lucide-react';
+import { ExternalLink, ChevronLeft, ChevronRight, Maximize2, X, Layers, Code, Cpu, Play } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import type { Project } from '../types';
 
 const Projects: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -21,17 +21,21 @@ const Projects: React.FC = () => {
     };
   }, [selectedProject]);
 
-  // Move to the next project (Center moves Left, Right moves Center)
+  // Reset active media when modal opens
+  useEffect(() => {
+    if (selectedProject) {
+      setActiveMediaIndex(0);
+    }
+  }, [selectedProject]);
+
   const handleNext = () => {
     setActiveIndex((prev) => (prev + 1) % PROJECTS.length);
   };
 
-  // Move to the previous project (Center moves Right, Left moves Center)
   const handlePrev = () => {
     setActiveIndex((prev) => (prev - 1 + PROJECTS.length) % PROJECTS.length);
   };
 
-  // Calculate properties for each card based on its distance from active index
   const getCardStyle = (index: number) => {
     const length = PROJECTS.length;
     const relativeIndex = (index - activeIndex + length) % length;
@@ -41,7 +45,6 @@ const Projects: React.FC = () => {
     else if (relativeIndex === 1) position = 'right';
     else if (relativeIndex === length - 1) position = 'left';
 
-    // Animation Variants
     const styles = {
       center: {
         x: '0%',
@@ -52,20 +55,20 @@ const Projects: React.FC = () => {
         rotateY: 0,
       },
       left: {
-        x: '-60%', // Moves to the left
+        x: '-60%',
         scale: 0.75,
         opacity: 0.6,
         zIndex: 10,
         filter: 'blur(4px)',
-        rotateY: 15, // Tilted in
+        rotateY: 15,
       },
       right: {
-        x: '60%', // Moves to the right
+        x: '60%',
         scale: 0.75,
         opacity: 0.6,
         zIndex: 10,
         filter: 'blur(4px)',
-        rotateY: -15, // Tilted in
+        rotateY: -15,
       },
       hidden: {
         x: '0%',
@@ -80,11 +83,28 @@ const Projects: React.FC = () => {
     return { position, style: styles[position as keyof typeof styles] };
   };
 
+  // Helper to check if URL is a video
+  const isVideo = (url: string) => {
+    const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov'];
+    return videoExtensions.some(ext => url.toLowerCase().includes(ext)) || 
+           url.includes('youtube.com') || 
+           url.includes('youtu.be');
+  };
+
   const isYoutube = (url: string) => url.includes('youtube.com') || url.includes('youtu.be');
+  
   const getEmbedUrl = (url: string) => {
     if (url.includes('watch?v=')) return url.replace('watch?v=', 'embed/');
     if (url.includes('youtu.be/')) return url.replace('youtu.be/', 'www.youtube.com/embed/');
     return url;
+  };
+
+  // Get the first gallery item as the card thumbnail
+  const getCardThumbnail = (project: Project) => {
+    if (project.gallery && project.gallery.length > 0) {
+      return project.gallery[0];
+    }
+    return '';
   };
 
   return (
@@ -127,6 +147,8 @@ const Projects: React.FC = () => {
             {PROJECTS.map((project, index) => {
               const { position, style } = getCardStyle(index);
               const isCenter = position === 'center';
+              const thumbnailUrl = getCardThumbnail(project);
+              const thumbnailIsVideo = isVideo(thumbnailUrl);
 
               return (
                 <motion.div
@@ -135,7 +157,7 @@ const Projects: React.FC = () => {
                   animate={style}
                   transition={{ 
                     duration: 0.5, 
-                    ease: "circOut", // Sharp movement
+                    ease: "circOut",
                   }}
                   onClick={() => {
                     if (position === 'left') handlePrev();
@@ -149,22 +171,35 @@ const Projects: React.FC = () => {
                     transformStyle: 'preserve-3d',
                   }}
                 >
-                  {/* Image Section */}
+                  {/* Image/Video Section - NO play button overlay */}
                   <div className="relative h-[45%] w-full overflow-hidden bg-black">
                     <div className="absolute inset-0 bg-gradient-to-t from-mech-surface to-transparent z-10" />
-                    <img 
-                      src={project.image} 
-                      alt={project.title} 
-                      className="w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-110"
-                    />
+                    {thumbnailUrl ? (
+                      thumbnailIsVideo && !isYoutube(thumbnailUrl) ? (
+                        <video 
+                          src={thumbnailUrl}
+                          muted
+                          loop
+                          playsInline
+                          className="w-full h-full object-cover opacity-90"
+                          onMouseEnter={(e) => isCenter && e.currentTarget.play()}
+                          onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+                        />
+                      ) : (
+                        <img 
+                          src={thumbnailUrl} 
+                          alt={project.title} 
+                          className="w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-110"
+                        />
+                      )
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-600 font-mono text-sm">
+                        // NO MEDIA
+                      </div>
+                    )}
                     {isCenter && (
                       <div className="absolute top-4 right-4 z-20 bg-black/60 backdrop-blur p-2 rounded-full text-neon-blue border border-neon-blue/30 group hover:bg-neon-blue hover:text-black transition-all">
                         <Maximize2 size={20} />
-                      </div>
-                    )}
-                    {isCenter && project.video && (
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-white/80 hover:text-neon-blue transition-colors">
-                        <PlayCircle size={48} className="drop-shadow-lg" />
                       </div>
                     )}
                   </div>
@@ -175,7 +210,6 @@ const Projects: React.FC = () => {
                       {project.title}
                     </h3>
                     
-                    {/* Only show full details if center */}
                     <div className={`flex-1 flex flex-col transition-opacity duration-300 ${isCenter ? 'opacity-100' : 'opacity-20'}`}>
                         <p className="text-gray-400 text-sm md:text-base mb-6 line-clamp-3">
                           {project.description}
@@ -214,13 +248,13 @@ const Projects: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-8 bg-black/90 backdrop-blur-lg"
-            onClick={() => setSelectedProject(null)} // Close on background click
+            onClick={() => setSelectedProject(null)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 50 }}
-              onClick={(e) => e.stopPropagation()} // Prevent click through
+              onClick={(e) => e.stopPropagation()}
               className="bg-mech-surface w-full max-w-6xl max-h-[90vh] rounded-2xl border border-neon-blue/30 shadow-[0_0_50px_rgba(0,243,255,0.1)] overflow-hidden flex flex-col relative"
             >
                {/* Close Button */}
@@ -233,48 +267,109 @@ const Projects: React.FC = () => {
 
                <div className="flex flex-col md:flex-row h-full overflow-y-auto md:overflow-hidden">
                  
-                 {/* Left: Visuals (Scrollable on mobile, sticky on desktop) */}
+                 {/* Left: Media Viewer + Gallery */}
                  <div className="w-full md:w-1/2 bg-black relative flex flex-col">
-                    <div className="h-64 md:h-[50%] w-full bg-black flex items-center justify-center">
-                       {selectedProject.video ? (
-                         isYoutube(selectedProject.video) ? (
-                           <iframe 
-                             src={getEmbedUrl(selectedProject.video)} 
-                             title={selectedProject.title}
-                             className="w-full h-full"
-                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                             allowFullScreen
-                           />
-                         ) : (
-                           <video 
-                             src={selectedProject.video} 
-                             controls 
-                             autoPlay 
-                             muted 
-                             loop
-                             className="w-full h-full object-contain"
-                           />
-                         )
+                    {/* Main Media Display */}
+                    <div className="h-64 md:h-[55%] w-full bg-black flex items-center justify-center relative">
+                       {selectedProject.gallery && selectedProject.gallery[activeMediaIndex] ? (
+                         (() => {
+                           const currentMedia = selectedProject.gallery[activeMediaIndex];
+                           if (isYoutube(currentMedia)) {
+                             return (
+                               <iframe 
+                                 src={getEmbedUrl(currentMedia)} 
+                                 title={selectedProject.title}
+                                 className="w-full h-full"
+                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                 allowFullScreen
+                               />
+                             );
+                           } else if (isVideo(currentMedia)) {
+                             return (
+                               <video 
+                                 key={currentMedia}
+                                 src={currentMedia} 
+                                 controls 
+                                 autoPlay 
+                                 muted 
+                                 loop
+                                 className="w-full h-full object-contain"
+                               />
+                             );
+                           } else {
+                             return (
+                               <img 
+                                 src={currentMedia} 
+                                 alt={selectedProject.title} 
+                                 className="w-full h-full object-contain"
+                               />
+                             );
+                           }
+                         })()
                        ) : (
-                         <>
-                           <img 
-                             src={selectedProject.image} 
-                             alt={selectedProject.title} 
-                             className="w-full h-full object-cover opacity-90"
-                           />
-                           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-mech-surface/90 md:to-transparent md:bg-gradient-to-t" />
-                         </>
+                         <div className="w-full h-full flex items-center justify-center text-gray-600 font-mono text-sm">
+                           // NO MEDIA AVAILABLE
+                         </div>
                        )}
                     </div>
                     
-                    {/* Gallery Grid */}
-                    <div className="flex-1 p-4 grid grid-cols-3 gap-2 bg-[#050507]">
-                       {selectedProject.gallery?.map((img, idx) => (
-                         <div key={idx} className="relative aspect-square rounded overflow-hidden border border-white/10 hover:border-neon-blue/50 transition-colors group">
-                            <img src={img} alt="Gallery" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    {/* Gallery Thumbnails - Scrollable Grid */}
+                    <div className="flex-1 p-4 bg-[#050507] overflow-y-auto">
+                       {selectedProject.gallery && selectedProject.gallery.length > 0 ? (
+                         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                           {selectedProject.gallery.map((media, idx) => {
+                             const mediaIsVideo = isVideo(media);
+                             const isActive = idx === activeMediaIndex;
+                             
+                             return (
+                               <div 
+                                 key={idx} 
+                                 onClick={() => setActiveMediaIndex(idx)}
+                                 className={`relative aspect-square rounded overflow-hidden cursor-pointer transition-all duration-200 group
+                                   ${isActive 
+                                     ? 'ring-2 ring-neon-blue border-neon-blue' 
+                                     : 'border border-white/10 hover:border-neon-blue/50'
+                                   }`}
+                               >
+                                  {mediaIsVideo && !isYoutube(media) ? (
+                                    <>
+                                      <video 
+                                        src={media}
+                                        muted
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                      />
+                                      {/* Play icon overlay for video thumbnails */}
+                                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-colors">
+                                        <Play size={24} className="text-white/80 group-hover:text-neon-blue transition-colors" fill="currentColor" />
+                                      </div>
+                                    </>
+                                  ) : isYoutube(media) ? (
+                                    <>
+                                      <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+                                        <Play size={24} className="text-red-500" fill="currentColor" />
+                                      </div>
+                                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                                        <Play size={24} className="text-white/80" fill="currentColor" />
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <img 
+                                      src={media} 
+                                      alt={`Gallery ${idx + 1}`} 
+                                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                                    />
+                                  )}
+                                  
+                                  {/* Active indicator */}
+                                  {isActive && (
+                                    <div className="absolute inset-0 border-2 border-neon-blue rounded pointer-events-none" />
+                                  )}
+                               </div>
+                             );
+                           })}
                          </div>
-                       )) || (
-                         <div className="col-span-3 flex items-center justify-center text-gray-600 font-mono text-sm border border-dashed border-gray-800 rounded">
+                       ) : (
+                         <div className="h-full flex items-center justify-center text-gray-600 font-mono text-sm border border-dashed border-gray-800 rounded">
                            // IMAGERY CLASSIFIED
                          </div>
                        )}

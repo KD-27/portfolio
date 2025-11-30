@@ -4,9 +4,7 @@ export interface Project {
   title: string;
   description: string;
   longDescription?: string;
-  tags: string[];
-  image: string;
-  video?: string; // New optional field for YouTube URL or local file path
+  tags: string[]; 
   gallery?: string[];
   details: string[];
   link?: string;
