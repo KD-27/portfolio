@@ -83,68 +83,81 @@ export const ACHIEVEMENTS: Achievement[] = [
 
 export const PROJECTS: Project[] = [
   {
-  id: '1',
-  title: 'Elissa 1.0 - Quadruped Inspection Robot',
-  description: 'A quadruped robot with five-bar parallel leg mechanism for inspection in human-inaccessible and hazardous environments.',
-  longDescription: `Elissa 1.0 addresses the challenge of inspecting environments too dangerous or confined for humans—industrial facilities, tunnels, disaster zones, and hazardous infrastructure. Traditional inspection methods risk human safety or rely on wheeled robots that struggle with obstacles and uneven surfaces.
-  This quadruped platform offers a practical, cost-effective alternative to complex systems like BigDog or ANYmal. It prioritizes stable, deliberate movement over speed, making it ideal for careful inspection tasks where reliability matters more than agility. The robot can carry sensor payloads while maintaining consistent locomotion, enabling remote visual inspection, environmental monitoring, and structural assessment in areas humans cannot safely access.
-  Designed for real-world deployment, the system features extended wireless range for operation in large facilities and a modular architecture that allows easy integration of additional sensors and tools for specific inspection requirements.`,
-  tags: ['ROS2', 'ESP32', 'MATLAB', 'Simscape', 'MicroROS', 'Quadruped', 'Parallel Mechanism'],
-  gallery: [
-    `${import.meta.env.BASE_URL}robot motion.mp4`,
-    `${import.meta.env.BASE_URL}quad model.mp4`,
-    `${import.meta.env.BASE_URL}Walking.mp4`,
-    `${import.meta.env.BASE_URL}Architecture.png`,
-    `${import.meta.env.BASE_URL}TkinterGUI.mp4`,
-    `${import.meta.env.BASE_URL}balancing POV1.mp4`,
-    `${import.meta.env.BASE_URL}balancing POV2.mp4`,
-    `${import.meta.env.BASE_URL}Simulink.png`
-  ],
-  details: [
-    'Five-bar parallel leg mechanism with curved links',
-    'Variable Circle Method for real-time inverse kinematics',
-    'Distributed ROS2 + MicroROS architecture (Raspberry Pi + ESP32)',
-    'ESP-NOW wireless communication with 120-130m range',
-    'Trajectory optimization using weighted stability metric',
-    'Active body leveling using MPU6050 IMU with complementary filtering',
-    '20 cm/s locomotion speed, 30°/s rotation, stability score: 987.9',
-    'Custom Tkinter GUI for trajectory design and deployment'
-  ]
-},
-  {
-    id: '2',
-    title: 'Haptic Feedback Exoskeleton',
-    description: 'Upper-body exoskeleton arm for teleoperation with force feedback.',
-    longDescription: 'This project focuses on human-robot interaction (HRI), specifically allowing a human operator to "feel" the weight and resistance of objects handled by a remote robotic arm. The system uses series elastic actuators (SEAs) to measure torque and provide realistic force feedback to the wearer. Low-latency communication is achieved via a custom UDP protocol over WiFi.',
-    tags: ['C++', 'STM32', 'Fusion 360', 'Control Theory'],
+    id: '1',
+    title: 'Elissa 1.0 - Quadruped Inspection Robot',
+    description: 'A quadruped robot with five-bar parallel leg mechanism for inspection in human-inaccessible and hazardous environments.',
+    longDescription: `Elissa 1.0 addresses the challenge of inspecting environments too dangerous or confined for humans—industrial facilities, tunnels, disaster zones, and hazardous infrastructure. Traditional inspection methods risk human safety or rely on wheeled robots that struggle with obstacles and uneven surfaces.
+    This quadruped platform offers a practical, cost-effective alternative to complex systems like BigDog or ANYmal. It prioritizes stable, deliberate movement over speed, making it ideal for careful inspection tasks where reliability matters more than agility. The robot can carry sensor payloads while maintaining consistent locomotion, enabling remote visual inspection, environmental monitoring, and structural assessment in areas humans cannot safely access.
+    Designed for real-world deployment, the system features extended wireless range for operation in large facilities and a modular architecture that allows easy integration of additional sensors and tools for specific inspection requirements.`,
+    tags: ['ROS2', 'ESP32', 'MATLAB', 'Simscape', 'MicroROS', 'Quadruped', 'Parallel Mechanism'],
     gallery: [
-      'https://picsum.photos/id/201/400/300',
-      'https://picsum.photos/id/202/400/300',
-      'https://picsum.photos/id/203/400/300'
+      `${import.meta.env.BASE_URL}robot motion.mp4`,
+      `${import.meta.env.BASE_URL}quad model.mp4`,
+      `${import.meta.env.BASE_URL}Walking.mp4`,
+      `${import.meta.env.BASE_URL}Architecture.png`,
+      `${import.meta.env.BASE_URL}TkinterGUI.mp4`,
+      `${import.meta.env.BASE_URL}balancing POV1.mp4`,
+      `${import.meta.env.BASE_URL}balancing POV2.mp4`,
+      `${import.meta.env.BASE_URL}Simulink.png`
     ],
     details: [
-      'Inverse kinematics solver running on STM32F4 microcontroller',
-      'Low-latency UDP communication protocol (<5ms roundtrip)',
-      '3D printed ergonomic mounts using carbon fiber nylon composite',
-      'PID force loop tuning for realistic resistance simulation'
+      'Five-bar parallel leg mechanism with curved links',
+      'Variable Circle Method for real-time inverse kinematics',
+      'Distributed ROS2 + MicroROS architecture (Raspberry Pi + ESP32)',
+      'ESP-NOW wireless communication with 120-130m range',
+      'Trajectory optimization using weighted stability metric',
+      'Active body leveling using MPU6050 IMU with complementary filtering',
+      '20 cm/s locomotion speed, 30°/s rotation, stability score: 987.9',
+      'Custom Tkinter GUI for trajectory design and deployment'
+    ]
+  },
+  {
+    id: '2',
+    title: 'Mars Rover-Inspired Six-Wheeled Robot for Mapping & Navigation',
+    description: 'A six-wheeled robot with LiDAR-based SLAM for autonomous mapping and navigation in complex environments.',
+    longDescription: `Modern industrial facilities, warehouses, and complex indoor spaces present significant challenges for autonomous robots—dynamic obstacles, changing layouts, and intricate pathways demand systems that can accurately map and navigate without human intervention.
+
+    This Mars Rover-inspired platform addresses these challenges by combining LiDAR sensing with SLAM algorithms to autonomously map unknown environments and navigate optimal paths between points. The six-wheeled design, inspired by NASA's Mars rovers, provides stability and maneuverability across varied surfaces. The robot builds real-time occupancy grid maps and localizes itself without relying on external infrastructure like beacons or pre-programmed routes.
+
+    Designed for practical deployment in industrial inspection, warehouse logistics, and research applications, the system demonstrates that robust autonomous navigation can be achieved with accessible hardware. The rocker-bogie-inspired suspension enables operation on rough terrain under manual control, while autonomous mode handles structured indoor environments.`,
+    tags: ['ROS', 'LiDAR', 'SLAM', 'Python', 'Arduino', 'SolidWorks', 'Path Planning'],
+    gallery: [
+      `${import.meta.env.BASE_URL}rover.jpg`,
+      `${import.meta.env.BASE_URL}robot_ assembly.mp4`,
+      `${import.meta.env.BASE_URL}model 6.png`,
+      `${import.meta.env.BASE_URL}Mapping.png`,
+      `${import.meta.env.BASE_URL}Navigation.png`,
+      `${import.meta.env.BASE_URL}mapping Vid.mp4`,
+      `${import.meta.env.BASE_URL}Navigation Vid.mp4`,
+    ],
+    details: [
+      'Six-wheeled rocker-bogie suspension for terrain adaptability',
+      'Hector SLAM for real-time 2D mapping without odometry',
+      'A* global path planning with DWA local obstacle avoidance',
+      'Extended Kalman Filter fusing IMU and wheel odometry',
+      'ROS-based distributed architecture with Arduino interface',
+      '10 cm position accuracy, 15° orientation accuracy'
     ]
   },
   {
     id: '3',
-    title: 'Industrial Pick & Place Cell',
-    description: 'Computer vision guided SCARA robot for automated assembly lines.',
-    longDescription: 'An industrial automation solution designed to increase throughput in small-parts assembly. This cell integrates a high-speed SCARA robot with an Intel RealSense camera. The system identifies random parts on a moving conveyor, calculates their orientation, and executes a synchronized pick-and-place maneuver.',
-    tags: ['OpenCV', 'PLC', 'Industrial Automation', 'Python'],
+    title: 'Rick and Roll - Sweep the Table Robot',
+    description: 'Award-winning autonomous wheeled robot that clears objects from an arena using a rotating hammer mechanism.',
+    longDescription: `Rick and Roll was built for the KDU Faculty of Engineering "Sweep the Table Robot Contest"—a competition where robots autonomously push objects off a rectangular arena, scored on both speed and clearance rate.
+
+    The challenge required balancing aggressive object removal with controlled movement to avoid falling off the table itself. After experimenting with multiple pushing mechanisms, we settled on a rotating hammer design that could sweep objects efficiently while maintaining stability.
+
+    Rick and Roll claimed 1st Place and "Best Design" at the Intake 38 Mechatronics Systems Design Competition, demonstrating that simple, well-executed mechanical solutions often outperform complex alternatives.`,
+    tags: ['Arduino', 'Mechanics', 'Prototyping', 'Competition'],
     gallery: [
-      'https://picsum.photos/id/301/400/300',
-      'https://picsum.photos/id/302/400/300',
-      'https://picsum.photos/id/304/400/300'
+      `${import.meta.env.BASE_URL}rick vid.mp4`,
+      `${import.meta.env.BASE_URL}rick robot.jpg`
     ],
     details: [
-      'Integrated RealSense camera for object detection and pose estimation',
-      'Optimized trajectory planning for 20% cycle time reduction vs standard implementation',
-      'Designed pneumatic gripper system with custom jaws',
-      'Safety system integration with light curtains and emergency stop logic'
+      'Rotating hammer mechanism for efficient object clearance',
+      'Arduino-based autonomous control system',
+      'Iterative prototyping of multiple pushing mechanisms',
+      '1st Place and Best Design Award - KDU FOE Competition'
     ]
   },
   {
