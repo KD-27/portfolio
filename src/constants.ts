@@ -47,37 +47,47 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'a1',
     title: 'Best Academic Performance | Mechatronic Engineering',
-    image: `${import.meta.env.BASE_URL}academic_p.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/academic_p.jpg`,
   },
   {
     id: 'a2',
     title: 'Publication at KDU IRC 2024',
-    image: `${import.meta.env.BASE_URL}KDUIRC24.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/KDUIRC24.jpg`,
   },
   {
     id: 'a3',
-    title: 'Genesis 23 - Research In Charge',
-    image: `${import.meta.env.BASE_URL}genisis23.jpg`,
+    title: 'Genesis 23',
+    image: `${import.meta.env.BASE_URL}achievements/Genisis23.jpg`,
   },
   {
     id: 'a4',
-    title: 'Genesis 22 - PR Team',
-    image: `${import.meta.env.BASE_URL}genisis22.jpg`,
+    title: 'Genesis 22',
+    image: `${import.meta.env.BASE_URL}achievements/Genisis22.jpg`,
   },
   {
     id: 'a5',
-    title: 'MATRIX 24 | Champions',
-    image: `${import.meta.env.BASE_URL}Quadruped_Robot.png`,
+    title: 'MATRIX 23',
+    image: `${import.meta.env.BASE_URL}achievements/Mathrix23.jpg`,
   },
   {
     id: 'a6',
-    title: 'Ignition Exhibition',
-    image: `${import.meta.env.BASE_URL}Quadruped_Robot.png`,
+    title: 'MATRIX 24 | Champions',
+    image: `${import.meta.env.BASE_URL}achievements/Mathrix24.jpg`,
   },
   {
     id: 'a7',
+    title: 'Ignite Exhibition',
+    image: `${import.meta.env.BASE_URL}achievements/Ignite Exhibition.jpg`,
+  },
+  {
+    id: 'a8',
     title: 'MSD Competition | Champions',
-    image: `${import.meta.env.BASE_URL}box_p_robot.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/box_p_robot.jpg`,
+  },
+  {
+    id: 'a9',
+    title: 'ERIC | Research In Charge',
+    image: `${import.meta.env.BASE_URL}achievements/ERIC Research In Charge.jpg`,
   }
 ];
 
@@ -91,14 +101,14 @@ export const PROJECTS: Project[] = [
     Designed for real-world deployment, the system features extended wireless range for operation in large facilities and a modular architecture that allows easy integration of additional sensors and tools for specific inspection requirements.`,
     tags: ['ROS2', 'ESP32', 'MATLAB', 'Simscape', 'MicroROS', 'Quadruped', 'Parallel Mechanism'],
     gallery: [
-      `${import.meta.env.BASE_URL}robot motion.mp4`,
-      `${import.meta.env.BASE_URL}quad model.mp4`,
-      `${import.meta.env.BASE_URL}Walking.mp4`,
-      `${import.meta.env.BASE_URL}Architecture.png`,
-      `${import.meta.env.BASE_URL}TkinterGUI.mp4`,
-      `${import.meta.env.BASE_URL}balancing POV1.mp4`,
-      `${import.meta.env.BASE_URL}balancing POV2.mp4`,
-      `${import.meta.env.BASE_URL}Simulink.png`
+      `${import.meta.env.BASE_URL}projects/ID1/robot motion.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID1/quad model.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID1/Walking.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID1/Architecture.png`,
+      `${import.meta.env.BASE_URL}projects/ID1/TkinterGUI.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID1/balancing POV1.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID1/balancing POV2.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID1/Simulink.png`
     ],
     details: [
       'Five-bar parallel leg mechanism with curved links',
@@ -122,13 +132,13 @@ export const PROJECTS: Project[] = [
     Designed for practical deployment in industrial inspection, warehouse logistics, and research applications, the system demonstrates that robust autonomous navigation can be achieved with accessible hardware. The rocker-bogie-inspired suspension enables operation on rough terrain under manual control, while autonomous mode handles structured indoor environments.`,
     tags: ['ROS', 'LiDAR', 'SLAM', 'Python', 'Arduino', 'SolidWorks', 'Path Planning'],
     gallery: [
-      `${import.meta.env.BASE_URL}rover.jpg`,
-      `${import.meta.env.BASE_URL}robot_ assembly.mp4`,
-      `${import.meta.env.BASE_URL}model 6.png`,
-      `${import.meta.env.BASE_URL}Mapping.png`,
-      `${import.meta.env.BASE_URL}Navigation.png`,
-      `${import.meta.env.BASE_URL}mapping Vid.mp4`,
-      `${import.meta.env.BASE_URL}Navigation Vid.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID2/rover.jpg`,
+      `${import.meta.env.BASE_URL}projects/ID2/robot_assembly.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID2/model 6.png`,
+      `${import.meta.env.BASE_URL}projects/ID2/Mapping.png`,
+      `${import.meta.env.BASE_URL}projects/ID2/Navigation.png`,
+      `${import.meta.env.BASE_URL}projects/ID2/mapping Vid.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID2/Navigation Vid.mp4`,
     ],
     details: [
       'Six-wheeled rocker-bogie suspension for terrain adaptability',
@@ -150,8 +160,8 @@ export const PROJECTS: Project[] = [
     Rick and Roll claimed 1st Place and "Best Design" at the Intake 38 Mechatronics Systems Design Competition, demonstrating that simple, well-executed mechanical solutions often outperform complex alternatives.`,
     tags: ['Arduino', 'Mechanics', 'Prototyping', 'Competition'],
     gallery: [
-      `${import.meta.env.BASE_URL}rick vid.mp4`,
-      `${import.meta.env.BASE_URL}rick robot.jpg`
+      `${import.meta.env.BASE_URL}projects/ID3/rick vid.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID3/rick robot.jpg`
     ],
     details: [
       'Rotating hammer mechanism for efficient object clearance',
@@ -171,14 +181,14 @@ export const PROJECTS: Project[] = [
     The model was built with direct input from cardiologists, ensuring the features it analyzes are clinically meaningful rather than just statistically convenient. This collaboration between data science and medical expertise resulted in a tool that's both accurate and practical for real-world clinical settings.`,
     tags: ['Python', 'TensorFlow', 'Machine Learning', 'ANN', 'Healthcare', 'SMOTE'],
     gallery: [
-      `${import.meta.env.BASE_URL}CAD.png`,
-      `${import.meta.env.BASE_URL}ArchitectureCAD.png`,
-      `${import.meta.env.BASE_URL}SMOTE.png`,
-      `${import.meta.env.BASE_URL}Neural Network.png`,
-      `${import.meta.env.BASE_URL}confusion matrix.png`,
-      `${import.meta.env.BASE_URL}metrics.png`,
-      `${import.meta.env.BASE_URL}accuraccy plot.png`,
-      `${import.meta.env.BASE_URL}loss plot.png`,
+      `${import.meta.env.BASE_URL}projects/ID4/CAD.png`,
+      `${import.meta.env.BASE_URL}projects/ID4/ArchitectureCAD.png`,
+      `${import.meta.env.BASE_URL}projects/ID4/SMOTE.png`,
+      `${import.meta.env.BASE_URL}projects/ID4/Neural Network.png`,
+      `${import.meta.env.BASE_URL}projects/ID4/confusion matrix.png`,
+      `${import.meta.env.BASE_URL}projects/ID4/metrics.png`,
+      `${import.meta.env.BASE_URL}projects/ID4/accuraccy plot.png`,
+      `${import.meta.env.BASE_URL}projects/ID4/loss plot.png`,
     ],
     details: [
       'Four-layer ANN with ReLU and sigmoid activation functions',
@@ -196,7 +206,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     id: 'p1',
     title: 'Design & Development of a Quadruped Robot for Inspection in Human-Inaccessible Structured Areas',
     abstract: 'A quadruped robot using a five-bar leg mechanism was developed for inspection in structured, inaccessible areas. Its optimized kinematics, stable locomotion, long-range ESP-NOW communication, and ROS2/MicroROS control architecture enable accurate, reliable, and modular operation on flat terrains.',
-    image: `${import.meta.env.BASE_URL}Quadruped_Robot.png`,
+    image: `${import.meta.env.BASE_URL}research_papers/Quadruped_Robot.png`,
     link: '#',
     publisher: 'International Journal of Control, Automation, and System (ICROS KIEE)',
     date: 'In Progress',
@@ -206,7 +216,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     id: 'p2',
     title: 'Prediction of Coronary Artery Disease Using Artificial Neural Network',
     abstract: 'An ANN for early CAD diagnosis achieved ~90% accuracy using SMOTE, expert-guided feature selection, optimized hyperparameters, and stratified k-fold validation. The model showed strong reliability and clinical relevance, outperforming conventional machine-learning methods',
-    image: `${import.meta.env.BASE_URL}CAD_Diagnosis.png`,
+    image: `${import.meta.env.BASE_URL}research_papers/CAD_Diagnosis.png`,
     link: 'https://scholar.google.com/citations?view_op=view_citation&hl=en&user=s9AT2TYAAAAJ&citation_for_view=s9AT2TYAAAAJ:9yKSN-GCB0IC',
     publisher: 'International Research Conference (KDU IRC)',
     date: '2024',
@@ -216,7 +226,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     id: 'p3',
     title: 'Development of an automated clothesline system',
     abstract: 'An automated clothes-drying system integrates sensors and actuators to detect rain and darkness, automatically sheltering garments while offering manual and remote control. It reduces household inconvenience, protects clothes from weather, and demonstrates how smart technology streamlines everyday domestic tasks.',
-    image: `${import.meta.env.BASE_URL}Automated_Clothesline.png`,
+    image: `${import.meta.env.BASE_URL}research_papers/Automated_Clothesline.png`,
     link: 'https://scholar.google.com/citations?view_op=view_citation&hl=en&user=s9AT2TYAAAAJ&citation_for_view=s9AT2TYAAAAJ:u5HHmVD_uO8C',
     publisher: 'International Research Conference (KDU IRC)',
     date: '2023',
