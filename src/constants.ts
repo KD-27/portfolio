@@ -1,4 +1,3 @@
-
 /*
  * ====================================================================================
  * 🛒 CONTENT DATABASE
@@ -24,16 +23,16 @@
  * ⚠️ IMPORTANT: After changing this file, you MUST run 'npm run deploy' for changes to appear online.
  */
 
-import type { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement } from './types';
+import type { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement, ThoughtLabData } from './types';
 
 // =========================================
 // 👤 PERSONAL LINKS & CONTACT
 // =========================================
 export const SOCIAL_LINKS = {
-  email: 'kaveeshadhananjaya2002@gmail.com', // Put your actual email here
-  linkedin: 'https://www.linkedin.com/in/kaveesha-dhananjaya/', // Your LinkedIn URL
-  github: 'https://github.com/KD-27', // Your GitHub URL
-  resume: `${import.meta.env.BASE_URL}resume.pdf` // The filename of your PDF in the public folder
+  email: 'kaveeshadhananjaya2002@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/kaveesha-dhananjaya/',
+  github: 'https://github.com/KD-27',
+  resume: `${import.meta.env.BASE_URL}resume.pdf`
 };
 
 export const HERO_DATA = {
@@ -133,7 +132,7 @@ export const PROJECTS: Project[] = [
     tags: ['ROS', 'LiDAR', 'SLAM', 'Python', 'Arduino', 'SolidWorks', 'Path Planning'],
     gallery: [
       `${import.meta.env.BASE_URL}projects/ID2/rover.jpg`,
-      `${import.meta.env.BASE_URL}projects/ID2/robot_assembly.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID2/robot_ assembly.mp4`,
       `${import.meta.env.BASE_URL}projects/ID2/model 6.png`,
       `${import.meta.env.BASE_URL}projects/ID2/Mapping.png`,
       `${import.meta.env.BASE_URL}projects/ID2/Navigation.png`,
@@ -157,24 +156,25 @@ export const PROJECTS: Project[] = [
 
     The challenge required balancing aggressive object removal with controlled movement to avoid falling off the table itself. After experimenting with multiple pushing mechanisms, we settled on a rotating hammer design that could sweep objects efficiently while maintaining stability.
 
-    Rick and Roll claimed 1st Place and "Best Design" at the Intake 38 Mechatronics Systems Design Competition, demonstrating that simple, well-executed mechanical solutions often outperform complex alternatives.`,
-    tags: ['Arduino', 'Mechanics', 'Prototyping', 'Competition'],
+    The result: first place in the competition. The robot's success came from optimizing the hammer's rotation speed and timing to maximize sweep coverage while the differential drive system maintained precise table-edge awareness.`,
+    tags: ['Arduino', 'Motor Control', 'Sensors', 'Competition', 'Mechatronics'],
     gallery: [
       `${import.meta.env.BASE_URL}projects/ID3/rick vid.mp4`,
-      `${import.meta.env.BASE_URL}projects/ID3/rick robot.jpg`
+      `${import.meta.env.BASE_URL}projects/ID3/rick robot.jpg`,
     ],
     details: [
-      'Rotating hammer mechanism for efficient object clearance',
-      'Arduino-based autonomous control system',
-      'Iterative prototyping of multiple pushing mechanisms',
-      '1st Place and Best Design Award - KDU FOE Competition'
+      'Differential drive for precise maneuvering',
+      'Rotating hammer mechanism for 360° object clearance',
+      'IR and ultrasonic sensors for table-edge detection',
+      'Arduino-based control with custom sweep algorithms',
+      '1st Place - KDU Sweep the Table Competition'
     ]
   },
   {
     id: '4',
-    title: 'Prediction of CAD Using Artificial Neural Networks',
-    description: 'A machine learning model for early prediction and diagnosis of Coronary Artery Disease achieving ~90% accuracy.',
-    longDescription: `Coronary Artery Disease is one of the leading causes of death worldwide. Early detection can be life-saving, but traditional diagnostic methods often miss subtle patterns in patient data that indicate risk.
+    title: 'Coronary Artery Disease Prediction Using ANN',
+    description: 'A neural network model achieving ~90% accuracy in predicting coronary artery disease from clinical data.',
+    longDescription: `Coronary Artery Disease (CAD) remains a leading cause of death worldwide, often developing silently until a critical event occurs. Early detection significantly improves outcomes, but traditional diagnostic methods can be invasive, expensive, or require specialized equipment not available in all clinical settings.
 
     This project develops an Artificial Neural Network that analyzes clinical data—demographics, medical history, and diagnostic test results—to predict CAD with approximately 90% accuracy. By identifying at-risk individuals earlier, healthcare providers can intervene sooner with lifestyle changes or treatment, potentially reducing mortality rates.
 
@@ -265,7 +265,7 @@ export const SKILLS: SkillCategory[] = [
       { name: 'SLAM/Navigation', level: 80 }
     ]
   },
-    {
+  {
     title: 'Programming & AI',
     icon: 'Code',
     skills: [
@@ -335,3 +335,296 @@ export const PROCESS_STEPS: ProcessStep[] = [
     image: ''
   }
 ];
+
+// =========================================
+// 🧪 THOUGHT LAB DATA
+// =========================================
+/*
+ * ====================================================================================
+ * HOW TO ADD CONTENT TO YOUR ARTICLES:
+ * ====================================================================================
+ * 
+ * Each article uses "contentBlocks" - an array of different block types.
+ * Mix and match these blocks in any order to create your article:
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ * 📝 TEXT BLOCK - Regular paragraph
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ *    { type: 'text', content: 'Your paragraph text here. Can be multiple sentences.' }
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ * 📌 HEADING BLOCK - Section titles
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ *    { type: 'heading', content: 'My Section Title', level: 2 }   // Big heading
+ *    { type: 'heading', content: 'Smaller Subsection', level: 3 } // Smaller heading
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ * 🖼️ IMAGE BLOCK - Image with caption
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ *    { 
+ *      type: 'image', 
+ *      src: '/thought-lab/my-robot.jpg',           // Path in public folder
+ *      caption: 'My robot during initial testing',  // Optional caption below image
+ *      alt: 'Robot on test bench'                   // Optional alt text
+ *    }
+ * 
+ *    For external images:
+ *    { type: 'image', src: 'https://example.com/image.jpg', caption: 'External image' }
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ * 🎬 VIDEO BLOCK - Video with caption (YouTube or local)
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ *    YouTube:
+ *    { 
+ *      type: 'video', 
+ *      src: 'https://www.youtube.com/watch?v=VIDEO_ID', 
+ *      caption: 'Demo of the walking gait' 
+ *    }
+ * 
+ *    Local video (put in public folder):
+ *    { 
+ *      type: 'video', 
+ *      src: '/thought-lab/demo.mp4', 
+ *      caption: 'Testing in the lab' 
+ *    }
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ * 💬 QUOTE BLOCK - Highlighted quote
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ *    { 
+ *      type: 'quote', 
+ *      content: 'The best way to predict the future is to invent it.', 
+ *      author: 'Alan Kay'  // Optional
+ *    }
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ * 📋 LIST BLOCK - Bullet or numbered list
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ *    Bullet list:
+ *    { type: 'list', items: ['First point', 'Second point', 'Third point'] }
+ * 
+ *    Numbered list:
+ *    { type: 'list', items: ['Step one', 'Step two', 'Step three'], ordered: true }
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ * ➖ DIVIDER BLOCK - Horizontal line separator
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ *    { type: 'divider' }
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ * 💡 CALLOUT BLOCK - Highlighted info box
+ * ─────────────────────────────────────────────────────────────────────────────────────
+ *    { type: 'callout', content: 'Important note here!', variant: 'info' }
+ *    { type: 'callout', content: 'Warning message', variant: 'warning' }
+ *    { type: 'callout', content: 'Pro tip for readers', variant: 'tip' }
+ * 
+ * ====================================================================================
+ * EXAMPLE ARTICLE WITH ALL BLOCK TYPES:
+ * ====================================================================================
+ * See the first article 'foundation-models' below for a complete example!
+ */
+
+export const THOUGHT_LAB_DATA: ThoughtLabData = {
+  pageTitle: 'THOUGHT LAB',
+  pageSubtitle: '// PERSPECTIVES ON ROBOTICS & INTELLIGENT SYSTEMS',
+  introduction: `This is my personal space for exploring and sharing perspectives on the evolving landscape of robotics and AI. Here, I document my thoughts on emerging technologies, practical challenges, and the philosophical questions that arise when building intelligent machines. These aren't formal papers—they're candid reflections from someone working in the trenches of robotics development.`,
+  ctaTitle: 'THOUGHT LAB',
+  ctaSubtitle: 'Explore my perspectives on current robotics topics',
+  articles: [
+    // =====================================================================
+    // EXAMPLE ARTICLE - Shows how to use all content block types
+    // Change status to 'published' when you add your real content
+    // =====================================================================
+    {
+      id: 'foundation-models',
+      title: 'Foundation Models for Robotics',
+      subtitle: 'Can large-scale AI transform physical manipulation?',
+      icon: 'Brain',
+      coverImage: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
+      introduction: 'Exploring how transformer-based models and large-scale training are reshaping robotic manipulation and decision-making.',
+      tags: ['Foundation Models', 'Transformers', 'Manipulation'],
+      status: 'coming-soon',  // Change to 'published' when ready
+      readTime: '8 min read',
+      contentBlocks: [
+        // Example of all block types - replace with your real content:
+        
+        { type: 'text', content: 'This is where your first paragraph goes. Introduce the topic and set the context for your readers.' },
+        
+        { type: 'heading', content: 'The Current Landscape', level: 2 },
+        
+        { type: 'text', content: 'Another paragraph explaining the current state of foundation models in robotics. You can write as much as you want here.' },
+        
+        { 
+          type: 'image', 
+          src: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80', 
+          caption: 'Example: A humanoid robot representing current advances in robotics',
+          alt: 'Humanoid robot'
+        },
+        
+        { type: 'text', content: 'Continue your explanation after the image. The caption below the image helps explain what the reader is seeing.' },
+        
+        { type: 'heading', content: 'Key Challenges', level: 3 },
+        
+        { 
+          type: 'list', 
+          items: [
+            'Sim-to-real transfer gaps remain significant',
+            'Data collection for robotics is expensive and slow',
+            'Safety constraints limit exploration during training',
+            'Generalization across environments is difficult'
+          ] 
+        },
+        
+        { 
+          type: 'callout', 
+          content: 'Pro tip: When testing new models, always start with simulation before deploying to real hardware.', 
+          variant: 'tip' 
+        },
+        
+        { type: 'text', content: 'Here is more text explaining your thoughts on the challenges listed above.' },
+        
+        { 
+          type: 'quote', 
+          content: 'The goal is not to replace human judgment but to augment human capabilities.', 
+          author: 'Anonymous Roboticist' 
+        },
+        
+        { type: 'divider' },
+        
+        { type: 'heading', content: 'My Experiments', level: 2 },
+        
+        { type: 'text', content: 'Describe your own experiments or observations here.' },
+        
+        { 
+          type: 'video', 
+          src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Replace with your actual video
+          caption: 'Example video - replace with your own demo footage'
+        },
+        
+        { type: 'text', content: 'Explain what the video shows and what conclusions you draw from it.' },
+        
+        { 
+          type: 'callout', 
+          content: 'Warning: Results may vary significantly based on hardware and environmental conditions.', 
+          variant: 'warning' 
+        },
+        
+        { type: 'heading', content: 'Conclusions', level: 2 },
+        
+        { type: 'text', content: 'Wrap up your article with final thoughts and what you think the future holds for this topic.' }
+      ]
+    },
+    
+    // =====================================================================
+    // REMAINING ARTICLES - Currently set as 'coming-soon'
+    // =====================================================================
+    {
+      id: 'generalization-vs-messiness',
+      title: 'Robot Generalization vs. Real-World Messiness',
+      subtitle: 'Why lab demos fail in the wild',
+      icon: 'AlertTriangle',
+      coverImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
+      introduction: 'The gap between controlled experiments and chaotic reality—and how we might bridge it.',
+      tags: ['Generalization', 'Real-World Robotics', 'Deployment'],
+      status: 'coming-soon',
+      readTime: '6 min read',
+      contentBlocks: []
+    },
+    {
+      id: 'human-robot-collaboration',
+      title: 'Human–Robot Collaboration and Safety',
+      subtitle: 'Building trust between humans and machines',
+      icon: 'Users',
+      coverImage: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80',
+      introduction: 'How do we design robots that work alongside humans safely and intuitively?',
+      tags: ['Cobots', 'Safety', 'HRI'],
+      status: 'coming-soon',
+      readTime: '7 min read',
+      contentBlocks: []
+    },
+    {
+      id: 'edge-ai-robots',
+      title: 'Edge AI on Robots',
+      subtitle: 'Running intelligence at the edge',
+      icon: 'Cpu',
+      coverImage: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80',
+      introduction: 'The challenges and opportunities of running ML models directly on robotic hardware.',
+      tags: ['Edge AI', 'Jetson', 'TensorRT', 'Optimization'],
+      status: 'coming-soon',
+      readTime: '10 min read',
+      contentBlocks: []
+    },
+    {
+      id: 'modular-vs-monolithic',
+      title: 'Modular vs. Monolithic Robot Architectures',
+      subtitle: 'Build vs. buy, integrate vs. develop',
+      icon: 'Blocks',
+      coverImage: 'https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?w=800&q=80',
+      introduction: 'When should you use off-the-shelf components versus building custom solutions?',
+      tags: ['Architecture', 'System Design', 'Trade-offs'],
+      status: 'coming-soon',
+      readTime: '9 min read',
+      contentBlocks: []
+    },
+    {
+      id: 'affordable-manipulators',
+      title: 'Affordable Robotic Manipulators',
+      subtitle: 'Democratizing robotic arms',
+      icon: 'Hand',
+      coverImage: 'https://images.unsplash.com/photo-1561144257-e32e8efc6c4f?w=800&q=80',
+      introduction: 'The rise of low-cost robot arms and what it means for research and small-scale automation.',
+      tags: ['Manipulators', 'Affordable Robotics', 'Automation'],
+      status: 'coming-soon',
+      readTime: '8 min read',
+      contentBlocks: []
+    },
+    {
+      id: 'ethics-autonomous-decisions',
+      title: 'Ethics of Autonomous Decision-Making',
+      subtitle: 'When machines make choices',
+      icon: 'Scale',
+      coverImage: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80',
+      introduction: 'The moral implications of robots that act without human intervention.',
+      tags: ['Ethics', 'Autonomy', 'Philosophy'],
+      status: 'coming-soon',
+      readTime: '12 min read',
+      contentBlocks: []
+    },
+    {
+      id: 'llms-as-planners',
+      title: 'LLMs as High-Level Planners',
+      subtitle: 'Language models meet robotics',
+      icon: 'MessageSquare',
+      coverImage: 'https://images.unsplash.com/photo-1676299081847-824916de030a?w=800&q=80',
+      introduction: 'Can ChatGPT-style models serve as the "brain" for robotic task planning?',
+      tags: ['LLM', 'Planning', 'Task Decomposition'],
+      status: 'coming-soon',
+      readTime: '10 min read',
+      contentBlocks: []
+    },
+    {
+      id: 'ros2-interoperability',
+      title: 'ROS2 Interoperability Realities',
+      subtitle: 'The promise vs. the practice',
+      icon: 'GitBranch',
+      coverImage: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=80',
+      introduction: 'Real-world experiences integrating ROS2 with various hardware and software stacks.',
+      tags: ['ROS2', 'Integration', 'Middleware'],
+      status: 'coming-soon',
+      readTime: '11 min read',
+      contentBlocks: []
+    },
+    {
+      id: 'robotics-regulations',
+      title: 'Robotics Regulations and AI Safety Policies',
+      subtitle: 'Navigating the regulatory landscape',
+      icon: 'Shield',
+      coverImage: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80',
+      introduction: 'An overview of emerging regulations affecting robotics and autonomous systems.',
+      tags: ['Regulations', 'Safety Standards', 'Compliance'],
+      status: 'coming-soon',
+      readTime: '9 min read',
+      contentBlocks: []
+    }
+  ]
+};
