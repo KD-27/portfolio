@@ -32,16 +32,68 @@ interface ThoughtLabArticlePageProps {
 // CONTENT BLOCK RENDERERS
 // =========================================
 
+// Turns raw URLs inside a string into clickable neon links
+const URL_REGEX = /(https?:\/\/[^\s]+)/g;
+const linkify = (text: string): React.ReactNode => {
+  const parts = text.split(URL_REGEX);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    URL_REGEX.test(part) ? (
+      <a
+        key={i}
+        href={part}
+        target="_blank"
+        rel="noreferrer"
+        className="text-neon-blue hover:text-neon-purple underline decoration-neon-blue/40 hover:decoration-neon-purple/60 underline-offset-2 break-all transition-colors"
+      >
+        {part}
+      </a>
+    ) : (
+      <React.Fragment key={i}>{part}</React.Fragment>
+    )
+  );
+};
+
 const TextBlock: React.FC<{ content: string }> = ({ content }) => (
-  <p className="text-gray-300 leading-relaxed mb-6">{content}</p>
+  <p className="text-gray-300 leading-relaxed mb-6">{linkify(content)}</p>
 );
 
-const HeadingBlock: React.FC<{ content: string; level?: 2 | 3 }> = ({ content, level = 2 }) => {
-  if (level === 3) {
-    return <h3 className="text-xl font-bold text-white mt-8 mb-4">{content}</h3>;
+const HeadingBlock: React.FC<{ content: string; level?: 2 | 3 | 4 }> = ({ content, level = 2 }) => {
+  if (level === 4) {
+    return (
+      <h4 className="text-lg font-semibold text-gray-300 mt-6 mb-3 tracking-wide">
+        {content}
+      </h4>
+    );
   }
-  return <h2 className="text-2xl font-bold text-white mt-12 mb-6">{content}</h2>;
+  if (level === 3) {
+    return (
+      <h3 className="text-xl font-bold text-neon-blue mt-8 mb-4">
+        {content}
+      </h3>
+    );
+  }
+  return (
+    <h2 className="text-2xl md:text-3xl font-bold text-white mt-14 mb-6 pb-3 border-b border-white/10">
+      {content}
+    </h2>
+  );
 };
+
+const EQUATION_FONT = "'JetBrains Mono', 'Fira Code', Menlo, Consolas, 'Courier New', monospace";
+
+const EquationBlock: React.FC<{ content: string }> = ({ content }) => (
+  <div className="my-6 flex justify-center">
+    <div className="max-w-full overflow-x-auto px-6 py-4 rounded-lg bg-mech-dark border border-neon-blue/25 shadow-[0_0_20px_rgba(0,243,255,0.08)]">
+      <p
+        className="text-center text-base md:text-lg text-neon-blue whitespace-nowrap"
+        style={{ fontFamily: EQUATION_FONT, letterSpacing: '0.02em' }}
+      >
+        {content}
+      </p>
+    </div>
+  </div>
+);
 
 const ImageBlock: React.FC<{ src: string; caption?: string; alt?: string }> = ({ src, caption, alt }) => (
   <figure className="my-8">
@@ -76,8 +128,8 @@ const VideoBlock: React.FC<{ src: string; caption?: string }> = ({ src, caption 
   };
 
   return (
-    <figure className="my-8">
-      <div className="aspect-video rounded-lg overflow-hidden border border-white/10 bg-black relative">
+    <figure className="my-8 group w-full sm:w-3/5 mx-auto">
+      <div className="aspect-video rounded-lg overflow-hidden border border-white/10 group-hover:border-neon-blue/40 bg-black relative shadow-lg shadow-black/40 transition-colors duration-300">
         {isYouTube ? (
           <iframe
             src={getEmbedUrl(src)}
@@ -86,9 +138,9 @@ const VideoBlock: React.FC<{ src: string; caption?: string }> = ({ src, caption 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
         ) : (
-          <video 
-            src={src} 
-            controls 
+          <video
+            src={src}
+            controls
             className="w-full h-full"
             preload="metadata"
           >
@@ -98,8 +150,8 @@ const VideoBlock: React.FC<{ src: string; caption?: string }> = ({ src, caption 
         )}
       </div>
       {caption && (
-        <figcaption className="mt-3 text-sm text-gray-500 text-center italic flex items-center justify-center gap-2">
-          <Play size={12} />
+        <figcaption className="mt-3 text-sm text-gray-400 text-center flex items-center justify-center gap-2 font-mono">
+          <Play size={12} className="text-neon-blue" />
           {caption}
         </figcaption>
       )}
@@ -119,9 +171,18 @@ const QuoteBlock: React.FC<{ content: string; author?: string }> = ({ content, a
 const ListBlock: React.FC<{ items: string[]; ordered?: boolean }> = ({ items, ordered }) => {
   const ListTag = ordered ? 'ol' : 'ul';
   return (
-    <ListTag className={`my-6 pl-6 space-y-2 ${ordered ? 'list-decimal' : 'list-disc'}`}>
+    <ListTag className="my-6 space-y-3">
       {items.map((item, idx) => (
-        <li key={idx} className="text-gray-300">{item}</li>
+        <li key={idx} className="flex items-start gap-3 text-gray-300 leading-relaxed">
+          {ordered ? (
+            <span className="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full border border-neon-blue/40 text-neon-blue text-xs font-mono flex items-center justify-center">
+              {idx + 1}
+            </span>
+          ) : (
+            <span className="flex-shrink-0 mt-2 w-1.5 h-1.5 rounded-full bg-neon-purple shadow-[0_0_6px_rgba(188,19,254,0.7)]" />
+          )}
+          <span>{linkify(item)}</span>
+        </li>
       ))}
     </ListTag>
   );
@@ -169,27 +230,44 @@ const CalloutBlock: React.FC<{ content: string; variant?: 'info' | 'warning' | '
 };
 
 // Main content block renderer
-const ContentBlockRenderer: React.FC<{ block: ContentBlock; index: number }> = ({ block }) => {
-  switch (block.type) {
-    case 'text':
-      return <TextBlock content={block.content} />;
-    case 'heading':
-      return <HeadingBlock content={block.content} level={block.level} />;
-    case 'image':
-      return <ImageBlock src={block.src} caption={block.caption} alt={block.alt} />;
-    case 'video':
-      return <VideoBlock src={block.src} caption={block.caption} />;
-    case 'quote':
-      return <QuoteBlock content={block.content} author={block.author} />;
-    case 'list':
-      return <ListBlock items={block.items} ordered={block.ordered} />;
-    case 'divider':
-      return <DividerBlock />;
-    case 'callout':
-      return <CalloutBlock content={block.content} variant={block.variant} />;
-    default:
-      return null;
-  }
+const ContentBlockRenderer: React.FC<{ block: ContentBlock; index: number }> = ({ block, index }) => {
+  const rendered = (() => {
+    switch (block.type) {
+      case 'text':
+        return <TextBlock content={block.content} />;
+      case 'heading':
+        return <HeadingBlock content={block.content} level={block.level} />;
+      case 'image':
+        return <ImageBlock src={block.src} caption={block.caption} alt={block.alt} />;
+      case 'video':
+        return <VideoBlock src={block.src} caption={block.caption} />;
+      case 'quote':
+        return <QuoteBlock content={block.content} author={block.author} />;
+      case 'list':
+        return <ListBlock items={block.items} ordered={block.ordered} />;
+      case 'divider':
+        return <DividerBlock />;
+      case 'callout':
+        return <CalloutBlock content={block.content} variant={block.variant} />;
+      case 'equation':
+        return <EquationBlock content={block.content} />;
+      default:
+        return null;
+    }
+  })();
+
+  if (block.type === 'divider') return rendered;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay: Math.min(index * 0.02, 0.2) }}
+    >
+      {rendered}
+    </motion.div>
+  );
 };
 
 // =========================================

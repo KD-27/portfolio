@@ -72,15 +72,16 @@ export interface Achievement {
  *    { type: 'callout', content: 'Important note here', variant: 'info' }  // info, warning, or tip
  */
 
-export type ContentBlock = 
+export type ContentBlock =
   | { type: 'text'; content: string }
-  | { type: 'heading'; content: string; level?: 2 | 3 }
+  | { type: 'heading'; content: string; level?: 2 | 3 | 4 }
   | { type: 'image'; src: string; caption?: string; alt?: string }
   | { type: 'video'; src: string; caption?: string }
   | { type: 'quote'; content: string; author?: string }
   | { type: 'list'; items: string[]; ordered?: boolean }
   | { type: 'divider' }
-  | { type: 'callout'; content: string; variant?: 'info' | 'warning' | 'tip' };
+  | { type: 'callout'; content: string; variant?: 'info' | 'warning' | 'tip' }
+  | { type: 'equation'; content: string };
 
 export interface ThoughtLabArticle {
   id: string;

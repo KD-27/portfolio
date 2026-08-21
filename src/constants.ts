@@ -42,6 +42,13 @@ export const HERO_DATA = {
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };
 
+export const ABOUT_DATA = {
+  photo: `${import.meta.env.BASE_URL}my_pic.jpeg`,
+  bio: `I am a multidisciplinary engineer obsessed with making things move. With a background in Mechatronic Engineering, I thrive in the "messy middle" where hardware meets software.
+
+My goal is to build robust, intelligent robotic systems that solve real-world problems. Whether it's designing a custom PCB, machining a chassis, or writing ROS nodes, I love every step of the process.`
+};
+
 export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'a1',
@@ -432,199 +439,237 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
   ctaSubtitle: 'Explore my perspectives on current robotics topics',
   articles: [
     // =====================================================================
-    // EXAMPLE ARTICLE - Shows how to use all content block types
-    // Change status to 'published' when you add your real content
+    // Lazy Coulomb Planner - physics-inspired path planner (JS + ROS2 Nav2)
     // =====================================================================
     {
-      id: 'foundation-models',
-      title: 'Foundation Models for Robotics',
-      subtitle: 'Can large-scale AI transform physical manipulation?',
-      icon: 'Brain',
-      coverImage: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
-      introduction: 'Exploring how transformer-based models and large-scale training are reshaping robotic manipulation and decision-making.',
-      tags: ['Foundation Models', 'Transformers', 'Manipulation'],
-      status: 'coming-soon',  // Change to 'published' when ready
-      readTime: '8 min read',
-      contentBlocks: [
-        // Example of all block types - replace with your real content:
-        
-        { type: 'text', content: 'This is where your first paragraph goes. Introduce the topic and set the context for your readers.' },
-        
-        { type: 'heading', content: 'The Current Landscape', level: 2 },
-        
-        { type: 'text', content: 'Another paragraph explaining the current state of foundation models in robotics. You can write as much as you want here.' },
-        
-        { 
-          type: 'image', 
-          src: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80', 
-          caption: 'Example: A humanoid robot representing current advances in robotics',
-          alt: 'Humanoid robot'
-        },
-        
-        { type: 'text', content: 'Continue your explanation after the image. The caption below the image helps explain what the reader is seeing.' },
-        
-        { type: 'heading', content: 'Key Challenges', level: 3 },
-        
-        { 
-          type: 'list', 
-          items: [
-            'Sim-to-real transfer gaps remain significant',
-            'Data collection for robotics is expensive and slow',
-            'Safety constraints limit exploration during training',
-            'Generalization across environments is difficult'
-          ] 
-        },
-        
-        { 
-          type: 'callout', 
-          content: 'Pro tip: When testing new models, always start with simulation before deploying to real hardware.', 
-          variant: 'tip' 
-        },
-        
-        { type: 'text', content: 'Here is more text explaining your thoughts on the challenges listed above.' },
-        
-        { 
-          type: 'quote', 
-          content: 'The goal is not to replace human judgment but to augment human capabilities.', 
-          author: 'Anonymous Roboticist' 
-        },
-        
-        { type: 'divider' },
-        
-        { type: 'heading', content: 'My Experiments', level: 2 },
-        
-        { type: 'text', content: 'Describe your own experiments or observations here.' },
-        
-        { 
-          type: 'video', 
-          src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Replace with your actual video
-          caption: 'Example video - replace with your own demo footage'
-        },
-        
-        { type: 'text', content: 'Explain what the video shows and what conclusions you draw from it.' },
-        
-        { 
-          type: 'callout', 
-          content: 'Warning: Results may vary significantly based on hardware and environmental conditions.', 
-          variant: 'warning' 
-        },
-        
-        { type: 'heading', content: 'Conclusions', level: 2 },
-        
-        { type: 'text', content: 'Wrap up your article with final thoughts and what you think the future holds for this topic.' }
-      ]
-    },
-    
-    // =====================================================================
-    // REMAINING ARTICLES - Currently set as 'coming-soon'
-    // =====================================================================
-    {
-      id: 'generalization-vs-messiness',
-      title: 'Robot Generalization vs. Real-World Messiness',
-      subtitle: 'Why lab demos fail in the wild',
-      icon: 'AlertTriangle',
-      coverImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
-      introduction: 'The gap between controlled experiments and chaotic reality—and how we might bridge it.',
-      tags: ['Generalization', 'Real-World Robotics', 'Deployment'],
-      status: 'coming-soon',
-      readTime: '6 min read',
-      contentBlocks: []
-    },
-    {
-      id: 'human-robot-collaboration',
-      title: 'Human–Robot Collaboration and Safety',
-      subtitle: 'Building trust between humans and machines',
-      icon: 'Users',
-      coverImage: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80',
-      introduction: 'How do we design robots that work alongside humans safely and intuitively?',
-      tags: ['Cobots', 'Safety', 'HRI'],
-      status: 'coming-soon',
-      readTime: '7 min read',
-      contentBlocks: []
-    },
-    {
-      id: 'edge-ai-robots',
-      title: 'Edge AI on Robots',
-      subtitle: 'Running intelligence at the edge',
+      id: 'lazy-coulomb-planner',
+      title: 'Lazy Coulomb Planner',
+      subtitle: 'Core ideology and mathematical foundation of a physics-inspired path planner',
       icon: 'Cpu',
-      coverImage: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80',
-      introduction: 'The challenges and opportunities of running ML models directly on robotic hardware.',
-      tags: ['Edge AI', 'Jetson', 'TensorRT', 'Optimization'],
-      status: 'coming-soon',
-      readTime: '10 min read',
-      contentBlocks: []
-    },
-    {
-      id: 'modular-vs-monolithic',
-      title: 'Modular vs. Monolithic Robot Architectures',
-      subtitle: 'Build vs. buy, integrate vs. develop',
-      icon: 'Blocks',
-      coverImage: 'https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?w=800&q=80',
-      introduction: 'When should you use off-the-shelf components versus building custom solutions?',
-      tags: ['Architecture', 'System Design', 'Trade-offs'],
-      status: 'coming-soon',
-      readTime: '9 min read',
-      contentBlocks: []
-    },
-    {
-      id: 'affordable-manipulators',
-      title: 'Affordable Robotic Manipulators',
-      subtitle: 'Democratizing robotic arms',
-      icon: 'Hand',
-      coverImage: 'https://images.unsplash.com/photo-1561144257-e32e8efc6c4f?w=800&q=80',
-      introduction: 'The rise of low-cost robot arms and what it means for research and small-scale automation.',
-      tags: ['Manipulators', 'Affordable Robotics', 'Automation'],
-      status: 'coming-soon',
-      readTime: '8 min read',
-      contentBlocks: []
-    },
-    {
-      id: 'ethics-autonomous-decisions',
-      title: 'Ethics of Autonomous Decision-Making',
-      subtitle: 'When machines make choices',
-      icon: 'Scale',
-      coverImage: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80',
-      introduction: 'The moral implications of robots that act without human intervention.',
-      tags: ['Ethics', 'Autonomy', 'Philosophy'],
-      status: 'coming-soon',
-      readTime: '12 min read',
-      contentBlocks: []
-    },
-    {
-      id: 'llms-as-planners',
-      title: 'LLMs as High-Level Planners',
-      subtitle: 'Language models meet robotics',
-      icon: 'MessageSquare',
-      coverImage: 'https://images.unsplash.com/photo-1676299081847-824916de030a?w=800&q=80',
-      introduction: 'Can ChatGPT-style models serve as the "brain" for robotic task planning?',
-      tags: ['LLM', 'Planning', 'Task Decomposition'],
-      status: 'coming-soon',
-      readTime: '10 min read',
-      contentBlocks: []
-    },
-    {
-      id: 'ros2-interoperability',
-      title: 'ROS2 Interoperability Realities',
-      subtitle: 'The promise vs. the practice',
-      icon: 'GitBranch',
-      coverImage: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=80',
-      introduction: 'Real-world experiences integrating ROS2 with various hardware and software stacks.',
-      tags: ['ROS2', 'Integration', 'Middleware'],
-      status: 'coming-soon',
-      readTime: '11 min read',
-      contentBlocks: []
-    },
-    {
-      id: 'robotics-regulations',
-      title: 'Robotics Regulations and AI Safety Policies',
-      subtitle: 'Navigating the regulatory landscape',
-      icon: 'Shield',
-      coverImage: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80',
-      introduction: 'An overview of emerging regulations affecting robotics and autonomous systems.',
-      tags: ['Regulations', 'Safety Standards', 'Compliance'],
-      status: 'coming-soon',
-      readTime: '9 min read',
-      contentBlocks: []
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/lcp/Coverpage.jpeg`,
+      introduction: "The Lazy Coulomb Planner (LCP) treats navigation as a correction problem, not a search problem: start with a straight line from start to goal, and apply localized, physics-inspired corrections only where the path actually collides with an obstacle. Borrowing the inverse-square repulsion of Coulomb's Law from electrostatics, LCP aims for fast, interpretable path planning in open environments — implemented both as a JavaScript visualization and as a full ROS 2 Nav2 global planner plugin.",
+      tags: ['Path Planning', 'Physics-Inspired Robotics', 'ROS2 Nav2', 'Autonomous Navigation'],
+      status: 'published',
+      publishedDate: 'August 2026',
+      readTime: '15 min read',
+      contentBlocks: [
+        { type: 'heading', content: 'External References', level: 2 },
+
+        { type: 'heading', content: 'Stage 1 — JavaScript Visualization', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/main',
+            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7403726788021116928/'
+          ]
+        },
+        { type: 'heading', content: 'Demonstration', level: 4 },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid4.mp4`, caption: 'LCP Stage 1 demo' },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid1.mp4`, caption: 'LCP Stage 1 demo' },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid2.mp4`, caption: 'LCP Stage 1 demo' },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid3.mp4`, caption: 'LCP Stage 1 demo' },
+
+        { type: 'heading', content: 'Stage 2 — Nav2 Global Planner Plugin (ROS 2 Humble)', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/humble',
+            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7442531996205109250/'
+          ]
+        },
+        { type: 'heading', content: 'Demonstration', level: 4 },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid5.mp4`, caption: 'LCP Stage 2 — Nav2 global planner plugin demo' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'The Core Idea', level: 2 },
+        { type: 'quote', content: 'Assume the simplest path is valid — and only react when reality proves otherwise.' },
+        { type: 'text', content: "Most planners approach navigation as a search problem. They explore the environment, weigh costs across a grid or graph, and produce an optimal path before the robot moves a single meter. The Lazy Coulomb Planner (LCP) rejects this premise entirely." },
+        { type: 'text', content: 'LCP treats navigation as a correction problem:' },
+        {
+          type: 'list',
+          ordered: true,
+          items: [
+            'Start with the most optimistic assumption possible — a straight line from start to goal.',
+            'Do nothing until that assumption is proven wrong by a real collision.',
+            'When a failure is found, apply a localized, physics-inspired correction — and only at that failure point.',
+            'Repeat until no failures remain.'
+          ]
+        },
+        { type: 'text', content: "This is not laziness as a shortcut. It is laziness as a design principle: spend zero computation on paths that might never be needed, and spend targeted computation only where the environment demands it. The result is a planner that is fast in open environments, highly interpretable, and whose behavior you can trace step by step without inspecting a heatmap." },
+
+        { type: 'heading', content: "Physical Foundation — Coulomb's Law", level: 2 },
+        { type: 'text', content: "The correction mechanism is borrowed from electrostatics. Coulomb's Law describes the force between two point charges:" },
+        { type: 'equation', content: 'F = k · q₁q₂ / r²' },
+        {
+          type: 'list',
+          items: [
+            'F = force magnitude',
+            "k = Coulomb's constant",
+            'q₁, q₂ = charge magnitudes',
+            'r = distance between charges'
+          ]
+        },
+        { type: 'text', content: 'The critical insight is the r² denominator: force grows explosively as distance shrinks. An obstacle that is far away barely matters. An obstacle you are about to enter matters enormously. This is exactly the behavior you want from a repulsion mechanism in path planning.' },
+
+        { type: 'heading', content: 'Mapping to Path Planning', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'Obstacle → Negative point charge (repeller)',
+            'Blocked waypoint → Positive test particle (repelled)',
+            'r → Distance from waypoint to obstacle boundary',
+            'F → Displacement force applied to push waypoint clear'
+          ]
+        },
+        { type: 'text', content: 'LCP does not compute the full Coulomb sum over every obstacle in the environment. It applies the principle — nearby obstacles exert strong repulsion — at precisely the point where a path segment has entered collision.' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Complete Mathematical Foundation', level: 2 },
+
+        { type: 'heading', content: '1. Path Representation', level: 3 },
+        { type: 'text', content: 'A path is a finite ordered sequence of 2D points:' },
+        { type: 'equation', content: 'P = {p₀, p₁, …, pₙ},  pᵢ ∈ ℝ²' },
+        { type: 'text', content: 'At initialization, LCP sets:' },
+        { type: 'equation', content: 'P₀ = {Start, Goal}' },
+        { type: 'text', content: 'This is the laziest possible path — a single straight segment. All subsequent computation is about inserting and correcting intermediate points.' },
+
+        { type: 'heading', content: '2. Segment Parameterization', level: 3 },
+        { type: 'text', content: 'Any segment between two consecutive path points pᵢ and pᵢ₊₁ can be written as:' },
+        { type: 'equation', content: 'p(t) = pᵢ + t·(pᵢ₊₁ − pᵢ),  t ∈ [0, 1]' },
+        { type: 'text', content: 'This parameterization is used for two purposes:' },
+        {
+          type: 'list',
+          items: [
+            'Collision detection: sample p(t) at N values of t and test each sample against the costmap.',
+            'Intersection finding: the first t at which p(t) enters an obstacle gives the insertion point for a new waypoint.'
+          ]
+        },
+        { type: 'text', content: 'In the Nav2 implementation, the number of samples per segment is:' },
+        { type: 'equation', content: 'N = max( segment_check_steps, ⌈‖pᵢ₊₁ − pᵢ‖ / Δmap⌉ )' },
+        { type: 'text', content: 'where Δmap is the cost map resolution. This ensures no obstacle cell is skipped regardless of segment length.' },
+
+        { type: 'heading', content: '3. Collision Condition', level: 3 },
+        { type: 'text', content: 'A point (x, y) is considered in collision if its costmap cost C(x,y) meets or exceeds the lethal threshold:' },
+        { type: 'equation', content: 'C(x, y) ≥ C_lethal' },
+        { type: 'text', content: 'For circle-shaped obstacles (used in the JS visualisation), the geometric equivalent is:' },
+        { type: 'equation', content: '√((x − cₓ)² + (y − c_y)²) ≤ r_obs + ρ' },
+        { type: 'text', content: 'where ρ is an inflation radius added to guarantee a safety margin around the obstacle boundary. In the Nav2 plugin, this inflation is handled by the costmap’s own inflation layer — LCP reads the already-inflated cost directly.' },
+
+        { type: 'heading', content: '4. The Directional Constraint — Key Innovation', level: 3 },
+        { type: 'text', content: 'This is where LCP diverges most sharply from classical potential field planners.' },
+        { type: 'text', content: 'In a standard potential field, the repulsion force on a point has arbitrary direction — it pushes away from whatever obstacles are nearby, which can pull the path in unpredictable directions or trap it in local minima.' },
+        { type: 'text', content: 'LCP constrains all corrections to be perpendicular to the current path direction. This single constraint is what keeps detours minimal and behaviour interpretable.' },
+        { type: 'text', content: 'Given the two locked neighbours of the blocked waypoint p_new:' },
+        { type: 'equation', content: 'd = (p_next_locked − p_prev_locked) / ‖p_next_locked − p_prev_locked‖' },
+        { type: 'text', content: 'The two perpendicular directions are:' },
+        { type: 'equation', content: 'd_left = (−d_y, d_x)' },
+        { type: 'equation', content: 'd_right = (d_y, −d_x)' },
+        { type: 'text', content: 'The algorithm then probes outward in both directions (at cost map resolution steps) to find which side reaches free space first:' },
+        { type: 'equation', content: 'd_left_clear = min{ d | C(p_new + d·d_left) < C_lethal }' },
+        { type: 'equation', content: 'd_right_clear = min{ d | C(p_new + d·d_right) < C_lethal }' },
+        { type: 'text', content: 'The push direction is chosen as whichever side reaches free space with the shorter distance: F_push = d_left if d_left_clear ≤ d_right_clear, otherwise d_right.' },
+        { type: 'text', content: 'This means LCP always takes the shortest detour perpendicular to its heading — the detouring geometry is locally optimal even when the global path is not.' },
+
+        { type: 'heading', content: '5. The Discrete Motion Update', level: 3 },
+        { type: 'text', content: 'Once the push direction is determined, the blocked waypoint is iteratively displaced:' },
+        { type: 'equation', content: 'p_new^(k+1) = p_new^(k) + α · F̂_push' },
+        { type: 'text', content: 'Where:' },
+        {
+          type: 'list',
+          items: [
+            'α = step_size (metres per iteration)',
+            'F̂_push = unit vector in the push direction'
+          ]
+        },
+        { type: 'text', content: 'This repeats until C(p_new) < C_lethal or max_push_iterations is exhausted.' },
+        { type: 'text', content: 'The normalisation to a unit vector is important: it makes the displacement per iteration constant regardless of how many obstacles are nearby, giving predictable convergence behaviour.' },
+
+        { type: 'heading', content: '6. Force Balance Fallback', level: 3 },
+        { type: 'text', content: 'In rare cases — typically when the waypoint is centred symmetrically inside a narrow passage — both d_left_clear and d_right_clear may be equal, or the net force magnitude falls below the threshold ε:' },
+        { type: 'equation', content: '|F_push| < ε_balance' },
+        { type: 'text', content: 'When this happens, LCP applies a deterministic perturbation: it always pushes perpendicular-left by perturbation_strength. This breaks the symmetry without randomness, preserving deterministic behaviour across repeated plan requests.' },
+
+        { type: 'heading', content: '7. The Lock Mechanism', level: 3 },
+        { type: 'text', content: 'Once a waypoint has been pushed clear, it is locked. Locked points are never moved again. This is critical to correctness: without locking, a later correction could re-enter a point into an obstacle that a previous correction had already avoided.' },
+        { type: 'text', content: 'The path at any moment consists entirely of locked points. The algorithm terminates when a full scan of all segments finds no collision — meaning every locked point has been verified clear and every segment between them has been sampled.' },
+
+        { type: 'heading', content: '8. Chaikin Smoothing (Optional Post-Process)', level: 3 },
+        { type: 'text', content: "After the main loop, LCP can apply Chaikin's corner-cutting algorithm to smooth the piecewise-linear path into a curve. Given a sequence of control points, each pass generates two new points per segment:" },
+        { type: 'equation', content: 'qᵢ = (3/4)pᵢ + (1/4)pᵢ₊₁' },
+        { type: 'equation', content: 'rᵢ = (1/4)pᵢ + (3/4)pᵢ₊₁' },
+        { type: 'text', content: 'After n passes, the path converges toward a quadratic B-spline approximation of the control polygon. Crucially, start and goal points are pinned — they are never moved by Chaikin — so the path always begins and ends exactly at the requested poses.' },
+        { type: 'callout', variant: 'warning', content: 'Chaikin does not re-validate the smoothed path against the costmap. If the path is very close to obstacle boundaries, smoothing can potentially re-introduce small violations. In tight environments, this is worth checking, and it is one area flagged for future work.' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Full Algorithm Loop (Conceptual)', level: 2 },
+        {
+          type: 'list',
+          ordered: true,
+          items: [
+            'P ← {Start, Goal} — the laziest possible initialisation. lock(Start), lock(Goal).',
+            'While iterations < max_iterations: find the first segment in P that intersects an obstacle. If none exists, the path is solved — break.',
+            'p_new ← entry point of the collision on that segment; insert p_new into P right after the segment’s start.',
+            'While p_new is inside the obstacle and push_iters < max_push_iters: determine the push direction from p_new’s locked neighbours, then p_new ← p_new + α·d, push_iters++.',
+            'lock(p_new) — it will never move again. Remove all unlocked intermediates, keeping only locked points.',
+            'If enable_smoothing, apply Chaikin smoothing to P.',
+            'Return P.'
+          ]
+        },
+        { type: 'text', content: 'The scan always restarts from the beginning of the path after each fix. This is by design: a correction at segment i can change the geometry in a way that affects segments i−1 or earlier.' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'LCP vs. Traditional Planners', level: 2 },
+        {
+          type: 'list',
+          items: [
+            'Search space — LCP: path segments only · A*/Dijkstra: full grid · Potential Fields: full grid',
+            'Computation on empty paths — LCP: minimal · A*/Dijkstra: full grid expansion · Potential Fields: full field computation',
+            'Local minima — LCP: not susceptible (perpendicular push) · A*/Dijkstra: not susceptible · Potential Fields: susceptible',
+            'Path interpretability — LCP: very high · A*/Dijkstra: moderate · Potential Fields: low',
+            'Narrow corridors — LCP: struggles · A*/Dijkstra: handles well · Potential Fields: struggles',
+            'Dynamic replanning speed — LCP: fast (short paths re-plan quickly) · A*/Dijkstra: slow (re-expands grid) · Potential Fields: moderate',
+            'Optimality — LCP: not globally optimal · A*/Dijkstra: globally optimal (with admissible heuristic) · Potential Fields: not optimal',
+            'Determinism — LCP: full (no randomness) · A*/Dijkstra: full · Potential Fields: full'
+          ]
+        },
+        { type: 'text', content: "LCP occupies a distinct niche: it is not trying to compete with A* on optimality. It trades global optimality for speed, interpretability, and computational locality. In open environments with scattered obstacles — which describes most outdoor robotics and warehouse navigation scenarios — LCP's straight-line-first assumption is correct most of the time, and corrections are cheap." },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Design Philosophy — Why "Lazy" is the Right Word', level: 2 },
+        { type: 'text', content: 'The name is not just a quip. There is a formal sense in which LCP embodies lazy evaluation from functional programming: computation is deferred until the result is demanded. A* eagerly evaluates the entire search space to find the optimal path. LCP evaluates nothing until a segment actually fails.' },
+        { type: 'text', content: "This has a useful property: if the environment is mostly open, LCP solves in very few iterations, potentially just one or two corrections. A* would still need to expand its full grid. In those cases, LCP's solution quality is essentially indistinguishable from optimal (a straight line with small detours), achieved at a fraction of the cost." },
+        { type: 'text', content: 'The flip side is honest: when the environment is dense, LCP may struggle to find corrections that work, and A* or Smac should be used. LCP is designed to know its own limits, which is why the Nav2 plugin documents its failure modes explicitly and recommends fallback strategies.' },
+        { type: 'quote', content: 'Why plan ahead when physics can push you around?', author: 'Kaveesha Dhananjaya' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Known Limitations & Future Work', level: 2 },
+        { type: 'heading', content: 'Current Limitations', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'Narrow corridors: the perpendicular-push approach works best when there is open space on at least one side. In tight passages where both sides have obstacles at similar distances, the algorithm can fail to clear the point within max_push_iterations.',
+            'Chaikin re-validation: smoothing is applied as a post-process and does not re-check the cost map. Near obstacle boundaries, smoothed paths may clip.',
+            'No path shortcutting: LCP only adds points; it never re-evaluates whether existing locked points could be removed if later corrections make them redundant. This can lead to slightly longer paths than necessary.'
+          ]
+        },
+        { type: 'heading', content: 'Planned Improvements', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'Hybrid fallback: detect narrow-corridor failure and switch to A* / Smac for that segment',
+            'Adaptive force scaling: increase α when far from free space, reduce it as the boundary approaches (analogous to variable step size in ODE solvers)',
+            'Dynamic obstacle support: re-flag locked points as unlocked when the underlying cost map changes',
+            'Post-lock shortcutting: after full solution, attempt to remove redundant locked points by checking if their neighboring segments are obstacle-free',
+            'Smoothing re-validation: run a lightweight cost map check on the Chaikin-smoothed path and revert locally if violations are introduced'
+          ]
+        }
+      ]
     }
   ]
 };

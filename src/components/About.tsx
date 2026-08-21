@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Download, Github, Linkedin, Mail } from 'lucide-react';
-import { SOCIAL_LINKS } from '../constants';
+import { SOCIAL_LINKS, ABOUT_DATA } from '../constants';
 
 const About: React.FC = () => {
   return (
@@ -11,13 +11,11 @@ const About: React.FC = () => {
         <div className="bg-mech-surface p-8 rounded-2xl shadow-xl border border-gray-800">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-neon-blue shadow-[0_0_20px_rgba(0,243,255,0.3)] flex-shrink-0">
-              <img src="https://picsum.photos/300/300?grayscale" alt="Profile" className="w-full h-full object-cover" />
+              <img src={ABOUT_DATA.photo} alt="Kaveesha Dhananjaya" className="w-full h-full object-cover" />
             </div>
             <div className="text-left">
-              <p className="text-gray-300 mb-6 text-lg leading-relaxed">
-                I am a multidisciplinary engineer obsessed with making things move. With a background in Mechatronic Engineering, I thrive in the "messy middle" where hardware meets software.
-                <br/><br/>
-                My goal is to build robust, intelligent robotic systems that solve real-world problems. Whether it's designing a custom PCB, machining a chassis, or writing ROS nodes, I love every step of the process.
+              <p className="text-gray-300 mb-6 text-lg leading-relaxed whitespace-pre-line">
+                {ABOUT_DATA.bio}
               </p>
               
               <div className="flex flex-wrap gap-4">
