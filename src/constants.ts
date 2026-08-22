@@ -1,26 +1,19 @@
 /*
  * ====================================================================================
- * 🛒 CONTENT DATABASE
+ * CONTENT DATABASE
  * ====================================================================================
- * 
- * HOW TO ADD YOUR OWN IMAGES:
- * 1. Create a folder named "public" in your main project folder (next to src, package.json, etc).
- * 2. Drag and drop your image files (e.g., "my-face.jpg", "robot.png") into that "public" folder.
- * 3. In this file below, change the image path to just the filename with a slash:
- *    Example: image: '/my-face.jpg'
- * 
- * HOW TO ADD VIDEOS:
- * 1. You can use a YouTube link OR a local file in the public folder.
- * 2. Add the 'video' property to your project object.
- *    Example: video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
- *    Example: video: '/my-robot-demo.mp4'
- * 
- * HOW TO ADD RESUME:
- * 1. Put your PDF file in the "public" folder (e.g., "resume.pdf").
- * 2. Update the 'resume' field in SOCIAL_LINKS below to '/resume.pdf'.
  *
- * HOW TO UPDATE SITE:
- * ⚠️ IMPORTANT: After changing this file, you MUST run 'npm run deploy' for changes to appear online.
+ * All site copy, project data, research papers, achievements, and Thought Lab
+ * content live here rather than inside components. Assets referenced below are
+ * served from the `public/` folder and must be prefixed with
+ * `import.meta.env.BASE_URL` (the Vite base path, currently '/portfolio/') so
+ * links resolve correctly both in dev and on GitHub Pages.
+ *
+ * A `Project` entry's media lives in `gallery: string[]` (images and/or video
+ * file paths / YouTube URLs, first item doubles as the card thumbnail) — see
+ * the `Project` interface in types.ts for the exact shape.
+ *
+ * Changes here only go live after running `npm run deploy`.
  */
 
 import type { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement, ThoughtLabData } from './types';
@@ -433,10 +426,10 @@ export const PROCESS_STEPS: ProcessStep[] = [
 
 export const THOUGHT_LAB_DATA: ThoughtLabData = {
   pageTitle: 'THOUGHT LAB',
-  pageSubtitle: '// PERSPECTIVES ON ROBOTICS & INTELLIGENT SYSTEMS',
-  introduction: `This is my personal space for exploring and sharing perspectives on the evolving landscape of robotics and AI. Here, I document my thoughts on emerging technologies, practical challenges, and the philosophical questions that arise when building intelligent machines. These aren't formal papers—they're candid reflections from someone working in the trenches of robotics development.`,
+  pageSubtitle: '// PERSPECTIVES & PROJECTS ON ROBOTICS, AI & INTELLIGENT SYSTEMS',
+  introduction: `This is my personal space for thinking out loud and building things at the intersection of robotics and AI. It's split into two halves: written perspectives on emerging technologies, practical challenges, and the questions that come up while building intelligent systems, and hands-on projects where I use AI as a collaborator to build real, working tools. None of this is formal — it's candid reflections and working software from someone in the trenches.`,
   ctaTitle: 'THOUGHT LAB',
-  ctaSubtitle: 'Explore my perspectives on current robotics topics',
+  ctaSubtitle: 'Explore my perspectives and AI-built projects',
   articles: [
     // =====================================================================
     // Lazy Coulomb Planner - physics-inspired path planner (JS + ROS2 Nav2)
@@ -446,6 +439,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       title: 'Lazy Coulomb Planner',
       subtitle: 'Core ideology and mathematical foundation of a physics-inspired path planner',
       icon: 'Cpu',
+      category: 'perspective',
       coverImage: `${import.meta.env.BASE_URL}thought_lab/lcp/Coverpage.jpeg`,
       introduction: "The Lazy Coulomb Planner (LCP) treats navigation as a correction problem, not a search problem: start with a straight line from start to goal, and apply localized, physics-inspired corrections only where the path actually collides with an obstacle. Borrowing the inverse-square repulsion of Coulomb's Law from electrostatics, LCP aims for fast, interpretable path planning in open environments — implemented both as a JavaScript visualization and as a full ROS 2 Nav2 global planner plugin.",
       tags: ['Path Planning', 'Physics-Inspired Robotics', 'ROS2 Nav2', 'Autonomous Navigation'],
@@ -669,6 +663,85 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
             'Smoothing re-validation: run a lightweight cost map check on the Chaikin-smoothed path and revert locally if violations are introduced'
           ]
         }
+      ]
+    },
+
+    // =====================================================================
+    // Monthly Plan - self-help gamified daily discipline tracker
+    // =====================================================================
+    {
+      id: 'monthly-plan',
+      title: 'Monthly Plan',
+      subtitle: 'A self-help gamified daily discipline tracker, modeled on the "System" from Solo Leveling',
+      icon: 'Trophy',
+      category: 'project',
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/Calender-view.png`,
+      introduction: "Monthly Plan is a private, single-page daily discipline tracker built for exactly one user: me. Every day is a quest with assigned tasks, the day locks in at midnight, and failing a task costs points instead of just earning none. It's not a neutral habit checklist — the penalty is the point. It was designed and built end-to-end through iterative collaboration with Claude, from the scoring engine's math to the local server architecture.",
+      tags: ['Gamification', 'Self-Improvement', 'Habit Tracking', 'Claude', 'Local-First'],
+      status: 'published',
+      publishedDate: 'August 2026',
+      readTime: '6 min read',
+      contentBlocks: [
+        { type: 'heading', content: 'Why It Exists', level: 2 },
+        { type: 'text', content: "Monthly Plan exists to keep one person honest about a daily routine — diet, gym, water, sleep, spending, and weight — by scoring each day out of 100 and turning the run into a visible rank and set of titles. It was built after the previous version's log was silently wiped by Chrome clearing local storage, so the whole architecture is designed around one hard rule: opening the app must never require a manual step, or the log goes cold and the habit dies with it." },
+
+        { type: 'heading', content: 'How It Runs', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'A launcher script starts a tiny stdlib-only Python server on localhost and opens the app in its own dedicated Chrome app-window profile, isolated from normal browsing so clearing browser data can never touch it again.',
+            'A JSON file next to the app is the single source of truth — written atomically (temp file + replace) with a rolling backup copy. The server shuts itself down once the window closes.',
+            "If Python isn't available, the app falls back to a plain file:// page backed by localStorage, so it still works, just without durable file storage."
+          ]
+        },
+
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/Calender-view.png`, caption: 'Calendar view — a full month grid, each day colored by score band' },
+
+        { type: 'heading', content: 'Core Features', level: 2 },
+        {
+          type: 'list',
+          items: [
+            'Calendar view — full month grid colored by score band (Good / Moderate / Bad / in progress), with a running month summary.',
+            'Day sheet — tap any day to check off ~15 weighted tasks grouped into All day / Morning / Afternoon / Evening / Night, with a live 0–100 score bar.',
+            'Analytics view — weekly score trend, gym attendance table, spending chart against a daily budget line, and weight progress toward target.',
+            'Gym / rest day toggle — the morning task set reshapes itself depending on the day type, while both variants still sum to 100.',
+            'CSV sync — the log can be linked directly to a .csv file on disk (e.g. inside a synced Drive folder) via the File System Access API.'
+          ]
+        },
+
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/day-sheet.png`, caption: 'Day sheet — tasks grouped by time of day, with a live score bar' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'The Design Signature: Penalty-Based Scoring', level: 2 },
+        { type: 'quote', content: "An unchecked task actively subtracts its weight rather than simply not adding — it mirrors a game system's daily quest penalty, not a forgiving habit tracker." },
+        { type: 'text', content: 'The score runs −100 to +100, not 0–100. Two tasks (10 AM and 3 PM plain tea) are flagged as bonus: they add points if done but cost nothing if skipped — the one intentional exception to the penalty model. Missing the weekly 4-session gym target docks that week\'s average by a flat 5 points, without touching or repainting any individual day\'s score.' },
+
+        { type: 'heading', content: 'Dual Rank System', level: 3 },
+        { type: 'text', content: "Rank (E → D → C → B → A → S) is a rolling 7-day average that can rise or fall, with a 3-day confirmation before promotion and a 3-day grace period before demotion, so one great or one bad day can't whipsaw the rank. Rank history is never stored — it's replayed live from the score log, so editing a past day retroactively and correctly rewrites the whole rank timeline." },
+        { type: 'text', content: "Weekly body-weight and daily spending are deliberately kept outside the 100-point score — logged, charted, and totaled, but never penalized. Each instead earns its own title track as it improves, a boundary that reflects that biology and money don't answer to willpower the way a checklist does." },
+
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/rank-titles.png`, caption: 'Rank and title progression' },
+
+        { type: 'heading', content: 'Analytics', level: 3 },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weekly.png`, caption: 'Weekly score trend and gym attendance' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-spending.png`, caption: 'Spending tracked against a daily budget line' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weight.png`, caption: 'Weight progress toward target' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Data & Backups', level: 2 },
+        {
+          type: 'list',
+          items: [
+            'The live log is the single source of truth for everything — no derived state (rank, streaks, titles) is stored anywhere, it\'s all recomputed on load.',
+            'An automatic previous-copy backup is refreshed on every save.',
+            'A damaged file is quarantined to its own timestamped file rather than silently discarded, and the app starts fresh instead of crashing.',
+            'A linked CSV copy (optional, e.g. on Google Drive) serves as a portable, human-readable spare.'
+          ]
+        },
+
+        { type: 'callout', content: 'Visiting with ?demo=1 loads sample data from a completely separate storage key — the real log is never read or written while demoing.', variant: 'tip' }
       ]
     }
   ]

@@ -1,26 +1,12 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { 
-  ArrowLeft, Clock, Calendar, Tag, Share2, 
-  Brain, AlertTriangle, Users, Cpu, Blocks, Hand, 
-  Scale, MessageSquare, GitBranch, Shield, FlaskConical,
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ArrowLeft, Clock, Calendar, Tag, Share2, Check,
   Construction, Info, AlertCircle, Lightbulb, Play
 } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
 import type { ContentBlock } from '../types';
-
-const iconMap: Record<string, React.ReactNode> = {
-  Brain: <Brain size={24} />,
-  AlertTriangle: <AlertTriangle size={24} />,
-  Users: <Users size={24} />,
-  Cpu: <Cpu size={24} />,
-  Blocks: <Blocks size={24} />,
-  Hand: <Hand size={24} />,
-  Scale: <Scale size={24} />,
-  MessageSquare: <MessageSquare size={24} />,
-  GitBranch: <GitBranch size={24} />,
-  Shield: <Shield size={24} />
-};
+import { getThoughtLabIcon } from '../utils/thoughtLabIcons';
 
 interface ThoughtLabArticlePageProps {
   articleId: string;
@@ -277,8 +263,20 @@ const ContentBlockRenderer: React.FC<{ block: ContentBlock; index: number }> = (
 const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({ 
   articleId, 
   onBack,
-  onBackToLab 
+  onBackToLab
 }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard access denied or unavailable — nothing to fall back to here.
+    }
+  };
+
   const article = THOUGHT_LAB_DATA.articles.find(a => a.id === articleId);
   
   if (!article) {
@@ -312,15 +310,30 @@ const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Thought Lab
           </button>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(window.location.href);
-            }}
-            className="p-2 text-gray-400 hover:text-neon-purple transition-colors"
-            title="Copy link"
-          >
-            <Share2 size={18} />
-          </button>
+          <div className="relative flex items-center">
+            <AnimatePresence>
+              {copied && (
+                <motion.span
+                  initial={{ opacity: 0, x: 8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 8 }}
+                  transition={{ duration: 0.2 }}
+                  aria-live="polite"
+                  className="absolute right-full mr-2 whitespace-nowrap text-xs font-mono text-neon-green"
+                >
+                  Link copied
+                </motion.span>
+              )}
+            </AnimatePresence>
+            <button
+              onClick={handleCopyLink}
+              className={`p-2 transition-colors ${copied ? 'text-neon-green' : 'text-gray-400 hover:text-neon-purple'}`}
+              title="Copy link"
+              aria-label={copied ? 'Link copied' : 'Copy article link'}
+            >
+              {copied ? <Check size={18} /> : <Share2 size={18} />}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -344,7 +357,7 @@ const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({
             >
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-14 h-14 rounded-xl bg-neon-purple/20 border border-neon-purple/40 flex items-center justify-center text-neon-purple">
-                  {iconMap[article.icon] || <FlaskConical size={24} />}
+                  {getThoughtLabIcon(article.icon, 24)}
                 </div>
                 {isComingSoon && (
                   <span className="px-3 py-1 bg-neon-purple/20 border border-neon-purple/40 rounded-full text-xs font-mono text-neon-purple">

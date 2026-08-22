@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Cpu, Zap } from 'lucide-react';
+import { Menu, X, Cpu } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,34 +40,23 @@ const Navbar: React.FC = () => {
             <span className="font-mono font-bold text-xl tracking-wider text-white">KD<span className="text-neon-blue">.DEV</span></span>
           </div>
           
-          <div className="hidden md:flex items-center gap-8">
-            <div className="flex items-baseline space-x-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="font-mono text-sm text-gray-300 hover:text-neon-blue transition-colors duration-200"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
-            {/* Flashy Tap Me Button */}
-            <a 
-              href="#fun" 
-              className="relative group px-6 py-2 bg-gradient-to-r from-neon-blue to-neon-purple rounded-full font-mono font-bold text-white text-sm overflow-hidden shadow-[0_0_15px_rgba(188,19,254,0.5)] hover:scale-105 transition-transform"
-            >
-               <span className="relative z-10 flex items-center gap-2">
-                 TAP ME <Zap size={14} className="fill-white" />
-               </span>
-               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-               <div className="absolute inset-0 rounded-full ring-2 ring-white/50 animate-ping opacity-30"></div>
-            </a>
+          <div className="hidden md:flex items-baseline space-x-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="font-mono text-sm text-gray-300 hover:text-neon-blue transition-colors duration-200"
+              >
+                {link.name}
+              </a>
+            ))}
           </div>
 
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
               className="text-gray-300 hover:text-white focus:outline-none"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -93,13 +82,6 @@ const Navbar: React.FC = () => {
                 {link.name}
               </a>
             ))}
-            <a
-                href="#fun"
-                onClick={() => setIsOpen(false)}
-                className="text-white bg-neon-purple/20 border border-neon-purple hover:bg-neon-purple block px-3 py-2 rounded-md text-base font-medium font-mono mt-4 text-center"
-              >
-                TAP ME TO PLAY
-            </a>
           </div>
         </div>
       )}

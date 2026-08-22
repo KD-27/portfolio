@@ -3,27 +3,27 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Cpu, CheckCircle2 } from 'lucide-react';
 
+const BOOT_SEQUENCE = [
+  "INITIALIZING KERNEL...",
+  "LOADING MEMORY MODULES...",
+  "CALIBRATING SENSORS...",
+  "CHECKING SYSTEM INTEGRITY...",
+  "ESTABLISHING NEURAL LINK...",
+  "RENDERING INTERFACE...",
+  "ACCESS GRANTED."
+];
+
 const BootLoader: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
   const [logs, setLogs] = useState<string[]>([]);
-
-  const bootSequence = [
-    "INITIALIZING KERNEL...",
-    "LOADING MEMORY MODULES...",
-    "CALIBRATING SENSORS...",
-    "CHECKING SYSTEM INTEGRITY...",
-    "ESTABLISHING NEURAL LINK...",
-    "RENDERING INTERFACE...",
-    "ACCESS GRANTED."
-  ];
 
   useEffect(() => {
     let currentLog = 0;
     
     // Log interval - SLOWED DOWN to 800ms per line
     const logInterval = setInterval(() => {
-      if (currentLog < bootSequence.length) {
-        setLogs(prev => [...prev, bootSequence[currentLog]]);
+      if (currentLog < BOOT_SEQUENCE.length) {
+        setLogs(prev => [...prev, BOOT_SEQUENCE[currentLog]]);
         currentLog++;
       }
     }, 800);

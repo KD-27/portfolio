@@ -1,25 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  FlaskConical, ArrowLeft, Clock, ChevronRight,
-  Brain, AlertTriangle, Users, Cpu, Blocks, Hand, 
-  Scale, MessageSquare, GitBranch, Shield
+import {
+  FlaskConical, ArrowLeft, Clock, ChevronRight, Sparkles
 } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
 import type { ThoughtLabArticle } from '../types';
-
-const iconMap: Record<string, React.ReactNode> = {
-  Brain: <Brain size={20} />,
-  AlertTriangle: <AlertTriangle size={20} />,
-  Users: <Users size={20} />,
-  Cpu: <Cpu size={20} />,
-  Blocks: <Blocks size={20} />,
-  Hand: <Hand size={20} />,
-  Scale: <Scale size={20} />,
-  MessageSquare: <MessageSquare size={20} />,
-  GitBranch: <GitBranch size={20} />,
-  Shield: <Shield size={20} />
-};
+import { getThoughtLabIcon } from '../utils/thoughtLabIcons';
 
 interface ThoughtLabPageProps {
   onBack: () => void;
@@ -39,6 +25,15 @@ const ArticleCard: React.FC<{
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, duration: 0.5 }}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`Read ${article.title}`}
       className={`group relative bg-mech-surface border border-white/5 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:border-neon-purple/30 hover:shadow-[0_0_30px_rgba(188,19,254,0.1)] ${isComingSoon ? 'opacity-80' : ''}`}
     >
       <div className="relative h-44 overflow-hidden">
@@ -50,7 +45,7 @@ const ArticleCard: React.FC<{
         <div className="absolute inset-0 bg-gradient-to-t from-mech-surface via-mech-surface/50 to-transparent" />
         
         <div className="absolute top-4 left-4 w-10 h-10 rounded-lg bg-mech-dark/80 backdrop-blur-sm border border-white/10 flex items-center justify-center text-neon-purple">
-          {iconMap[article.icon] || <FlaskConical size={20} />}
+          {getThoughtLabIcon(article.icon, 20)}
         </div>
 
         {isComingSoon && (
@@ -97,6 +92,8 @@ const ArticleCard: React.FC<{
 
 const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onBack, onSelectArticle }) => {
   const publishedArticles = THOUGHT_LAB_DATA.articles.filter(a => a.status !== 'draft');
+  const perspectives = publishedArticles.filter(a => a.category !== 'project');
+  const aiProjects = publishedArticles.filter(a => a.category === 'project');
 
   return (
     <div className="min-h-screen bg-mech-dark">
@@ -154,20 +151,57 @@ const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onBack, onSelectArticle
         </div>
       </section>
 
-      <section className="py-12 md:py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {publishedArticles.map((article, index) => (
-              <ArticleCard 
-                key={article.id} 
-                article={article} 
-                index={index}
-                onClick={() => onSelectArticle(article.id)}
-              />
-            ))}
+      {perspectives.length > 0 && (
+        <section className="py-12 md:py-16">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-lg bg-neon-blue/10 border border-neon-blue/30 flex items-center justify-center text-neon-blue">
+                <FlaskConical size={18} />
+              </div>
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold font-mono text-white">Perspectives</h2>
+                <p className="text-sm text-gray-500">Essays and technical deep dives</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {perspectives.map((article, index) => (
+                <ArticleCard
+                  key={article.id}
+                  article={article}
+                  index={index}
+                  onClick={() => onSelectArticle(article.id)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {aiProjects.length > 0 && (
+        <section className="py-12 md:py-16">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-lg bg-neon-purple/10 border border-neon-purple/30 flex items-center justify-center text-neon-purple">
+                <Sparkles size={18} />
+              </div>
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold font-mono text-white">Built with AI</h2>
+                <p className="text-sm text-gray-500">Apps and tools I've built with AI as a collaborator</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {aiProjects.map((article, index) => (
+                <ArticleCard
+                  key={article.id}
+                  article={article}
+                  index={index}
+                  onClick={() => onSelectArticle(article.id)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <footer className="py-12 border-t border-white/5">
         <div className="max-w-6xl mx-auto px-4 text-center">

@@ -95,6 +95,8 @@ export interface ThoughtLabArticle {
   status: 'published' | 'draft' | 'coming-soon';
   publishedDate?: string;
   readTime?: string;
+  /** 'perspective' = written essays/analysis (default). 'project' = built AI projects/apps. */
+  category?: 'perspective' | 'project';
 }
 
 export interface ThoughtLabData {

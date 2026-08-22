@@ -43,9 +43,19 @@ const Achievements: React.FC = () => {
       </div>
 
       {/* Marquee Container */}
-      <div 
+      <div
         className="relative w-full flex gap-8 overflow-hidden cursor-pointer"
         onClick={() => setIsPaused(!isPaused)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsPaused(!isPaused);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-pressed={isPaused}
+        aria-label={isPaused ? 'Resume achievements scroll' : 'Pause achievements scroll'}
       >
         {/* First Track */}
         <div 

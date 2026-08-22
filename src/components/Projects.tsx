@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, ChevronLeft, ChevronRight, Maximize2, X, Layers, Code, Cpu, Play } from 'lucide-react';
 import { PROJECTS } from '../constants';
@@ -8,6 +8,14 @@ const Projects: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const openProject = (project: Project) => {
+    setSelectedProject(project);
+    setActiveMediaIndex(0);
+  };
+
+  const closeProject = () => setSelectedProject(null);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -21,11 +29,17 @@ const Projects: React.FC = () => {
     };
   }, [selectedProject]);
 
-  // Reset active media when modal opens
+  // Close on Escape and move focus into the dialog when it opens
   useEffect(() => {
-    if (selectedProject) {
-      setActiveMediaIndex(0);
-    }
+    if (!selectedProject) return;
+
+    modalRef.current?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeProject();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedProject]);
 
   const handleNext = () => {
@@ -128,15 +142,17 @@ const Projects: React.FC = () => {
         <div className="relative h-[500px] md:h-[600px] flex items-center justify-center perspective-1000">
           
           {/* Navigation Controls */}
-          <button 
+          <button
             onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+            aria-label="Previous project"
             className="absolute left-2 md:left-10 z-40 p-4 bg-mech-surface/80 text-white rounded-full hover:bg-neon-blue hover:text-black transition-all border border-white/10 backdrop-blur-md shadow-lg group"
           >
             <ChevronLeft size={28} className="group-hover:-translate-x-1 transition-transform" />
           </button>
-          
-          <button 
+
+          <button
             onClick={(e) => { e.stopPropagation(); handleNext(); }}
+            aria-label="Next project"
             className="absolute right-2 md:right-10 z-40 p-4 bg-mech-surface/80 text-white rounded-full hover:bg-neon-blue hover:text-black transition-all border border-white/10 backdrop-blur-md shadow-lg group"
           >
             <ChevronRight size={28} className="group-hover:translate-x-1 transition-transform" />
@@ -162,8 +178,17 @@ const Projects: React.FC = () => {
                   onClick={() => {
                     if (position === 'left') handlePrev();
                     else if (position === 'right') handleNext();
-                    else if (position === 'center') setSelectedProject(project);
+                    else if (position === 'center') openProject(project);
                   }}
+                  onKeyDown={(e) => {
+                    if (isCenter && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      openProject(project);
+                    }
+                  }}
+                  role={isCenter ? 'button' : undefined}
+                  tabIndex={isCenter ? 0 : undefined}
+                  aria-label={isCenter ? `View details for ${project.title}` : undefined}
                   className={`absolute w-[85%] md:w-[65%] bg-mech-surface rounded-xl overflow-hidden border shadow-2xl flex flex-col cursor-pointer
                     ${isCenter ? 'border-neon-blue/40' : 'border-white/5 hover:border-white/20'}`}
                   style={{
@@ -248,18 +273,24 @@ const Projects: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-8 bg-black/90 backdrop-blur-lg"
-            onClick={() => setSelectedProject(null)}
+            onClick={closeProject}
           >
             <motion.div
+              ref={modalRef}
               initial={{ scale: 0.9, y: 50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 50 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-mech-surface w-full max-w-6xl max-h-[90vh] rounded-2xl border border-neon-blue/30 shadow-[0_0_50px_rgba(0,243,255,0.1)] overflow-hidden flex flex-col relative"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="project-modal-title"
+              tabIndex={-1}
+              className="bg-mech-surface w-full max-w-6xl max-h-[90vh] rounded-2xl border border-neon-blue/30 shadow-[0_0_50px_rgba(0,243,255,0.1)] overflow-hidden flex flex-col relative outline-none"
             >
                {/* Close Button */}
-               <button 
-                 onClick={() => setSelectedProject(null)}
+               <button
+                 onClick={closeProject}
+                 aria-label="Close project details"
                  className="absolute top-4 right-4 z-50 p-2 bg-black/50 text-white rounded-full hover:bg-red-500 hover:text-white transition-colors border border-white/10"
                >
                  <X size={24} />
@@ -322,12 +353,22 @@ const Projects: React.FC = () => {
                              const isActive = idx === activeMediaIndex;
                              
                              return (
-                               <div 
-                                 key={idx} 
+                               <div
+                                 key={idx}
                                  onClick={() => setActiveMediaIndex(idx)}
+                                 onKeyDown={(e) => {
+                                   if (e.key === 'Enter' || e.key === ' ') {
+                                     e.preventDefault();
+                                     setActiveMediaIndex(idx);
+                                   }
+                                 }}
+                                 role="button"
+                                 tabIndex={0}
+                                 aria-label={`View media ${idx + 1}`}
+                                 aria-pressed={isActive}
                                  className={`relative aspect-square rounded overflow-hidden cursor-pointer transition-all duration-200 group
-                                   ${isActive 
-                                     ? 'ring-2 ring-neon-blue border-neon-blue' 
+                                   ${isActive
+                                     ? 'ring-2 ring-neon-blue border-neon-blue'
                                      : 'border border-white/10 hover:border-neon-blue/50'
                                    }`}
                                >
@@ -379,7 +420,7 @@ const Projects: React.FC = () => {
                  {/* Right: Content (Scrollable) */}
                  <div className="w-full md:w-1/2 p-8 overflow-y-auto custom-scrollbar">
                     <div className="mb-6">
-                       <h2 className="text-3xl md:text-4xl font-mono font-bold text-white mb-4">{selectedProject.title}</h2>
+                       <h2 id="project-modal-title" className="text-3xl md:text-4xl font-mono font-bold text-white mb-4">{selectedProject.title}</h2>
                        <div className="flex flex-wrap gap-2 mb-6">
                           {selectedProject.tags.map(tag => (
                             <span key={tag} className="px-3 py-1 text-sm font-mono font-bold bg-neon-blue/10 text-neon-blue border border-neon-blue/20 rounded-full">
