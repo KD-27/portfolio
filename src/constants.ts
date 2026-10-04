@@ -206,7 +206,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     id: 'p4',
     title: 'FusionGrasp: A Modular Framework for Integrating Heterogeneous 6D Grasp Planners for Multimodal Cluttered Sorting',
     abstract: 'FusionGrasp integrates independently trained 6D grasp planners for multimodal cluttered waste sorting without retraining or labelled grasp outcomes. A quantile-based confidence harmonisation layer makes their scores comparable, and real-world UR10 experiments achieved a 74.53% grasp success rate, exceeding both single-modality baselines.',
-    image: `${import.meta.env.BASE_URL}research_papers/FusionGrasp.png`,
+    image: `${import.meta.env.BASE_URL}research_papers/FusionGrasp_paper.png`,
     link: '#',
     publisher: 'Australasian Conference on Robotics and Automation (ACRA)',
     date: 'Under Review',
