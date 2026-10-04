@@ -1041,7 +1041,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       readTime: '5 min read',
       contentBlocks: [
         { type: 'heading', content: 'The Build', level: 2 },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/board.jpg`, caption: 'The finished perfboard: OLED, ESP32-C3 SuperMini, power switch, LED resistors and the three knobs' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/board.jpg`, caption: 'Component placement on the perfboard before wiring: OLED, ESP32-C3 SuperMini, power switch, LED resistors and the three knobs' },
         { type: 'list', items: [
           'ESP32-C3 SuperMini, clocked down to 80 MHz with the radio never started',
           '3 × 10 kΩ linear potentiometers on the ADC1 pins',
