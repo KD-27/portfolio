@@ -5,6 +5,7 @@ import {
   Construction, Info, AlertCircle, Lightbulb, Play,
   Download, BarChart3, Crosshair, BookOpen, PenLine, Mic, Clapperboard, Package,
   Monitor, Smartphone, Image as ImageIcon, FileText, CornerDownRight, Workflow,
+  Cpu, Wifi, Compass, Activity, Footprints, Ruler, Gauge, SlidersHorizontal, Filter,
   type LucideIcon
 } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
@@ -257,8 +258,12 @@ const CalloutBlock: React.FC<{ content: string; variant?: 'info' | 'warning' | '
 
 const FLOW_ICONS: Record<string, LucideIcon> = {
   Download, BarChart3, Crosshair, BookOpen, PenLine, Mic, Clapperboard, Package,
-  Monitor, Smartphone, Image: ImageIcon, FileText
+  Monitor, Smartphone, Image: ImageIcon, FileText,
+  Cpu, Wifi, Compass, Activity, Footprints, Ruler, Gauge, SlidersHorizontal, Filter, Lightbulb
 };
+
+// Static class names so Tailwind keeps them; the output grid matches the fork's branch count
+const OUTPUT_COLS = ['', 'md:grid-cols-1', 'md:grid-cols-2', 'md:grid-cols-3', 'md:grid-cols-4'];
 
 // Phases are colored in order of first appearance: blue -> purple -> green
 const PHASE_STYLES = [
@@ -348,18 +353,21 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
           transition={{ duration: 0.5 }}
         >
           {/* Fork: the spine splits into one branch per output */}
-          <div className="relative h-12 mx-5 md:mx-[12.5%]">
+          <div className="relative h-12 mx-5 md:mx-0">
             <div className="absolute left-0 md:left-1/2 -translate-x-1/2 top-0 h-8 w-px bg-neon-green/50" />
-            <div className="hidden md:block absolute top-8 left-0 right-0 h-px bg-neon-green/50" />
+            <div
+              className="hidden md:block absolute top-8 h-px bg-neon-green/50"
+              style={{ left: `${50 / outputs.length}%`, right: `${50 / outputs.length}%` }}
+            />
             {outputs.length > 1 && outputs.map((out, i) => (
               <div
                 key={out.label}
                 className="hidden md:block absolute top-8 h-4 w-px bg-neon-green/50 -translate-x-1/2"
-                style={{ left: `${(i / (outputs.length - 1)) * 100}%` }}
+                style={{ left: `${((i + 0.5) / outputs.length) * 100}%` }}
               />
             ))}
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className={`grid grid-cols-2 ${OUTPUT_COLS[Math.min(outputs.length, 4)]} gap-3`}>
             {outputs.map(out => {
               const Icon = FLOW_ICONS[out.icon ?? ''] ?? Package;
               return (
@@ -380,6 +388,28 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
     </figure>
   );
 };
+
+// =========================================
+// GALLERY BLOCK
+// =========================================
+
+const GalleryBlock: React.FC<{ images: { src: string; caption?: string }[]; caption?: string }> = ({ images, caption }) => (
+  <figure className="my-8">
+    <div className={`grid grid-cols-2 ${images.length % 3 === 0 ? 'md:grid-cols-3' : ''} gap-3`}>
+      {images.map(img => (
+        <div key={img.src}>
+          <div className="rounded-lg overflow-hidden border border-white/10 bg-mech-surface hover:border-neon-blue/40 transition-colors">
+            <img src={img.src} alt={img.caption || caption || 'Gallery image'} className="w-full aspect-[4/3] object-cover" loading="lazy" />
+          </div>
+          {img.caption && <p className="mt-2 text-xs text-gray-500 text-center font-mono">{img.caption}</p>}
+        </div>
+      ))}
+    </div>
+    {caption && (
+      <figcaption className="mt-4 text-sm text-gray-500 text-center italic">{caption}</figcaption>
+    )}
+  </figure>
+);
 
 // =========================================
 // TIMELINE BLOCK
@@ -485,6 +515,8 @@ const ContentBlockRenderer: React.FC<{ block: ContentBlock; index: number }> = (
         return <FlowBlock steps={block.steps} outputs={block.outputs} caption={block.caption} />;
       case 'timeline':
         return <TimelineBlock entries={block.entries} />;
+      case 'gallery':
+        return <GalleryBlock images={block.images} caption={block.caption} />;
       default:
         return null;
     }

@@ -888,6 +888,218 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
           ]
         }
       ]
+    },
+
+    // =====================================================================
+    // Seven-IMU Gait Monitor - wearable gait deviation detector
+    // =====================================================================
+    {
+      id: 'gait-imu-monitor',
+      title: 'Seven-IMU Gait Monitor',
+      subtitle: 'A wearable that learns how I walk, then tells me what changed and when',
+      icon: 'Footprints',
+      category: 'hardware',
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cover.jpg`,
+      introduction: "Seven motion sensors strapped to the thighs, shins, feet and lower back, one ESP32-S3 at the waist, and a Wi-Fi stream into a Python pipeline that turns raw accelerometer and gyroscope readings into knee, hip and ankle angles. The goal was narrow and testable: record one good walk to learn what normal looks like for me, then check any other walk against it and say what was wrong and when. On a deliberately stiff-kneed walk it flagged the right joint in the right 45–86 second window, without being told the fault was there.",
+      tags: ['Wearables', 'ESP32-S3', 'IMU Sensor Fusion', 'Gait Analysis', 'Python', 'SolidWorks'],
+      status: 'published',
+      publishedDate: 'October 2026',
+      readTime: '9 min read',
+      contentBlocks: [
+        { type: 'heading', content: 'The Idea', level: 2 },
+        { type: 'text', content: "Gait labs use force plates and optical motion capture. I wanted to see how far a cheap wearable could get with the simplest useful question: is this walk different from my own normal one? Comparing against my own baseline instead of a textbook curve sidesteps most of the accuracy problems of cheap sensors. The system doesn't need to know the true hip angle. It only needs to measure the same thing the same way twice." },
+        { type: 'quote', content: "Faults are local in time, so detection has to be local in time too." },
+
+        { type: 'heading', content: 'The Hardware', level: 2 },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/kit.jpg`, caption: 'The harness: waist band with the electronics, and six leg bands with printed sensor mounts' },
+        { type: 'list', items: [
+          'ESP32-S3 at the waist, streaming over Wi-Fi',
+          '7 × MPU6050 6-axis IMUs: thigh, shank and foot on each leg, plus one on the pelvis',
+          'TCA9548A I²C multiplexer, one sensor per channel',
+          'Buzzer on the waist band for on-device alerts, plus a vibration module for haptic feedback (not yet wired in)',
+          '3D-printed sensor mounts and electronics housing designed in SolidWorks, on Velcro straps',
+          'JST connectors at every segment so the harness can be taken apart'
+        ] },
+        { type: 'callout', content: "Every MPU6050 has the same I²C address (0x68), so only one can be on the bus at a time. The multiplexer switches between them, which means the seven sensors are never sampled at exactly the same moment. Each reading carries its own microsecond timestamp so the pipeline can line them back up, and almost every later design decision follows from this.", variant: 'info' },
+        {
+          type: 'gallery',
+          images: [
+            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cad_waist.jpg`, caption: 'Waist band (CAD)' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cad_sensor.jpg`, caption: 'Sensor mount (CAD)' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cover.jpg`, caption: 'Waist electronics' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/straps.jpg`, caption: 'Printed sensor mounts' }
+          ]
+        },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'The Build, Phase by Phase', level: 2 },
+        { type: 'text', content: "I built it in small verified steps, one sensor on its own first, so that every new problem had only one new thing that could be causing it. That paid off more than once." },
+        {
+          type: 'timeline',
+          entries: [
+            {
+              label: 'PHASE 1',
+              title: 'Hardware bring-up',
+              detail: "One sensor wired straight to the ESP32, then through the multiplexer, then all seven. Two channels failed on the first full test; swapping sensors between channels showed the fault moved with the jumper wires, not the sensors. On the soldered harness the bus went completely silent. After stripping back to a breadboard to prove nothing was damaged, the cause turned out to be the multiplexer's power wire soldered one pin over.",
+              stat: { value: '7 / 7', label: 'sensors answering through the mux' },
+              added: ['Mux channel scanner', 'Soldered harness', 'JST leads']
+            },
+            {
+              label: 'PHASE 2',
+              title: 'Timestamped capture and Wi-Fi streaming',
+              detail: "A paced round-robin loop reads all seven sensors 150 times a second and packs each sweep into a 126-byte binary frame with a sequence number, sent over a WebSocket to a browser dashboard. The first 5-minute test had 18 pauses of about 0.18 s each. The frames were intact, but the stream kept stalling. The cause was Wi-Fi modem power-saving, and one line (WiFi.setSleep(false)) fixed it.",
+              stat: { value: '0.004%', label: 'dropped samples after the fix (was ~1%)' },
+              added: ['WebSocket stream', 'Live dashboard', 'Capture validator'],
+              media: [{ type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/live_stream.mp4`, caption: 'The live dashboard: all seven sensors at 150 Hz, tapping one lights up its lane' }]
+            },
+            {
+              label: 'PHASE 3',
+              title: 'From raw signals to joint angles',
+              detail: "One complementary filter per body segment fuses the gyroscope (smooth but drifts) with the accelerometer (noisy but drift-free). Heel strikes from the foot sensors cut the walk into strides, each one stretched onto a 0–100% gait cycle. The first right-knee curve peaked in completely the wrong place because only the thigh's sign was being corrected, not the shank's. Fixing that took the left/right difference from 37° down to 5°.",
+              stat: { value: '5.2°', label: 'left vs right knee difference over the gait cycle' },
+              added: ['Complementary filter', 'Heel-strike detection', 'Stride normalization'],
+              media: [{ type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/gaitcycle.jpg`, caption: 'Normalized knee gait cycle, mean ± SD across strides, both legs' }]
+            },
+            {
+              label: 'PHASE 4',
+              title: 'Calibration and fault detection',
+              detail: "A short routine at the start of each session (stand, sit, extend each knee, flex each ankle) pins down how every sensor is actually sitting on the leg. Then the real test: a walk that was normal for the first half, then deliberately stiff-kneed. Averaging all its strides only showed a mild change. Tracking knee swing in short windows along the walk showed the fault clearly, and exactly when it started and stopped.",
+              stat: { value: '45–86 s', label: 'fault window found without being told' },
+              added: ['Per-session calibration', 'Windowed detector', 'gait_monitor.py'],
+              media: [{ type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/alert.jpg`, caption: 'Alert timeline: knee swing per window against my normal band. Red = under-flexion, grey = standing' }]
+            }
+          ]
+        },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'How the Pipeline Works', level: 2 },
+        {
+          type: 'flow',
+          steps: [
+            { title: 'Sample', detail: 'The mux selects each sensor in turn for a 14-byte burst read, timestamped to the microsecond. 150 sweeps a second.', icon: 'Cpu', phase: 'CAPTURE', tools: ['ESP32-S3', 'TCA9548A', 'MPU6050'] },
+            { title: 'Stream', detail: 'One binary frame per sweep over a WebSocket. A sequence number makes any dropped frame countable.', icon: 'Wifi', phase: 'CAPTURE', tools: ['WebSocket', 'Wi-Fi'], note: 'Modem power-save caused stalls → WiFi.setSleep(false)' },
+            { title: 'Calibrate', detail: "A short movement routine finds each segment's bending axis for this wearing of the rig.", icon: 'Compass', phase: 'MEASURE', tools: ['Python', 'NumPy'] },
+            { title: 'Orient', detail: 'A complementary filter per segment gives a drift-free angle. Knee = thigh − shank.', icon: 'Activity', phase: 'MEASURE', tools: ['Complementary filter'] },
+            { title: 'Segment', detail: 'Heel strikes split the walk into strides, each normalized to 0–100%. Turning strides are rejected using the pelvis sensor.', icon: 'Footprints', phase: 'MEASURE', tools: ['NumPy'] },
+            { title: 'Learn normal', detail: 'One good walk becomes a personal reference band for knee swing.', icon: 'Ruler', phase: 'JUDGE', tools: ['reference_band.json'] },
+            { title: 'Check', detail: 'Slide a 4 s window along a new walk, compare against the band, skip standing, group the red windows into fault episodes with a severity.', icon: 'Gauge', phase: 'JUDGE', tools: ['gait_monitor.py'] }
+          ],
+          outputs: [
+            { label: 'Alert timeline', detail: 'what & when', icon: 'BarChart3' },
+            { label: 'Cycle overlay', detail: 'which part of the stride', icon: 'Activity' },
+            { label: 'Browser analyzer', detail: 'no install', icon: 'Monitor' },
+            { label: 'JSON report', detail: 'episodes + severity', icon: 'FileText' }
+          ],
+          caption: 'From strapping on the rig to a verdict on a walk'
+        },
+
+        { type: 'heading', content: 'The Lesson: Don\'t Average a Fault Away', level: 2 },
+        { type: 'text', content: "My first attempt pooled every stride of the faulty walk into one average and compared it against normal. The result was a weak, everywhere-at-once change of a few degrees, easy to dismiss as noise. In reality the fault was strong (knee swing roughly halved) but only lasted about 40 seconds, and averaging it together with the normal half of the walk hid it. The fix was to judge the walk window by window along the timeline and leave out the periods spent standing still. The per-stride overlay below makes the same point from the other side: the faulty strides fall clearly outside the band." },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/vs_normal_cycle.jpg`, caption: 'Strides from the faulty walk (red) against my good-walk band (green)' },
+        { type: 'heading', content: 'An Alert You Can Hear', level: 2 },
+        { type: 'text', content: "The pipeline needs a laptop, so I also wrote a much lighter stiff-knee check that runs on the ESP32 itself and sounds the buzzer. It needs no calibration, so it still works after the rig is taken off and put back on. When the knee bends, the thigh and shank rotate at different rates. When it's held stiff, they move together. The firmware watches that difference on both legs, learns my normal level from the first 30–40 seconds of walking, and buzzes if either knee drops below 60% of it for a few seconds while I'm walking. Standing still is ignored." },
+        { type: 'callout', content: "Replayed against the recorded walks, the good walk never triggered the buzzer, and the stiff-knee walk set it off from about 51 to 86 seconds on both legs. That matches the window the full pipeline found.", variant: 'tip' },
+        { type: 'text', content: "The same detector also runs entirely in the browser. You drop in a calibration file, a good walk and a walk to check, and it produces the same flags as the Python version." },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/analyzer.mp4`, caption: 'The in-browser analyzer: three files in, fault episodes out' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Honest Limitations', level: 2 },
+        { type: 'list', items: [
+          'The knee is the trustworthy joint. Hip and ankle angles depend on weaker sensor axes, so the tool only flags the knee and says so.',
+          'It detects stiff-knee (reduced flexion) only. Overstriding and limping have different signatures and need their own test walks.',
+          'It measures movement relative to my own baseline. It does not diagnose injuries, which would need muscle and force data.',
+          'Taking the rig off and putting it back on means a new calibration, and ideally a fresh good walk.',
+          'It still runs from a USB power bank. The battery path browns out under Wi-Fi load and needs a boost converter.'
+        ] },
+
+        { type: 'heading', content: 'What\'s Next', level: 2 },
+        { type: 'list', items: [
+          'Detectors for overstriding (stride length) and limping (left/right asymmetry), each validated with its own normal-then-fault walk',
+          'Haptic feedback: drive the vibration module so alerts can be felt as well as heard, with a different buzz pattern for each fault type',
+          'A boost converter for untethered battery power'
+        ] }
+      ]
+    },
+
+    // =====================================================================
+    // RGB Colour Mixer - three-knob ESP32-C3 colour mixer with OLED readout
+    // =====================================================================
+    {
+      id: 'rgb-colour-mixer',
+      title: 'Three-Knob RGB Colour Mixer',
+      subtitle: 'Three knobs, one LED, and a hex code on a tiny screen, running all day on one battery',
+      icon: 'Palette',
+      category: 'hardware',
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/violet.jpg`,
+      introduction: "A small battery-powered instrument built on an ESP32-C3. Three potentiometers set the red, green and blue levels of an RGB LED, and a 0.96\" OLED shows each value as a number and a bar, along with the colour's hex code. It's a simple idea, but getting it right on a perfboard with whatever parts were in the drawer took real circuit maths, a few firmware workarounds and a careful power budget.",
+      tags: ['Embedded Systems', 'ESP32-C3', 'PWM', 'Circuit Design', 'Arduino', 'Power Budgeting'],
+      status: 'published',
+      publishedDate: 'October 2026',
+      readTime: '5 min read',
+      contentBlocks: [
+        { type: 'heading', content: 'The Build', level: 2 },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/board.jpg`, caption: 'The finished perfboard: OLED, ESP32-C3 SuperMini, power switch, LED resistors and the three knobs' },
+        { type: 'list', items: [
+          'ESP32-C3 SuperMini, clocked down to 80 MHz with the radio never started',
+          '3 × 10 kΩ linear potentiometers on the ADC1 pins',
+          '5 mm common-anode RGB LED driven by 5 kHz, 8-bit PWM (256 levels per channel, 16.7 million colours)',
+          '0.96" 128×64 SSD1306 OLED over software SPI',
+          '1000 mAh LiPo cell with a TP4056 charger and protection board, and a slide switch'
+        ] },
+        { type: 'callout', content: "The display I had turned out to be a 7-pin SPI module, not the 4-pin I²C one the design assumed. That meant reassigning five GPIOs and switching the display driver to software SPI, while staying clear of the C3's strapping and USB pins.", variant: 'warning' },
+
+        { type: 'heading', content: 'The Problem with Green and Blue', level: 2 },
+        { type: 'text', content: "Each LED colour drops a different voltage. Red drops about 2.0 V, which leaves 1.3 V across its resistor from a 3.3 V pin. Green and blue drop 3.0–3.1 V, which leaves only 0.2–0.3 V. With the usual 330 Ω resistor on every channel, green and blue got well under 1 mA and were barely visible." },
+        { type: 'equation', content: 'R = (V_GPIO − V_f) / I   →   green: 0.3 V / 2.7 mA ≈ 110 Ω' },
+        { type: 'text', content: "I only had 330 Ω and 1 kΩ resistors, so green and blue each got three 330 Ω resistors in parallel, which gives exactly 110 Ω (R/n for n equal resistors). Even in the worst case, a green chip dropping only 2.8 V draws 4.5 mA, far below the 20 mA pin limit." },
+        { type: 'callout', content: "The trade-off is that red still carries about 40% more current than green and twice as much as blue, so full 255/255/255 comes out warm rather than white. That was predicted on paper before the test confirmed it. A per-channel cap in firmware (around 150 on red) balances it.", variant: 'tip' },
+
+        { type: 'heading', content: 'Firmware: Cleaning Up a Noisy Knob', level: 2 },
+        { type: 'text', content: "Two parts that should have been on the board weren't: series resistors to keep the ADC in its linear range, and filter capacitors on the knob wipers. The firmware does their job instead. The ESP32-C3's ADC is only linear up to about 2.5 V, and without filter capacitors the last digits flickered." },
+        {
+          type: 'flow',
+          steps: [
+            { title: 'Read', detail: 'Average 16 samples per knob, which cuts random noise by √16 = 4×.', icon: 'SlidersHorizontal', phase: 'READ', tools: ['ADC1', '12-bit'] },
+            { title: 'Clamp', detail: 'Treat anything at or above 2,500 mV as full scale, where the ADC stops being linear.', icon: 'Gauge', phase: 'READ', note: 'Hardware fix: a 3.3 kΩ series resistor per knob' },
+            { title: 'Scale', detail: 'Map 30–2,500 mV to 0–255. The 30 mV floor makes true zero reachable.', icon: 'Ruler', phase: 'CLEAN' },
+            { title: 'Filter', detail: 'Exponential smoothing, y = 0.7·y + 0.3·x, about 56 ms time constant at a 50 Hz loop.', icon: 'Filter', phase: 'CLEAN', note: 'Hardware fix: 0.1 µF from each wiper to ground' },
+            { title: 'Drive', detail: 'Three 5 kHz, 8-bit PWM channels, inverted for the common-anode LED.', icon: 'Lightbulb', phase: 'SHOW', tools: ['ledcWrite'] },
+            { title: 'Display', detail: 'Redraw the OLED only when a value moves by 2+ counts, or once a second, to save power.', icon: 'Monitor', phase: 'SHOW', tools: ['U8g2'] }
+          ],
+          outputs: [
+            { label: 'RGB LED', detail: '16.7M colours', icon: 'Lightbulb' },
+            { label: 'OLED readout', detail: 'values · bars · #hex', icon: 'Monitor' }
+          ],
+          caption: 'The main loop, every 20 ms'
+        },
+
+        { type: 'heading', content: 'Results', level: 2 },
+        { type: 'text', content: "All eight functional tests passed. The only qualified result was the expected one: with every knob at maximum, the mix leans warm instead of neutral white." },
+        {
+          type: 'gallery',
+          images: [
+            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/red.jpg`, caption: '255 / 0 / 0 · #FF0000' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/green.jpg`, caption: '0 / 255 / 0 · #00FF00' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/blue.jpg`, caption: '0 / 0 / 255 · #0000FF' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/violet.jpg`, caption: '143 / 13 / 237 · #8F0DED' }
+          ]
+        },
+
+        { type: 'heading', content: 'Power Budget', level: 2 },
+        { type: 'text', content: "The whole thing draws about 45 mA typical and 63 mA worst case from the 3.3 V rail: roughly 20 mA for the ESP32 with the radio off, 12 mA for the OLED, 8 mA for the LED and the rest for the knobs and board overhead. From a 1000 mAh cell at 85% usable capacity, that's about 18 hours typical and 13 hours worst case. The cell feeds the board's 5 V pin rather than 3V3, so it goes through the onboard regulator. A full cell at 4.2 V would exceed the chip's 3.6 V maximum if fed in directly." },
+        { type: 'text', content: "One unexpected result: the battery gives no gradual warning. The rail holds 3.3 V until the cell sags to about 3.4 V, then blue fades first (it has the least voltage headroom), then green. So a white or violet mix drifting warm is the low-battery warning, and a pure red setting gives no warning at all." },
+
+        { type: 'heading', content: 'What I\'d Add Next', level: 2 },
+        { type: 'list', items: [
+          'The missing 3.3 kΩ and 0.1 µF parts, so the full knob travel is usable and noise is filtered in hardware',
+          'MOSFET drivers powering the LED from the battery, so green and blue reach full brightness and true white is possible',
+          'Gamma correction, so brightness tracks the knob evenly',
+          'A battery-voltage monitor on a spare ADC pin, saved favourite colours and an HSV mode'
+        ] }
+      ]
     }
   ]
 };

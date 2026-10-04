@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import {
-  FlaskConical, ArrowLeft, Clock, ChevronRight, Sparkles
+  FlaskConical, ArrowLeft, Clock, ChevronRight, Sparkles, Wrench
 } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
 import type { ThoughtLabArticle } from '../types';
@@ -92,7 +92,8 @@ const ArticleCard: React.FC<{
 
 const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onBack, onSelectArticle }) => {
   const publishedArticles = THOUGHT_LAB_DATA.articles.filter(a => a.status !== 'draft');
-  const perspectives = publishedArticles.filter(a => a.category !== 'project');
+  const perspectives = publishedArticles.filter(a => a.category !== 'project' && a.category !== 'hardware');
+  const hardwareBuilds = publishedArticles.filter(a => a.category === 'hardware');
   const aiProjects = publishedArticles.filter(a => a.category === 'project');
 
   return (
@@ -165,6 +166,32 @@ const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onBack, onSelectArticle
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {perspectives.map((article, index) => (
+                <ArticleCard
+                  key={article.id}
+                  article={article}
+                  index={index}
+                  onClick={() => onSelectArticle(article.id)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {hardwareBuilds.length > 0 && (
+        <section className="py-12 md:py-16">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-lg bg-neon-green/10 border border-neon-green/30 flex items-center justify-center text-neon-green">
+                <Wrench size={18} />
+              </div>
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold font-mono text-white">Built by Hand</h2>
+                <p className="text-sm text-gray-500">Hardware I've designed, soldered and debugged on the bench</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {hardwareBuilds.map((article, index) => (
                 <ArticleCard
                   key={article.id}
                   article={article}

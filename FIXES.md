@@ -107,3 +107,17 @@ New "Built with AI" Thought Lab write-up, plus the article-page features it need
 - **Vertical videos**: `video` blocks accept `vertical: true` for 9:16 Shorts-style clips.
 - **Video autoplay on scroll**: local videos play muted and looped while at least half on screen and pause when scrolled away; only one plays at a time; autoplay is skipped under `prefers-reduced-motion`.
 - **`Clapperboard` icon** added to `src/utils/thoughtLabIcons.tsx`.
+
+---
+
+## Pass 4 — "Built by Hand" Thought Lab section (2026-10-04)
+
+- **New `hardware` category** (`types.ts`) and a **"Built by Hand"** section on the Thought Lab page, between Perspectives and Built with AI (`ThoughtLabPage.tsx`).
+- **Two new articles** in `constants.ts`:
+  - `gait-imu-monitor`: seven-IMU wearable gait monitor (ESP32-S3, TCA9548A, Wi-Fi streaming, Python pipeline, stiff-knee fault detection, on-device buzzer alert). Media in `public/thought_lab/gait_imu/`.
+  - `rgb-colour-mixer`: three-knob ESP32-C3 RGB mixer with OLED readout. Media in `public/thought_lab/rgb_mixer/`.
+- **`gallery` content block**: a 2- or 3-column image grid with per-image captions (`GalleryBlock` in `ThoughtLabArticlePage.tsx`).
+- **Flow block fixes**: the output grid now has one column per output (up to 4), and the fork branches line up with the column centres, so flowcharts with 2 or 3 outputs no longer misalign. More step icons are available (`Cpu`, `Wifi`, `Compass`, `Activity`, `Footprints`, `Ruler`, `Gauge`, `SlidersHorizontal`, `Filter`, `Lightbulb`).
+- **Card icons**: `Palette` and `Footprints` added to `thoughtLabIcons.tsx`.
+- **Media** was resized and re-encoded with ffmpeg as in Pass 2: about 66 MB of source photos and screen recordings became 2.8 MB (the two dashboard videos went from 35 MB and 15 MB to 0.6 MB and 0.4 MB).
+

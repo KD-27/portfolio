@@ -79,6 +79,9 @@ export interface Achievement {
  * 10. TIMELINE BLOCK - Stages on a vertical rail, each with a stat, chips and media
  *    { type: 'timeline', entries: [{ label: 'WEEK 1', title: '...', detail: '...', stat: { value: '2x', label: '...' },
  *      added: ['...'], media: [{ type: 'video', src: '...', vertical: true }] }] }
+ *
+ * 11. GALLERY BLOCK - Grid of images, e.g. test results or CAD views
+ *    { type: 'gallery', images: [{ src: '/path/a.jpg', caption: 'Red' }, { src: '/path/b.jpg' }], caption: '...' }
  */
 
 export interface FlowStep {
@@ -122,7 +125,8 @@ export type ContentBlock =
   | { type: 'callout'; content: string; variant?: 'info' | 'warning' | 'tip' }
   | { type: 'equation'; content: string }
   | { type: 'flow'; steps: FlowStep[]; outputs?: FlowOutput[]; caption?: string }
-  | { type: 'timeline'; entries: TimelineEntry[] };
+  | { type: 'timeline'; entries: TimelineEntry[] }
+  | { type: 'gallery'; images: { src: string; caption?: string }[]; caption?: string };
 
 export interface ThoughtLabArticle {
   id: string;
@@ -136,8 +140,8 @@ export interface ThoughtLabArticle {
   status: 'published' | 'draft' | 'coming-soon';
   publishedDate?: string;
   readTime?: string;
-  /** 'perspective' = written essays/analysis (default). 'project' = built AI projects/apps. */
-  category?: 'perspective' | 'project';
+  /** 'perspective' = written essays/analysis (default). 'hardware' = physical builds. 'project' = built AI projects/apps. */
+  category?: 'perspective' | 'hardware' | 'project';
 }
 
 export interface ThoughtLabData {
