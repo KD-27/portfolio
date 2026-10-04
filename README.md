@@ -23,4 +23,8 @@ npm run build     # type-check + production build
 npm run deploy    # build and push dist/ to the gh-pages branch
 ```
 
-Editing content (projects, achievements, Thought Lab articles, etc.) is done entirely in `constants.ts` — no component changes needed for text/data updates. Changes only go live after `npm run deploy`.
+Editing content (projects, achievements, Thought Lab articles, etc.) is done entirely in `constants.ts` — no component changes needed for text/data updates.
+
+Thought Lab article bodies are arrays of content blocks — `text`, `heading`, `image`, `video` (add `vertical: true` for 9:16 clips), `quote`, `list`, `divider`, `callout`, `equation`, `flow` (a phased flowchart of pipeline steps) and `timeline` (stages with stats, chips and media). The full reference with examples is the comment block above `ContentBlock` in `types.ts`.
+
+Changes only go live after `npm run deploy`. Note that deploying only pushes the built `dist/` to the `gh-pages` branch — commit and push the source to `main` separately.

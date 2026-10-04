@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   FlaskConical, Brain, AlertTriangle, Users, Cpu, Blocks, Hand,
-  Scale, MessageSquare, GitBranch, Shield, Trophy, type LucideIcon
+  Scale, MessageSquare, GitBranch, Shield, Trophy, Clapperboard, type LucideIcon
 } from 'lucide-react';
 
 const THOUGHT_LAB_ICONS: Record<string, LucideIcon> = {
   Brain, AlertTriangle, Users, Cpu, Blocks, Hand,
-  Scale, MessageSquare, GitBranch, Shield, Trophy
+  Scale, MessageSquare, GitBranch, Shield, Trophy, Clapperboard
 };
 
 export const getThoughtLabIcon = (name: string, size: number): React.ReactNode => {

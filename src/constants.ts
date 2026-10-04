@@ -743,6 +743,151 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
 
         { type: 'callout', content: 'Visiting with ?demo=1 loads sample data from a completely separate storage key — the real log is never read or written while demoing.', variant: 'tip' }
       ]
+    },
+
+    // =====================================================================
+    // Blunder Breakdown - automated chess YouTube channel pipeline
+    // =====================================================================
+    {
+      id: 'blunder-breakdown',
+      title: 'Blunder Breakdown',
+      subtitle: 'One month of trying to run a YouTube chess channel on an automated video pipeline',
+      icon: 'Clapperboard',
+      category: 'project',
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/cover.jpg`,
+      introduction: "Blunder Breakdown started as a simple question: could my own Lichess games become YouTube videos with almost no manual editing? Over about a month I built, with Claude as a pair programmer, a pipeline that fetches my games, uses Stockfish to find the most dramatic mistake, writes and voices a narration, renders the board animation, and outputs a finished video with its thumbnail, title, description and tags. It then grew into five video formats, a local dashboard, a YouTube analytics tab and scheduled uploads. The channel published 60+ videos and passed 11,000 views, mostly from Shorts.",
+      tags: ['Content Automation', 'Python', 'Stockfish', 'LLM Narration', 'ElevenLabs', 'YouTube API', 'Claude'],
+      status: 'published',
+      publishedDate: 'October 2026',
+      readTime: '8 min read',
+      contentBlocks: [
+        { type: 'heading', content: 'The Idea', level: 2 },
+        { type: 'text', content: "I play a lot of fast games on Lichess, and every game is already a complete record in PGN form. Every move, every mistake and the result are all there. The idea was to treat that PGN as raw material and let software do the editing a human creator would normally do: pick the interesting game, find the moment that matters, explain it, and package it for YouTube." },
+        { type: 'quote', content: "Stockfish decides what is true on the board. The AI only decides how to say it." },
+        { type: 'text', content: "That split was the most important design rule. Language models are not trusted to calculate chess. Every evaluation, blunder, missed mate and best move comes from Stockfish. The LLM is only used for wording: narration scripts, titles and descriptions. If the narration service fails, the pipeline falls back to a deterministic script and still produces a video." },
+
+        { type: 'heading', content: 'How the Pipeline Works', level: 2 },
+        {
+          type: 'flow',
+          steps: [
+            { title: 'Fetch', detail: 'Pull my recent games from Lichess as PGN files.', icon: 'Download', phase: 'FIND THE MOMENT', tools: ['Lichess API'] },
+            { title: 'Rank', detail: 'Score every game for drama, not accuracy. A CSV remembers which games are already used.', icon: 'BarChart3', phase: 'FIND THE MOMENT', tools: ['Stockfish', 'CSV'] },
+            { title: 'Extract', detail: 'Pick the one key move: missed mate › blunder › eval swing.', icon: 'Crosshair', phase: 'FIND THE MOMENT', tools: ['Stockfish'] },
+            { title: 'Story', detail: 'Three acts: what happened, why it was wrong, the best move.', icon: 'BookOpen', phase: 'TELL THE STORY', tools: ['Python'] },
+            { title: 'Narrate', detail: 'A long script and a condensed Shorts script, written from facts Stockfish supplied.', icon: 'PenLine', phase: 'TELL THE STORY', tools: ['DeepSeek', 'OpenRouter'], note: 'LLM fails? Fall back to a deterministic script' },
+            { title: 'Voice', detail: 'Read in a clone of my own voice, then loudness-normalized.', icon: 'Mic', phase: 'TELL THE STORY', tools: ['ElevenLabs', 'FFmpeg'] },
+            { title: 'Render', detail: 'Board, arrows, captions, capture animations and eval bar. The voice-over length sets the timeline.', icon: 'Clapperboard', phase: 'MAKE THE VIDEO', tools: ['Pillow', 'NumPy', 'FFmpeg'] },
+            { title: 'Package', detail: 'Thumbnails plus title options, description and tags.', icon: 'Package', phase: 'MAKE THE VIDEO', tools: ['Pillow', 'DeepSeek'] }
+          ],
+          outputs: [
+            { label: '16:9 Video', detail: 'long-form', icon: 'Monitor' },
+            { label: '9:16 Short', detail: 'captions + intro', icon: 'Smartphone' },
+            { label: 'Thumbnails', detail: 'both formats', icon: 'Image' },
+            { label: 'Metadata', detail: 'titles · desc · tags', icon: 'FileText' }
+          ],
+          caption: 'One run: from a raw PGN file to an upload-ready folder'
+        },
+
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/thumb_blunder.jpg`, caption: 'An auto-generated thumbnail: the key square highlighted, text drawn from the highlight type' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'The Journey: How It Evolved', level: 2 },
+        { type: 'text', content: "The first version made 16:9 long-form blunder breakdown videos and nothing else. The design guide I wrote for myself at the start had one rule in bold: publish for one month before over-engineering anything, and let real YouTube numbers decide what to improve. Here is roughly how that month went." },
+
+        {
+          type: 'timeline',
+          entries: [
+            {
+              label: 'WEEK 1',
+              title: 'Long-form blunder videos',
+              detail: "Daily 30–50 second landscape videos in three acts. The pipeline worked, but impressions weren't turning into clicks or watch time.",
+              stat: { value: '30–70', label: 'views per video' },
+              added: ['16:9 three-act video', 'Cloned voice', 'Auto thumbnails'],
+              media: [{ type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/blunder_long.mp4`, caption: 'The original 16:9 three-act format' }]
+            },
+            {
+              label: 'WEEK 2',
+              title: 'Shorts: the turning point',
+              detail: 'A 9:16 Shorts generator with its own condensed narration, plus a local dashboard so a full run became a few clicks. Views jumped the week the Shorts went out.',
+              stat: { value: '21×', label: 'weekly views (242 → 5,185)' },
+              added: ['9:16 Shorts', 'Burned-in captions', 'Rook intro + SFX', 'Flask dashboard'],
+              media: [{ type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/blunder_short.mp4`, caption: 'A blunder Short', vertical: true }]
+            },
+            {
+              label: 'WEEK 3',
+              title: 'New formats',
+              detail: '~7 minute opening lessons built from the Lichess Opening Explorer with Stockfish-checked traps, and short games replayed move by move with a live eval bar.',
+              stat: { value: '2:37', label: 'avg view on the Italian Game lesson' },
+              added: ['Opening theory', 'Full game replays', 'Analytics tab'],
+              media: [
+                { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/theory_excerpt.mp4`, caption: 'First minute of the Italian Game lesson' },
+                { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/full_game_short.mp4`, caption: 'Full game replay', vertical: true }
+              ]
+            },
+            {
+              label: 'WEEK 4',
+              title: 'Puzzles and hands-off publishing',
+              detail: "'Find the win' puzzles from a Lichess study, with the eval bar hidden so it doesn't spoil the answer. A script uploads a batch with YouTube's publishAt, so they go live daily with my computer off.",
+              stat: { value: '16', label: 'Shorts auto-scheduled' },
+              added: ['Brilliancy puzzles', 'YouTube API upload', 'publishAt scheduling'],
+              media: [{ type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/brilliancy_short.mp4`, caption: "'Find the win' puzzle", vertical: true }]
+            }
+          ]
+        },
+
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/shorts_covers.jpg`, caption: 'Auto-generated 9:16 covers for three formats: blunder Short, full game replay, brilliancy puzzle' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'The Control Room: A Local Dashboard', level: 2 },
+        { type: 'text', content: "Running a dozen scripts from a terminal every day doesn't last, so the whole pipeline sits behind a local Flask dashboard opened from a desktop shortcut. Each format has its own tab with live progress and logs. Every generated video can be previewed with its thumbnail and copy-ready metadata, and a password-protected settings area keeps the API keys out of the code." },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_home.jpg`, caption: 'Dashboard: fetch games, run the lesson pipeline, or build a full game replay with one click' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_media.jpg`, caption: 'Media tab: every run in its own folder, with the video, thumbnail and one-click copy for titles, description and tags' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_theory.jpg`, caption: 'Theory tab: the opening catalog with done and published tracking' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_database.jpg`, caption: 'Database tab: the Stockfish drama ranking that decides which game becomes the next video' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_analytics.jpg`, caption: 'Analytics tab: live YouTube numbers, monetization progress and daily views, pulled over OAuth' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Results', level: 2 },
+        {
+          type: 'list',
+          items: [
+            '60+ videos published across five formats, nearly all generated end to end by the pipeline.',
+            '11,400+ views, 30 hours of watch time and 30 subscribers in the 28 days to August 5, on a brand-new channel with no existing audience. Daily views peaked at around 1,400 in mid-July.',
+            'In the first month of analytics, 84% of views (6,599 of 7,833) came from the Shorts feed.',
+            "Best performer: 'White Had a Forced Mate – Then Played This', a 26 second Short with 1,842 views and 82% average viewed.",
+            'The Italian Game theory video held viewers for an average of 2 min 37 s, against roughly 20–30 s for blunder-style videos. That told me that teaching content keeps people watching.'
+          ]
+        },
+        { type: 'callout', content: 'Shorts brought the reach and long-form theory brought the watch time. Tweaking titles barely moved the numbers. Changing the format did.', variant: 'info' },
+
+        { type: 'heading', content: 'What I Learned', level: 2 },
+        {
+          type: 'list',
+          items: [
+            'Ship first, then optimize. The pipeline was rough when the first video went out, and real analytics changed my priorities more than any amount of polishing beforehand would have.',
+            "Keep the source of truth deterministic. PGN plus Stockfish is the ground truth, and the LLM only adds wording on top. That made AI mistakes easy to spot and contain. The one time the metadata step claimed a variation that didn't exist, it was traced and fixed the same day.",
+            'Every optional step must fail softly. LLM APIs sometimes return empty or malformed output. When narration, voice, thumbnail or metadata fails, the pipeline logs a warning and still finishes a video.',
+            'Let the audio drive the timeline. Sizing each video to the measured voice-over solved the cut-off narration problems that fixed-length renders kept causing.',
+            'Retention and click-through rate are what count. Most YouTube SEO advice turned out to be noise. The opening seconds and the thumbnail matter most.',
+            'Working with Claude as a collaborator made a month-long solo project possible. It handled the rendering math, FFmpeg plumbing and API integration while I made the product and content decisions.'
+          ]
+        },
+
+        { type: 'heading', content: 'Tech Stack', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'Python, python-chess, Stockfish, Pillow, NumPy, imageio, FFmpeg',
+            'OpenRouter (DeepSeek) for narration and metadata, ElevenLabs voice cloning, Microsoft edge-tts for free drafts',
+            'Lichess API and Opening Explorer, YouTube Data and Analytics APIs (OAuth)',
+            'Flask dashboard with Chart.js, launched from a desktop shortcut and shut down automatically when the last tab closes',
+            'Channel: https://www.youtube.com/channel/UCAW9Z0uZu_nww26nI5ZF8hA'
+          ]
+        }
+      ]
     }
   ]
 };

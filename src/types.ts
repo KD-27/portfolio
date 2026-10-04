@@ -58,6 +58,7 @@ export interface Achievement {
  * 4. VIDEO BLOCK - Video with optional caption (YouTube or local file)
  *    { type: 'video', src: 'https://youtube.com/watch?v=xxx', caption: 'Video description' }
  *    { type: 'video', src: '/path/to/video.mp4', caption: 'Local video' }
+ *    { type: 'video', src: '/path/to/short.mp4', vertical: true }  // 9:16 portrait clip
  * 
  * 5. QUOTE BLOCK - Blockquote with optional author
  *    { type: 'quote', content: 'Quote text here...', author: 'Person Name' }
@@ -70,18 +71,58 @@ export interface Achievement {
  * 
  * 8. CALLOUT BLOCK - Highlighted info box
  *    { type: 'callout', content: 'Important note here', variant: 'info' }  // info, warning, or tip
+ *
+ * 9. FLOW BLOCK - Flowchart of connected steps, optionally forking into outputs
+ *    { type: 'flow', steps: [{ title: 'Fetch', detail: '...', icon: 'Download', phase: 'FIND', tools: ['Lichess API'] }],
+ *      outputs: [{ label: 'Video', icon: 'Monitor' }] }
+ *
+ * 10. TIMELINE BLOCK - Stages on a vertical rail, each with a stat, chips and media
+ *    { type: 'timeline', entries: [{ label: 'WEEK 1', title: '...', detail: '...', stat: { value: '2x', label: '...' },
+ *      added: ['...'], media: [{ type: 'video', src: '...', vertical: true }] }] }
  */
+
+export interface FlowStep {
+  title: string;
+  detail: string;
+  /** lucide icon name, see FLOW_ICONS in ThoughtLabArticlePage */
+  icon?: string;
+  /** steps sharing a phase share a color */
+  phase?: string;
+  tools?: string[];
+  /** a dashed side note, e.g. a fallback path */
+  note?: string;
+}
+
+export interface TimelineEntry {
+  /** short badge, e.g. 'WEEK 1' */
+  label: string;
+  title: string;
+  detail: string;
+  /** headline number for this stage */
+  stat?: { value: string; label: string };
+  /** what was added in this stage, shown as chips */
+  added?: string[];
+  media?: { type: 'image' | 'video'; src: string; caption?: string; vertical?: boolean }[];
+}
+
+export interface FlowOutput {
+  label: string;
+  detail?: string;
+  icon?: string;
+}
 
 export type ContentBlock =
   | { type: 'text'; content: string }
   | { type: 'heading'; content: string; level?: 2 | 3 | 4 }
   | { type: 'image'; src: string; caption?: string; alt?: string }
-  | { type: 'video'; src: string; caption?: string }
+  | { type: 'video'; src: string; caption?: string; vertical?: boolean }
   | { type: 'quote'; content: string; author?: string }
   | { type: 'list'; items: string[]; ordered?: boolean }
   | { type: 'divider' }
   | { type: 'callout'; content: string; variant?: 'info' | 'warning' | 'tip' }
-  | { type: 'equation'; content: string };
+  | { type: 'equation'; content: string }
+  | { type: 'flow'; steps: FlowStep[]; outputs?: FlowOutput[]; caption?: string }
+  | { type: 'timeline'; entries: TimelineEntry[] };
 
 export interface ThoughtLabArticle {
   id: string;

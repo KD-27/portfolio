@@ -94,3 +94,16 @@ Running record of issues found in the [review](#) and how each was fixed. Groupe
 `npx tsc -b`, `npm run lint`, and `npx vite build` all pass clean. Final `dist/` size: ~18 MB, down from the ~128 MB it would have been before this pass (dominated by the media fix).
 
 **Note:** ffmpeg was briefly installed system-wide via `winget` before discovering an existing install on this machine (`C:\ffmpeg\ffmpeg-8.1.1-full_build`) — the winget copy was uninstalled again immediately, and the pre-existing install was used for all the compression work above. No lasting system changes were made outside this repo.
+
+---
+
+## Pass 3 — Blunder Breakdown article (2026-10-04)
+
+New "Built with AI" Thought Lab write-up, plus the article-page features it needed.
+
+- **New article `blunder-breakdown`** in `constants.ts`: an automated chess-video pipeline (Lichess → Stockfish → LLM narration → voice → render) and how it evolved over a month of publishing. Media lives in `public/thought_lab/blunder_breakdown/`.
+- **`flow` content block**: a vertical flowchart of steps, colored by `phase`, with tool chips, optional dashed side notes and output nodes. `FlowStep` / `FlowOutput` types in `types.ts`, rendered by `FlowBlock` in `ThoughtLabArticlePage.tsx`.
+- **`timeline` content block**: stages on a vertical rail, each with a badge, headline stat, "added" chips and inline media. `TimelineEntry` type in `types.ts`.
+- **Vertical videos**: `video` blocks accept `vertical: true` for 9:16 Shorts-style clips.
+- **Video autoplay on scroll**: local videos play muted and looped while at least half on screen and pause when scrolled away; only one plays at a time; autoplay is skipped under `prefers-reduced-motion`.
+- **`Clapperboard` icon** added to `src/utils/thoughtLabIcons.tsx`.
