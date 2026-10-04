@@ -26,7 +26,7 @@ const Research: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 auto-rows-fr gap-8">
           {RESEARCH_PAPERS.map((paper, index) => (
             <motion.div
               key={paper.id}
@@ -36,7 +36,7 @@ const Research: React.FC = () => {
               transition={{ delay: index * 0.1 }}
               className="group relative bg-mech-dark border border-white/5 rounded-xl overflow-hidden hover:border-neon-purple/50 transition-all duration-300"
             >
-              <div className="flex flex-col md:flex-row">
+              <div className="flex flex-col md:flex-row h-full">
                 {/* Abstract Visual Representation */}
                 <div className="w-full md:w-1/3 h-48 md:h-auto relative overflow-hidden">
                   <img 
