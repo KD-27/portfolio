@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FileText, ExternalLink, Calendar, Bookmark } from 'lucide-react';
+import { FileText, Calendar, Bookmark } from 'lucide-react';
 import { RESEARCH_PAPERS } from '../constants';
 
 const Research: React.FC = () => {
@@ -82,15 +82,6 @@ const Research: React.FC = () => {
                           </motion.span>
                         ))}
                      </div>
-                     <a 
-                      href={paper.link}
-                      onClick={(e) => { if (paper.link === '#') e.preventDefault(); }}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm font-bold text-white hover:text-neon-purple transition-colors"
-                    >
-                      READ PAPER <ExternalLink size={16} />
-                    </a>
                   </div>
                 </div>
               </div>

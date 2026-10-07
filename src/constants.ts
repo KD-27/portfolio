@@ -219,7 +219,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     image: `${import.meta.env.BASE_URL}research_papers/Quadruped_Robot.png`,
     link: '#',
     publisher: 'International Journal of Control, Automation, and System (ICROS KIEE)',
-    date: 'In Progress',
+    date: 'Under Review',
     tags: ['Quadruped robot', 'Five-bar parallel mechanism', 'Trajectory optimization']
   },
   {

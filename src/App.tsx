@@ -110,10 +110,10 @@ const App: React.FC = () => {
             <main>
               <Hero />
               <Projects />
+              <ThoughtLabCTA onNavigate={navigateToThoughtLab} />
               <Research />
               <Process />
               <Skills />
-              <ThoughtLabCTA onNavigate={navigateToThoughtLab} />
               <Achievements />
               <About />
               <Contact />
