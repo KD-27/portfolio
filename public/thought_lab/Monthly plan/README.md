@@ -1,39 +1,217 @@
 # Monthly Plan
 
-A private, single-page daily discipline tracker — modeled on the "System" from *Solo Leveling*. Every day is a quest with assigned tasks, the day locks in at midnight, and failing a task **costs points** instead of just earning none. It's not a neutral habit checklist; the penalty is the point.
+A single-page, offline daily discipline tracker — modeled on the "System" from *Solo Leveling*. Every day is a quest with assigned tasks, the day locks in at midnight, and failing a task **costs points** instead of just earning none. It's not a neutral habit checklist; the penalty is the point.
 
 ## Purpose
 
-Monthly Plan exists to keep one person (its only user) honest about a daily routine — diet, gym, water, sleep, spending, and weight — by scoring each day out of 100 and turning the run into a visible rank and set of titles. It was built after the previous version's log was silently wiped by Chrome clearing local storage, so the whole architecture is designed around one hard rule: **opening the app must never require a manual step**, or the log goes cold and the habit dies with it.
+Monthly Plan exists to keep one person (its only user) honest about a daily routine — diet, gym, water, sleep, spending, and weight — by scoring each day and turning the run into a visible rank, level, and set of titles. It was built after the previous version's log was silently wiped by Chrome clearing local storage, so the whole architecture is designed around one hard rule: **opening the app must never require a manual step**, or the log goes cold and the habit dies with it.
+
+## Make it yours
+
+You need **Windows**, **Python 3** (from python.org — the server uses only the standard library) and **Chrome** or **Edge**.
+
+1. Fork or download this repository.
+2. Copy `config.example.js` to `config.local.js` and edit it:
+   - `START` — your day one (`m` is 0-based: January = 0).
+   - `TASKS` — your own tasks, icons, groups and points. Each task needs a unique `id`; once you've logged days, keep the ids stable and give new tasks a `since:'YYYY-MM-DD'` date.
+   - `WEIGHT_START` / `WEIGHT_TARGET`, `MONEY_BUDGET` — your numbers.
+   `config.local.js` is git-ignored, so your settings stay on your machine. Without it the app runs on the examples.
+3. Double-click `Monthly Plan.bat` (make a desktop shortcut to it if you like). It starts the local server and opens the app full screen — **F11** switches to a window.
+4. Try `index.html?demo=1` to look around with made-up data; it never touches your log.
+
+Sync between devices uses the Firebase project named in `FIREBASE_CONFIG` near the end of `index.html`. To sync your own copy, make your own Firebase project (Google sign-in + Firestore, rules below) and put its config there; to run laptop-only, leave it — nothing syncs until you sign in.
+
+The currency is LKR — to change it, search `index.html` for `LKR`. On macOS or Linux there's no launcher: run `python3 server.py` and open `http://127.0.0.1:8731/index.html`. Your log is written to `data/data.json`, which is git-ignored too.
+
+## Folder layout
+
+```
+Monthly Plan/
+├── Monthly Plan.bat      launcher (the desktop shortcut runs this)
+├── server.py             local server that reads and writes the log
+├── index.html            the whole app
+├── manifest.webmanifest  makes it installable on a phone (icon, full screen)
+├── sw.js                 the phone's offline copy of the app
+├── config.example.js     template for your own settings — copy it to config.local.js
+├── config.local.js       (local only — never committed) your day one, tasks, points, targets
+├── LICENSE               MIT
+├── README.md
+├── CLAUDE.md             rules for changing the app safely (read by Claude Code)
+├── .gitignore            keeps data/ and every copy of the log out of git
+├── .gitattributes        keeps the .bat on Windows line endings
+├── data/                 (local only — never committed)
+│   ├── data.json         your log on the laptop — kept in step with the cloud copy
+│   └── data.backup.json  the previous save, refreshed every time
+└── icon/
+    ├── icon.ico          app + desktop-shortcut icon
+    ├── icon-192.png      large app icon
+    ├── icon-512.png      install icon
+    ├── maskable-192/512.png  install icon Android can crop to its own shape
+    └── favicon-16/32/48.png  window / tab icons
+```
+
+Only the app is tracked in git. Your log (`data/`) and your settings (`config.local.js`) are
+git-ignored, so they never leave your machine through git. GitHub Pages hosts the app for the
+phone; the log reaches it through your private Firestore folder, never through the repo.
 
 ## How it runs
 
-- `Monthly Plan.bat` launches a tiny stdlib-only Python server (`server.py`) on `http://127.0.0.1:8731` and opens the app in its own dedicated Chrome app-window profile (isolated from normal browsing, so clearing browser data can never touch it again).
-- `data.json`, sitting next to the app, is the single source of truth — written atomically (temp file + replace) with a rolling backup copy. The server shuts itself down once the window closes.
+- `Monthly Plan.bat` finds a windowless Python (`pyw -3`, then known `pythonw.exe` paths), launches a tiny stdlib-only Python server (`server.py`) on `http://127.0.0.1:8731`, waits for the port, and opens the app full screen (`--start-fullscreen`; F11 toggles back to a window) in its own Chrome (or Edge) app window with a dedicated profile at `%LocalAppData%\MonthlyPlan\chrome` — isolated from normal browsing, so clearing browser data can never touch it.
+- `data/data.json` is the laptop's copy of the log — written atomically (temp file + replace) with a rolling backup copy beside it. With sync on, the same log also lives in Firestore and the two are kept in step (see **Phone & sync**). The page pings the server every 20 s; the server shuts itself down 90 s after the pings stop (i.e. once the window closes). If the server is already running, a second launch just reuses it.
+- Server API: `GET /api/data` (the log, or `{}` on first run; `503` if the file is locked), `POST /api/data` (atomic overwrite, must be a JSON object), `GET /api/ping` (heartbeat), `POST /api/quit`. Everything else is served as static files from the app folder.
+- The page also mirrors the log to `localStorage` (`monthlyPlan.v1`). On load the file on disk wins; the browser copy is only used when the server is unreachable, or once — to seed an empty `data.json` on the first run after the move to disk. Once signed in, the cloud's copy is merged in on top and written back to disk.
+- On the phone (served from GitHub Pages, so no server and no `data.json`) the log lives in `localStorage` and Firestore's copy on the device, and syncs through the cloud. Only the launcher's own address (`127.0.0.1` / `localhost`) uses `/api/data`.
+- Older versions kept the log next to `server.py`. On startup the server moves any `data.json` still found there into `data/` if it's newer (the copy it replaces becomes the backup), or keeps it aside as `data/data.old-root-<timestamp>.json` if it's older — nothing is ever deleted.
 - If Python or the server isn't available, the app falls back to opening as a plain `file://` page backed by `localStorage`, so it still works, just without durable file storage.
+
+## Phone & sync
+
+- **One log, two devices.** Signed in with Google (Settings → Sync, once per device — it stays signed in), every key of the log is its own Firestore document at `users/{uid}/db/{key}`, holding the value as JSON text. A change on one device reaches the other in a second or two. Keys merge one by one: the latest change to a day wins, and a change to a different day never touches it.
+- **Offline.** Firestore keeps a copy on the device: the app opens without signal and sends queued changes once it's back online. On the laptop `data/data.json` is still written on every change, as a local backup of the same log.
+- **First sign-in on a device.** The cloud's copy wins; keys only that device has are sent up. On the very first sign-in (an empty cloud) the whole log goes up.
+- **Settings travel too.** The phone has no `config.local.js` (it is never published), so the laptop sends its settings to `users/{uid}/meta/config`; the phone keeps the latest copy (`localStorage` `monthlyPlan.config`) and restarts once when it changes.
+- **Firestore rules** (Firebase console → Firestore → Rules) — each account reaches only its own folder:
+  ```
+  match /users/{uid}/{document=**} {
+    allow read, write: if request.auth != null && request.auth.uid == uid;
+  }
+  ```
+  The web config in `index.html` is not a secret; the sign-in and these rules are what keep the log private.
+- **The phone layout.** Under 640 px wide the app turns into pages picked from a bar at the bottom: **Today** (the day sheet, always on today), **Calendar** (tap a day to open it), **Notes**, **Deadlines** (mind maps below them, to look at only — drag to pan, pinch to zoom) and **More** (money, journal, analytics, rank, dark mode, settings). The flip clock and Focus stay on the laptop.
+- **Installing.** Hosted on GitHub Pages, opened in Chrome on the phone → ⋮ → *Install* (pick *Install*, not *Create shortcut*, if Chrome asks); it then opens full screen from its own icon. `sw.js` keeps an offline copy of the page; the page is fetched fresh whenever there's a connection, so pushed changes arrive on the next open.
+- **Trying it safely.** `?demo=1&cloud=1` syncs the demo's sample data through the real Firebase, to `users/{uid}/demo` — apart from the real log.
+
+## Daily tasks and points
+
+Every scored task adds its points when done and **subtracts** them when missed. Gym days and rest days cap at the same total. The tasks below are the built-in examples (−77 to +77) — your own list, points and dates go in `config.local.js` (see **Make it yours**).
+
+| Group | Task | Points | Notes |
+|---|---|---|---|
+| All day | Water | 8 | Entered in ml; scored on a curve toward a **3.0 L** target (0 ml = −8, 3000 ml+ = +8) |
+| All day | Weigh-in | — | Mondays only; unscored, earns a title instead |
+| All day | Money spent | — | Unscored, earns a title instead; big purchases tracked separately |
+| Morning | Went to gym | 0 | Checkbox; picks the gym/rest label of tasks with variants and counts toward the weekly gym quota |
+| Morning | Morning wash · Brush teeth | 1 each | Hygiene — the A and S rank gates count these |
+| Morning | Healthy breakfast | 5 | "Protein before the gym" on gym days |
+| Morning | Read for 20 minutes | 5 | |
+| Morning | No sugary snacks (morning) | 6 | |
+| Morning | Coffee before noon only | 0 | Tracked only — no points either way |
+| Afternoon | Balanced lunch | 5 | |
+| Afternoon | No sugary snacks (afternoon) | 6 | |
+| Afternoon | Walk 8,000 steps | 6 | |
+| Evening | Light dinner before 8 PM | 6 | |
+| Evening | No junk food | 8 | |
+| Night | Night wash · Brush teeth | 1 each | Hygiene |
+| Night | No phone in bed | 6 | |
+| Night | Sleep 6–8 hours | 12 | Scored on a curve; full points inside 6–8 h, falling off outside it |
+
+Score zones: **Good** 60+, **Moderate** 20–59, **Bad** below 20.
+
+Tasks added mid-run carry a start date (`since`). On days before it they show faded with "—", can't be ticked, and don't count toward that day's score — so adding a task never rewrites past scores.
 
 ## Core features
 
-- **Calendar view** — a full month grid, each day colored by score band (Good / Moderate / Bad / in progress), with a running month summary.
-- **Day sheet** — tap any day to check off tasks grouped into All day / Morning / Afternoon / Evening / Night, with a live 0–100 score bar.
-- **Analytics view** — weekly score trend, gym attendance table, spending chart against a daily budget line, and weight progress toward target.
-- **Scoring engine** — ~15 weighted tasks summing to exactly 100 points per day; some tasks (like sleep hours or water bottles) score on a curve rather than as flat yes/no.
-- **Gym / rest day toggle** — the morning task set reshapes itself depending on whether it's a gym day or a rest day, while both variants still sum to 100.
-- **CSV sync** — the log can be linked directly to a `.csv` file on disk (e.g. inside a synced Google Drive folder) via the File System Access API, updating on every change, with manual export/import as a fallback.
+- **Calendar view** — a full month grid, each day colored by score zone (or marked in progress), with the month's stat tiles in a column on the right (below the card on narrow windows). The cell size is fitted for a six-week month and doesn't depend on the tiles, so every month draws at the same size and position.
+- **Day sheet** — tap any day to check off tasks grouped into All day / Morning / Afternoon / Evening / Night, with a live score bar showing the day's total against its max.
+- **Journal (📖)** — a book button beside the 🏦 opens a spiral notepad that slides in from the right, one page per day from `JOURNAL_SINCE` (day one by default) to today. Each page has the date, 14 numbered ruled lines for a few sentences (a full page refuses more text), and a "The day" strip with the score, gym/rest, water and sleep, plus "Open day →". It saves as you type and is never scored. Going forward the page curls up from the bottom and over the spiral, shading as it turns and showing its plain back; going back the page curls down onto the pad; the month arrows riffle through the days in between and land on the same date in that month (clamped to the journal's range). ←/→ or PageUp/PageDown turn pages when not typing. The day sheet has a 📖 button left of "Clear day" that opens the journal on that day (faded and unclickable before the journal's first page). "Clear day" resets the ticks but keeps the note.
+- **Water tracker** — a single row: the day's total in ml is directly editable, and a "+ ml" field next to it adds to the running total each time (Enter or +). Bottle icons show progress at **1 bottle = 1 L**, filling fractionally — 2.75 L shows as two full bottles and a three-quarters-full third.
+- **Big purchases** — one-off spends logged under Money, outside the daily budget. Click a purchase to edit its amount or note in place; ✕ removes it.
+- **Finances drawer (🏦)** — a bank button beside "Day N" in the top bar opens the single place for money, kept apart from the score and from Analytics. It has three tabs; the first two share one month selector (from day one's month through next month), so switching tabs stays on the same month:
+  - **Income & card** — log any number of dated income entries (click one to edit, ✕ to remove) and the credit card amount due that month.
+  - **Statement** — Income / Out / Left tiles; a "Where it went" bar splitting outflow into daily spending, big purchases, and credit card; the daily spending chart against the `MONEY_BUDGET` line; and a dated statement of income (+) and big purchases (−), with daily spending and the card bill as month-wide lines.
+  - **Fixed deposits** — a standing list (not monthly) of bank + amount, with the total across all deposits. Click one to edit, ✕ to remove.
+- **Deadlines** — dated to-dos, kept entirely outside the score. On windows 1280 px or wider a 290 px light-yellow rail on the right edge lists the open ones, soonest first, each with its date and "In N days" / "Due today" / "N days overdue" (overdue cards tint red). Tap a card's circle to mark it completed and it slides out; click the card to edit it. The **+** at the top of the rail opens a drawer to add one (title, due date, optional note; Enter adds) and review the **Open / Completed / Cancelled** lists, where any deadline can be edited, cancelled or reopened. Nothing is ever deleted — completing or cancelling only changes the status. A deadline linked to a mind map shows a **◈ Map** chip that opens it.
+- **Mind maps** — the lower half of the deadlines rail, in soft sage, one card per map showing just its name. Both halves of the rail show whole tiles only — each list ends below the last tile that fits, the rest scrolls, and scrolling stops on tiles. **+** starts a map and opens it, fitted to the window: the title in a centre bubble (with the linked deadline's date chip under it), main branches as filled pills in their branch colour, and deeper levels as text resting on tapered branch lines that thin toward the edge. Main branches alternate right and left by their order, so editing deeper never moves a branch to the other side.
+  - **One mode.** Click a box to select it — a soft ring and a small toolbar appear (add child, add sibling, fold, delete; the toolbar sits above or below, whichever hides less). Type to replace its text, or press **Enter / F2**, click it again or double-click to edit with the cursor at the end; **Enter** finishes, **Esc** cancels (a second Esc deselects; with nothing selected, Esc closes). Click the empty canvas to deselect.
+  - **Keys while selected:** **Tab** adds a child, **Shift+Enter** a sibling, arrows move the selection (←/→ toward the centre or outward, mirrored on the left), **Delete** removes, **Backspace** removes an empty box, **Ctrl+Z / Ctrl+Y** undo and redo any change. While editing, Tab and Shift+Enter finish and add.
+  - **Ticks:** the last boxes on a branch have a tick circle, clickable any time. Ticking fills it, draws the strike-through, then fades the box; when that finishes a branch, the fade climbs toward the centre. Boxes with children show a small done/total count, hidden once the branch is complete.
+  - **Folding:** the knob at a branch's outer end (quiet until hover or selection) folds it away and shows how many boxes it hides (+3).
+  - **Moving:** drag a box onto another (middle = under it, top/bottom = before/after); it lifts and follows the pointer, a dashed slot shows where it will land and the neighbours make room.
+  - **Motion:** boxes and branches glide on a soft spring between layouts (only transform, opacity and the branch shapes animate); a new box grows out of its parent, a deleted one shrinks back into it, folds collapse into the knob. Data always changes first and the picture follows, so undo, quick repeats or closing mid-animation can't leave anything out of sync. Zoom eases toward the cursor, a released pan coasts, **Fit** animates. With *reduce motion* set, all of this becomes short fades.
+  The **Deadline** dropdown links the map to one deadline, which becomes the map's main topic — its title in the centre and its date on the centre (the only date on a map). The linked deadline's card shows a **◈ Map** chip that opens it. Maps are saved while they exist; **Delete map** (two taps) removes one for good, and a new map closed without any text is discarded. Never scored.
+- **Flip clock** — a 24-hour flip clock (13:05, no AM/PM) under the calendar on the left. Click it and it grows out of its spot into a big flip clock centred on an empty screen (it keeps flipping each minute; with the mouse still, the cursor and hint fade so only the clock shows); click anywhere or press Esc and it shrinks back. The minute card's top half falls to reveal each new minute. It sits outside the calendar's fitted height, so it never shrinks the grid; it shows when there's room below (full screen) and hides itself otherwise.
+- **Focus (🌲)** — a tile beside the flip clock opens a Forest-style focus timer: the screen turns green with a tree in a ring at the centre. Drag the ring to set 10–120 min (scroll or arrow keys work too) and press **Plant**. Every session grows a different tree (generated from a random seed): a sprout, then a trunk that draws itself upward and thickens, branches splitting off in turn, leaves popping in along them, and pink blossoms at the end — all swaying gently while the ring fills. The window title shows the countdown. **Give up** (two taps) withers it: the leaves fall and a bare tree is left; finishing plays a soft chime. Nothing is recorded — it lives only on screen.
+- **Settings (⚙)** — a profile bar at the bottom of the notes column shows your name with an initials avatar and a gear. A sun/moon button beside the gear flips between light and dark — the new theme spreads out in a circle from the button you pressed (a View Transition: the browser animates a snapshot of the page, so gradients and all change together; a system-driven switch crossfades, and reduced motion switches instantly). The gear opens Settings: **Sync** (sign in with Google, and whether this device is synced, sending, or offline), **Appearance** (Light — the original look — Dark, or Match system, which follows Windows), **Profile** (your name), **Show on screen** (switch the Notes column, Deadlines, Mind maps, flip clock and Focus tile on or off — Deadlines and Mind maps are the two halves of the right column and switch independently, the one left filling the column; hiding a part keeps its data, and its space stays empty so the middle of the page never moves), and **Data & backups** (where the log lives, plus the CSV link and Export/Import, moved here from Analytics). With the notes column hidden, a small gear sits in the bottom-left corner. Preferences are saved with the log (so they sync too). On the phone, Settings opens from **More** and leaves out Show on screen and Data & backups, which only mean something on the laptop.
+- **Sticky notes** — on windows 1500 px or wider, a 290 px light-orange rail on the left edge holds free-form notes, newest first. **+** starts one; type straight in. A small toolbar (bold, italic, underline, strikethrough, bulleted list) appears while writing, and Ctrl+B/I/U work too. Drag a note by its coloured top bar to move it — the others slide aside to open the slot, and the order is saved. Each note's **···** menu changes its colour (sand, butter, sage, clay, mist) or deletes it (two taps). Notes save as you type; pasting brings in plain text only, and saved HTML is cleaned to those few formatting tags — no images. Never scored.
+- **Analytics view** — daily score chart, weekly average with the gym quota table, "Where the points go" per-task breakdown, weight progress, and hydration. (Spending moved to the 🏦 drawer.)
+- **Hydration panel** — total water logged all-time and per month, with a line graph of each month's daily ml, a dashed target line (3.0 L), and a dashed line at that month's average.
+- **CSV sync** (in ⚙ Settings → Data & backups) — the log can be linked directly to a `.csv` file on disk (e.g. inside a synced Google Drive folder) via the File System Access API, updating on every change, with manual export/import as a fallback. Water is exported as `water_ml`; the journal text goes in a last `note` column, with line breaks folded to spaces.
 
 ## Special features (the design signature of this app)
 
-- **Penalty-based scoring, not just completion.** The score runs **−100 to +100**, not 0–100 — an unchecked task actively subtracts its weight rather than simply not adding. This is deliberate: it mirrors a game system's daily quest penalty, not a forgiving habit tracker.
-- **Bonus tasks.** Two tasks (10 AM and 3 PM plain tea) are flagged `bonus:true` — they add points if done but cost nothing if skipped. This is the one intentional exception to the penalty model.
+- **Penalty-based scoring, not just completion.** An unchecked task actively subtracts its weight rather than simply not adding. This is deliberate: it mirrors a game system's daily quest penalty, not a forgiving habit tracker. The only exceptions are the 0-point tracked-only items (such as the gym checkbox).
 - **Weekly gym quota with a week-level penalty.** Missing the 4-session/week gym target docks the *week's* average by a flat 5 points, without touching or repainting any individual day's score — one bad week can't retroactively wreck days that were actually fine.
-- **Dual rank system (Rank vs. Level).** Rank (E → D → C → B → A → S) is a rolling 7-day average that can rise *or fall*, with a 3-day confirmation before promotion and a 3-day grace period before demotion — so one great or one bad day can't whipsaw the rank. A and S rank are additionally capped at B if the previous week's gym quota wasn't met, lifting automatically the moment a clean week closes. Rank history is never stored — it's replayed live from the score log, so editing a past day retroactively and correctly rewrites the whole rank timeline.
-- **Unscored tracks with titles instead of points.** Weekly body-weight (Monday morning) and daily spending are deliberately kept *outside* the 100-point score — logged, charted, and totaled, but never scored or penalized. Each instead earns a title as it improves (weight: Unforged → Kindled → Tempered → Ironclad → Ascendant at target; spending: its own "Steward" track against a daily budget). This is a deliberate boundary — biology and money don't answer to willpower the way a checklist does.
-- **Everything is a pure function of the log.** No derived state (rank, streaks, titles) is stored anywhere — it's all recomputed from `data.json` on load, so editing history is always safe and self-consistent.
+- **Dual rank system (Rank vs. Level).**
+  - **Rank** (E → D → C → B → A → S, floors at <0 / 0 / 20 / 40 / 60 / 80) is a rolling 7-day average that can rise *or fall*, with a 3-day confirmation before promotion and a 3-day grace period before demotion — so one great or one bad day can't whipsaw it. The top two ranks are gated — a gate caps the rank shown rather than demoting you, and lifts by itself once met:
+    - **A** needs a *full hygiene* day (all four hygiene checks done) on at least 5 of the 7 window days.
+    - **S** needs full hygiene on all 7 days **and** last week's 4-session gym quota.
+    - If `HYG_SINCE` is set, days before it use the older rule (A and S needed only the gym quota), so ranks earned then aren't rewritten. Leave it empty and the hygiene gates apply from day one.
+  - **Level** is the permanent record and never falls. XP is the sum of positive day scores; a bad day earns nothing but takes nothing back. Each level costs 40 XP more than the last, starting at 100.
+- **Unscored tracks with titles instead of points.** Weekly body-weight and daily spending are deliberately kept *outside* the score — logged, charted, and totaled, but never penalized. Each earns a title instead:
+  - Weight (latest weigh-in, toward `WEIGHT_TARGET`): Unforged → Kindled → Tempered → Ironclad → Ascendant.
+  - Spending (average over the last 7 logged days, against `MONEY_BUDGET`): Spendthrift → Steward → Warden → Ironpurse → Vaultkeeper.
+- **Everything is a pure function of the log.** No derived state (rank, level, titles) is stored anywhere — it's all recomputed from the log on load, so editing a past day is always safe and correctly rewrites everything downstream.
 - **Demo mode.** Visiting with `?demo=1` loads sample data from a completely separate storage key — the real log is never read or written while demoing.
 
 ## Data & backups
 
-- `data.json` — the live log (source of truth).
+All of these live in the `data/` folder.
+
+The cloud copy (Firestore, one document per key — see **Phone & sync**) holds the same log; these files are the laptop's own copies of it.
+
+- `data.json` — the live log on the laptop. Each day stores its checks, `water` (ml), `sleep` (hours), `money` (LKR), `big` purchases, `gym` (true/false), and `weight` (kg, weigh-in days only), and `note` (the journal page; absent when empty). Monthly income and credit card amounts live under a separate `_finance` key, grouped by month (`"2026-09": { income:[{date, amt, note}], card }`), fixed deposits under `_deposits` (`[{bank, amt}]`), deadlines under `_deadlines` (`[{id, title, due, note?, status: open|done|cancelled, added, closed?}]`), sticky notes under `_notes` (`[{id, html, color, updated}]`), and mind maps under `_mindmaps` (`[{id, root:{id, text, done?, collapsed?, children}, deadline?, updated}]`). UI preferences (theme, name, what's shown) live under `_prefs` (`{theme?: 'dark'|'system', name?, hide:{notes?, deadlines?, mindmaps?, clock?, focus?}}`; no theme = light). The theme is also mirrored to `localStorage` (`monthlyPlan.theme`) so the page can apply it before its first paint. Restoring from a CSV keeps all six.
 - `data.backup.json` — automatic previous-copy backup, refreshed on every save.
-- `data.corrupt-<timestamp>.json` — a damaged file is quarantined here rather than silently discarded, and the app starts fresh instead of crashing.
-- A linked CSV copy (optional, e.g. on Google Drive) serves as a portable, human-readable spare.
+- `data.corrupt-<timestamp>.json` — only if `data.json` contains invalid JSON is it quarantined here, rather than silently discarded. A file that is merely *locked* for a moment (cloud sync, antivirus) is not treated as damaged: the server retries for ~2.5 s, and if it still can't open it the app says so and leaves `data.json` untouched for that session instead of overwriting it with the browser's copy.
+- A linked CSV copy (optional, e.g. on Google Drive) serves as a portable, human-readable spare. Importing an old CSV that only has a `water_bottles` column converts it at 700 ml per bottle.
+
+## Code map (for whoever changes this next)
+
+Read `CLAUDE.md` first — it holds the rules for changing the app safely (live data, demo-only testing, the viewport the day sheet must fit, design rules).
+
+`index.html` is one file: a tiny theme script in `<head>`, the CSS (~lines 20–1500, ending with the DARK THEME and PHONE blocks), the markup, then the main inline `<script>` (~lines 1820–6850) and a small `<script type="module">` for Firebase at the very end. CSS and script are both organised in banner-commented sections; the script's, in order:
+
+| Section | What lives there |
+|---|---|
+| CONFIG | reads `window.MONTHLY_PLAN_CONFIG` from `config.local.js` (or, on the phone, the copy the cloud sent), else neutral examples: `START`, `HYG_SINCE`, `JOURNAL_SINCE`, `LEGACY_GYM_IDS`, the `TASKS` array (id, group, label, points, `since`, gym/rest variants), `MONEY_BUDGET`, `WEIGHT_START` / `WEIGHT_TARGET`; plus fixed tuning: `WATER_TARGET_ML`, `SLEEP_LO/HI/FALLOFF` (6 / 8 / 1.5 h), `GYM_TARGET` / `GYM_PENALTY` (4 / 5), `ZONE_GOOD` / `ZONE_MID` (60 / 20), `FIN_COLORS` |
+| DATE HELPERS | local-time date math (no UTC), `key()` → `YYYY-MM-DD` |
+| STORAGE | `load()` / `save()`, disk sync via `/api/data` (laptop only), heartbeat, `localStorage` mirror, corrupt-blob rescue |
+| CLOUD SYNC | `CLOUD` state, `cloudMerge` (first copy in), `cloudDocs` (changes in), `cloudPush` (changes out), `cloudConfig`, the Sync card |
+| DEMO SEED | deterministic sample history for `?demo=1` |
+| SCORING | `waterScore`, `sleepScore`, `scoreDay`, `gymWeek` (Mon–Sun weeks), `finalScore` (only for days that have ended) |
+| RANK & LEVEL | `RANK_FLOOR`, window/confirm/grace constants, hygiene and gym gates, `TITLE_TRACKS` (spending + weight ladders), `levelState` |
+| TABS / CALENDAR | view switching, the month grid, the 🏦 finances drawer, the 📖 journal notepad (`openJournal`, `jrTurn` page flips), and the rank/title detail drawer |
+| FLIP CLOCK / FOCUS | the 24-hour clock and its full-screen version; the Forest-style focus timer |
+| STICKY NOTES / DEADLINES / MIND MAPS | the two rails (`renderNotes`, `renderDeadlines`, `openDeadlines`) and the mind map window (`openMindmap`, `mmLayout`, `mmRender`) |
+| SETTINGS | `_prefs`, the profile bar, the ⚙ panel, light/dark (`applyTheme`, `setTheme`) |
+| DAY SHEET | `openSheet`, `renderSheetBody` and the counters (water, money, weight, sleep) |
+| ANALYTICS | charts and panels |
+| CSV | File System Access link (handle kept in IndexedDB `monthlyPlanFS`), export / import |
+| MISC | toast, demo bar, start-up and the midnight rollover |
+| PHONE | `phoneApply` / `phoneTab` (the bottom bar's pages), `renderPMore`; its layout is the PHONE block at the end of the CSS |
+| FIREBASE (module) | `firebaseCloud` — sign-in, the Firestore listener and writes, behind the small interface CLOUD SYNC uses; tests hand in `window.MP_CLOUD_TEST` instead |
+
+Other storage keys (kept out of the log on purpose): `monthlyPlan.demo.v1` (demo log), `<store key>.rank` (last rank seen, for the one-time "Rank up / Rank down" toast), `<store key>.cloudUid` (this device has synced with that account before), `monthlyPlan.theme` (the theme, applied before first paint), `monthlyPlan.config` (the phone's copy of your settings), `monthlyPlan.start` (day one, when no `START` is configured).
+
+To add a task: append it to `TASKS` in your `config.local.js` with `since:'YYYY-MM-DD'` (the day it starts counting), then reload. Don't change `pts` on an existing task without a dated rule — past scores are recomputed from the log, so an undated change rewrites history.
+
+## History
+
+| Date | Change |
+|---|---|
+| 17 Aug 2026 | Day 1 of the plan; daily live use begins. |
+| 14 Sep 2026 | Water switched from 700 ml bottles to millilitres (`e.water` is ml); target 3.0 L; bottle icons became 1 L each. |
+| 27 Sep 2026 | Four hygiene checks added (score range −82…+82 → −86…+86); A/S rank gates switched to hygiene (+ gym quota for S), applied only from this date. |
+| 27 Sep 2026 | Log moved from the app folder into `data/`; folder made a git repo (`main`), with `data/` git-ignored. |
+| 1 Oct 2026 | Journal added: 📖 spiral notepad, one page per day from 28 Sep 2026 (`JOURNAL_SINCE`); unscored, stored as `e.note`, exported to CSV as `note`. |
+| 2 Oct 2026 | Deadlines added: yellow rail on the right and a ＋ drawer for adding and history; stored under `_deadlines`, never scored. |
+| 2 Oct 2026 | Sticky notes added: light-orange rail on the left (≥1500 px), stored under `_notes`, never scored. Calendar cell also fits the room between the rails. |
+| 2 Oct 2026 | Side rails widened to 290 px; app opens full screen; 24-hour flip clock under the calendar. |
+| 2 Oct 2026 | Repo made public: personal settings moved to the git-ignored `config.local.js`. Focus timer with a growing tree; notes reorder by dragging. |
+| 4 Oct 2026 | Mind maps added as the lower half of the deadlines rail, stored under `_mindmaps`, never scored. |
+| 5 Oct 2026 | Mind maps redesigned: one mode, tapered branches, spring motion, undo/redo; rails show whole tiles only. |
+| 6 Oct 2026 | Settings (profile, show/hide parts, data & backups) under `_prefs`; dark theme; the flip clock opens full screen. |
+| 7 Oct 2026 | Sync through Firebase (Google sign-in, Firestore); the log moved to the cloud with `data.json` kept as the laptop's backup. Phone layout and installable app (GitHub Pages, `manifest.webmanifest`, `sw.js`). |
+
+## License
+
+MIT — see `LICENSE`. Fork it, change it, make it yours.

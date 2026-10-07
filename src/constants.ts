@@ -682,61 +682,87 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
     {
       id: 'monthly-plan',
       title: 'Monthly Plan',
-      subtitle: 'A self-help gamified daily discipline tracker, modeled on the "System" from Solo Leveling',
+      subtitle: 'A gamified daily discipline tracker, modeled on the "System" from Solo Leveling',
       icon: 'Trophy',
       category: 'project',
-      coverImage: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/Calender-view.png`,
-      introduction: "Monthly Plan is a private, single-page daily discipline tracker built for exactly one user: me. Every day is a quest with assigned tasks, the day locks in at midnight, and failing a task costs points instead of just earning none. It's not a neutral habit checklist — the penalty is the point. It was designed and built end-to-end through iterative collaboration with Claude, from the scoring engine's math to the local server architecture.",
-      tags: ['Gamification', 'Self-Improvement', 'Habit Tracking', 'Claude', 'Local-First'],
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/calendar.png`,
+      introduction: "Monthly Plan is a single-page, offline daily discipline tracker built for exactly one user: me. Every day is a quest with assigned tasks, the day locks in at midnight, and failing a task costs points instead of just earning none. It's not a neutral habit checklist — the penalty is the point. It started in August 2026 as a calendar and a score, and daily use grew it into a journal, a finances drawer, deadlines, mind maps, a focus timer, a dark theme and a phone app that stays in sync with the laptop. It was designed and built end-to-end through iterative collaboration with Claude.",
+      tags: ['Gamification', 'Self-Improvement', 'Habit Tracking', 'Claude', 'Local-First', 'Firebase', 'PWA'],
       status: 'published',
-      publishedDate: 'August 2026',
-      readTime: '6 min read',
+      publishedDate: 'October 2026',
+      readTime: '8 min read',
       contentBlocks: [
         { type: 'heading', content: 'Why It Exists', level: 2 },
-        { type: 'text', content: "Monthly Plan exists to keep one person honest about a daily routine — diet, gym, water, sleep, spending, and weight — by scoring each day out of 100 and turning the run into a visible rank and set of titles. It was built after the previous version's log was silently wiped by Chrome clearing local storage, so the whole architecture is designed around one hard rule: opening the app must never require a manual step, or the log goes cold and the habit dies with it." },
+        { type: 'text', content: "Monthly Plan exists to keep one person honest about a daily routine — diet, gym, water, sleep, spending, and weight — by scoring each day and turning the run into a visible rank, level, and set of titles. It was built after the previous version's log was silently wiped by Chrome clearing local storage, so the whole architecture is designed around one hard rule: opening the app must never require a manual step, or the log goes cold and the habit dies with it." },
+
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/calendar.png`, caption: 'The main screen — sticky notes on the left, the month colored by score in the middle, deadlines and mind maps on the right, with the flip clock and Focus tile below' },
 
         { type: 'heading', content: 'How It Runs', level: 3 },
         {
           type: 'list',
           items: [
-            'A launcher script starts a tiny stdlib-only Python server on localhost and opens the app in its own dedicated Chrome app-window profile, isolated from normal browsing so clearing browser data can never touch it again.',
-            'A JSON file next to the app is the single source of truth — written atomically (temp file + replace) with a rolling backup copy. The server shuts itself down once the window closes.',
+            'A launcher script starts a tiny stdlib-only Python server on localhost and opens the app full screen in its own dedicated Chrome app-window profile, isolated from normal browsing so clearing browser data can never touch it again.',
+            'The laptop keeps the log in a JSON file, written atomically (temp file + replace) with a rolling backup copy. The server shuts itself down about 90 seconds after the window closes.',
+            'Signed in with Google, every key of the log is also its own Firestore document. A change on one device reaches the other in a second or two, keys merge one by one, and the latest change to a day wins.',
             "If Python isn't available, the app falls back to a plain file:// page backed by localStorage, so it still works, just without durable file storage."
           ]
         },
 
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/Calender-view.png`, caption: 'Calendar view — a full month grid, each day colored by score band' },
-
-        { type: 'heading', content: 'Core Features', level: 2 },
-        {
-          type: 'list',
-          items: [
-            'Calendar view — full month grid colored by score band (Good / Moderate / Bad / in progress), with a running month summary.',
-            'Day sheet — tap any day to check off ~15 weighted tasks grouped into All day / Morning / Afternoon / Evening / Night, with a live 0–100 score bar.',
-            'Analytics view — weekly score trend, gym attendance table, spending chart against a daily budget line, and weight progress toward target.',
-            'Gym / rest day toggle — the morning task set reshapes itself depending on the day type, while both variants still sum to 100.',
-            'CSV sync — the log can be linked directly to a .csv file on disk (e.g. inside a synced Drive folder) via the File System Access API.'
-          ]
-        },
-
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/day-sheet.png`, caption: 'Day sheet — tasks grouped by time of day, with a live score bar' },
-
         { type: 'divider' },
+
+        { type: 'heading', content: 'The Day Sheet', level: 2 },
+        { type: 'text', content: "Tapping any day opens its sheet: tasks grouped into All day / Morning / Afternoon / Evening / Night, with a live score bar against that day's maximum. Water is entered in millilitres and scored on a curve toward a 3.0 L target (bottle icons fill at 1 L each), and sleep is scored on a curve that gives full points inside 6–8 hours and falls off outside it. Ticking \"Went to gym\" swaps the morning tasks to their gym-day variants." },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/day-sheet.png`, caption: 'Day sheet — every unticked task shows the points it will cost' },
 
         { type: 'heading', content: 'The Design Signature: Penalty-Based Scoring', level: 2 },
         { type: 'quote', content: "An unchecked task actively subtracts its weight rather than simply not adding — it mirrors a game system's daily quest penalty, not a forgiving habit tracker." },
-        { type: 'text', content: 'The score runs −100 to +100, not 0–100. Two tasks (10 AM and 3 PM plain tea) are flagged as bonus: they add points if done but cost nothing if skipped — the one intentional exception to the penalty model. Missing the weekly 4-session gym target docks that week\'s average by a flat 5 points, without touching or repainting any individual day\'s score.' },
+        { type: 'text', content: "With the built-in tasks a day runs from −77 to +77, and gym days and rest days cap at the same total. Days land in three zones: Good (60+), Moderate (20–59) and Bad (below 20). Missing the weekly 4-session gym target docks that week's average by a flat 5 points, without touching or repainting any individual day's score." },
+        { type: 'text', content: "A task added mid-run carries a start date. On days before it, it shows faded and doesn't count, so adding a task never rewrites past scores." },
 
-        { type: 'heading', content: 'Dual Rank System', level: 3 },
-        { type: 'text', content: "Rank (E → D → C → B → A → S) is a rolling 7-day average that can rise or fall, with a 3-day confirmation before promotion and a 3-day grace period before demotion, so one great or one bad day can't whipsaw the rank. Rank history is never stored — it's replayed live from the score log, so editing a past day retroactively and correctly rewrites the whole rank timeline." },
-        { type: 'text', content: "Weekly body-weight and daily spending are deliberately kept outside the 100-point score — logged, charted, and totaled, but never penalized. Each instead earns its own title track as it improves, a boundary that reflects that biology and money don't answer to willpower the way a checklist does." },
+        { type: 'heading', content: 'Rank and Level', level: 3 },
+        { type: 'text', content: "Rank (E → D → C → B → A → S) is a rolling 7-day average that can rise or fall, with a 3-day confirmation before promotion and a 3-day grace period before demotion, so one great or one bad day can't whipsaw it. The top two ranks are gated: A needs full hygiene on 5 of the 7 days, and S needs all 7 plus last week's gym quota." },
+        { type: 'text', content: "Level is the permanent record and never falls. XP is the sum of positive day scores, so a bad day earns nothing but takes nothing back. Nothing derived is stored anywhere — rank, level and titles are recomputed from the log on every load, so editing a past day correctly rewrites everything downstream." },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/rank.png`, caption: 'Rank & Level drawer — the ladder, the gates on A and S, and how the rank has moved' },
 
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/rank-titles.png`, caption: 'Rank and title progression' },
+        { type: 'heading', content: 'Titles Instead of Points', level: 3 },
+        { type: 'text', content: "Weekly body-weight and daily spending are deliberately kept outside the score — logged, charted and totaled, but never penalized, because biology and money don't answer to willpower the way a checklist does. Each earns a title instead: weight climbs Unforged → Kindled → Tempered → Ironclad → Ascendant, and spending climbs Spendthrift → Steward → Warden → Ironpurse → Vaultkeeper." },
 
-        { type: 'heading', content: 'Analytics', level: 3 },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weekly.png`, caption: 'Weekly score trend and gym attendance' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-spending.png`, caption: 'Spending tracked against a daily budget line' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weight.png`, caption: 'Weight progress toward target' },
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Analytics', level: 2 },
+        { type: 'text', content: 'The Analytics view shows the stat tiles, the rank history, a daily score chart shaded by zone, the weekly average with the gym-quota table, a per-task breakdown of where the points actually go, weight progress toward the target, and hydration month by month.' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-overview.png`, caption: 'Stat tiles, rank history and the daily score chart' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weekly.png`, caption: 'Weekly average — weeks under the gym quota lose 5 points' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weight.png`, caption: 'Where the points go, and weight progress toward the target' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/hydration.png`, caption: 'Hydration — each month against the 3.0 L target' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Everything Around the Score', level: 2 },
+        { type: 'text', content: 'Daily use kept asking for more than a checklist. Each of these lives completely outside the score:' },
+        {
+          type: 'list',
+          items: [
+            'Journal — a spiral notepad that slides in from the right, one page per day with 14 ruled lines and a strip summarising the day. Pages curl as you turn them.',
+            'Finances drawer — dated income, the credit card bill, a "Where it went" split, daily spending against the budget line, and a standing list of fixed deposits.',
+            'Deadlines — a yellow rail of dated to-dos, soonest first, with "In N days" / "Due today" / "N days overdue". Nothing is ever deleted; completing or cancelling only changes the status.',
+            'Mind maps — linked to a deadline, with tapered branches, tick circles that fade finished branches toward the centre, folding, drag-to-move, undo/redo and spring animation.',
+            'Sticky notes — a light-orange rail of free-form notes with basic formatting, five colours and drag-to-reorder.',
+            'Flip clock and Focus — a 24-hour flip clock that grows to full screen, and a Forest-style focus timer where every session grows a different generated tree.'
+          ]
+        },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/journal.png`, caption: 'Journal — one page per day, saved as you type' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/finances.png`, caption: 'Finances drawer — money stays apart from the daily score' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/mind-map.png`, caption: 'Mind map linked to a deadline — finished branches fade toward the centre' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/focus.png`, caption: 'Focus — drag the ring to set 10–120 minutes, then plant' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Phone, Sync and Dark Mode', level: 2 },
+        { type: 'text', content: 'Under 640 px wide the app turns into pages picked from a bar at the bottom: Today, Calendar, Notes, Deadlines and More. Hosted on GitHub Pages, it installs from Chrome as a full-screen app, and a service worker keeps an offline copy. Firestore keeps a copy on the device too, so the app opens without signal and sends queued changes once it is back online.' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/phone.png`, caption: 'The phone layout — Today and Calendar' },
+        { type: 'text', content: 'Settings hold the Google sign-in, your name, which parts are shown, data and backups, and the theme. Switching between light and dark spreads the new theme out in a circle from the button you pressed.' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/dark-mode.png`, caption: 'Dark theme' },
 
         { type: 'divider' },
 
@@ -744,14 +770,14 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         {
           type: 'list',
           items: [
-            'The live log is the single source of truth for everything — no derived state (rank, streaks, titles) is stored anywhere, it\'s all recomputed on load.',
+            'One log, two devices: the laptop file and the Firestore copy are kept in step, and each account can reach only its own folder.',
             'An automatic previous-copy backup is refreshed on every save.',
-            'A damaged file is quarantined to its own timestamped file rather than silently discarded, and the app starts fresh instead of crashing.',
-            'A linked CSV copy (optional, e.g. on Google Drive) serves as a portable, human-readable spare.'
+            'A damaged file is quarantined to its own timestamped file rather than silently discarded, and a file that is only locked for a moment by cloud sync or antivirus is retried, never overwritten.',
+            'A linked CSV copy (optional, e.g. on Google Drive) serves as a portable, human-readable spare, with export and import as a fallback.'
           ]
         },
 
-        { type: 'callout', content: 'Visiting with ?demo=1 loads sample data from a completely separate storage key — the real log is never read or written while demoing.', variant: 'tip' }
+        { type: 'callout', content: 'The code is public on GitHub (KD-27/monthly-plan) under the MIT license — copy config.example.js to config.local.js to set your own tasks, points and targets. Visiting with ?demo=1 loads made-up sample data from a separate storage key, so the real log is never read or written while demoing. All the screenshots here come from demo mode.', variant: 'tip' }
       ]
     },
 
