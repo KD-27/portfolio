@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Cpu } from 'lucide-react';
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ onThoughtLab: () => void }> = ({ onThoughtLab }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -36,20 +36,26 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
-            <Cpu className="h-8 w-8 text-neon-blue animate-spin-slow" />
-            <span className="font-mono font-bold text-xl tracking-wider text-white">KD<span className="text-neon-blue">.DEV</span></span>
+            <Cpu className="h-7 w-7 text-neon-blue" />
+            <span className="font-mono font-bold text-lg tracking-tight text-white">KD<span className="text-neon-blue">.DEV</span></span>
           </div>
           
-          <div className="hidden md:flex items-baseline space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="font-mono text-sm text-gray-300 hover:text-neon-blue transition-colors duration-200"
+                className="font-mono text-sm text-gray-300 hover:text-white transition-colors duration-200"
               >
                 {link.name}
               </a>
             ))}
+            <button
+              onClick={onThoughtLab}
+              className="font-mono text-sm text-neon-purple border border-neon-purple/30 rounded-full px-4 py-1.5 hover:bg-neon-purple/10 transition-colors"
+            >
+              Thought Lab
+            </button>
           </div>
 
           <div className="md:hidden">
@@ -66,7 +72,7 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* Scroll Progress Bar */}
-      <div className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-neon-blue via-neon-purple to-neon-green transition-all duration-100 ease-out" style={{ width: `${scrollProgress * 100}%` }}></div>
+      <div className="absolute bottom-0 left-0 h-[2px] bg-neon-blue transition-all duration-100 ease-out" style={{ width: `${scrollProgress * 100}%` }}></div>
 
       {/* Mobile menu */}
       {isOpen && (
@@ -82,6 +88,12 @@ const Navbar: React.FC = () => {
                 {link.name}
               </a>
             ))}
+            <button
+              onClick={() => { setIsOpen(false); onThoughtLab(); }}
+              className="text-neon-purple block w-full text-left px-3 py-2 rounded-md text-base font-medium font-mono"
+            >
+              Thought Lab
+            </button>
           </div>
         </div>
       )}

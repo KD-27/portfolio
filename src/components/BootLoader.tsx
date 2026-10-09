@@ -1,94 +1,44 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Cpu, CheckCircle2 } from 'lucide-react';
 
-const BOOT_SEQUENCE = [
-  "INITIALIZING KERNEL...",
-  "LOADING MEMORY MODULES...",
-  "CALIBRATING SENSORS...",
-  "CHECKING SYSTEM INTEGRITY...",
-  "ESTABLISHING NEURAL LINK...",
-  "RENDERING INTERFACE...",
-  "ACCESS GRANTED."
-];
+// Total time on screen before the site fades in. Kept short so visitors land on content fast.
+const INTRO_DURATION_MS = 900;
+
+export const INTRO_SEEN_KEY = 'kd-intro-seen';
 
 const BootLoader: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
-  const [progress, setProgress] = useState(0);
-  const [logs, setLogs] = useState<string[]>([]);
-
   useEffect(() => {
-    let currentLog = 0;
-    
-    // Log interval - SLOWED DOWN to 800ms per line
-    const logInterval = setInterval(() => {
-      if (currentLog < BOOT_SEQUENCE.length) {
-        setLogs(prev => [...prev, BOOT_SEQUENCE[currentLog]]);
-        currentLog++;
-      }
-    }, 800);
-
-    // Progress interval - SLOWED DOWN
-    const progressInterval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          clearInterval(logInterval);
-          // Hold at 100% for 1.5 seconds before entering site
-          setTimeout(onComplete, 1500); 
-          return 100;
-        }
-        // Increment by only 0.5% per tick for smoother, slower loading
-        // Total time approx: (100 / 0.5) * 30ms = 6000ms (6 seconds)
-        return prev + 0.5; 
-      });
-    }, 30);
-
-    return () => {
-      clearInterval(progressInterval);
-      clearInterval(logInterval);
-    };
+    try {
+      sessionStorage.setItem(INTRO_SEEN_KEY, '1');
+    } catch {
+      // Storage can be blocked (private mode); the intro just plays again next time.
+    }
+    const timer = setTimeout(onComplete, INTRO_DURATION_MS);
+    return () => clearTimeout(timer);
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center font-mono p-4">
-      <div className="w-full max-w-md">
-        <div className="flex items-center gap-2 text-neon-blue mb-6 animate-pulse">
-           <Cpu size={32} />
-           <h1 className="text-2xl font-bold tracking-widest">SYSTEM BOOT</h1>
-        </div>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-mech-dark">
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full bg-neon-blue/10 blur-[120px]" />
 
-        {/* Terminal Window */}
-        <div className="bg-mech-surface border border-white/10 rounded-lg p-4 h-48 overflow-hidden mb-6 shadow-[0_0_20px_rgba(0,243,255,0.1)] relative">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-neon-blue to-transparent opacity-50"></div>
-          <div className="flex flex-col justify-end h-full space-y-1">
-            {logs.map((log, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-2 text-xs md:text-sm text-neon-green"
-              >
-                <span className="text-gray-600">[{new Date().toLocaleTimeString()}]</span>
-                <span>{'>'} {log}</span>
-                {index < logs.length - 1 && <CheckCircle2 size={12} className="ml-auto text-neon-blue" />}
-              </motion.div>
-            ))}
-          </div>
-        </div>
+      <div className="relative flex flex-col items-center">
+        <motion.span
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="font-mono font-bold text-4xl tracking-tight text-white"
+        >
+          KD<span className="text-neon-blue">.</span>
+        </motion.span>
 
-        {/* Progress Bar */}
-        <div className="relative h-2 w-full bg-gray-900 rounded overflow-hidden border border-white/10">
-          <motion.div 
-            className="absolute top-0 left-0 h-full bg-neon-blue shadow-[0_0_10px_#00f3ff]"
-            style={{ width: `${progress}%` }}
+        <div className="mt-5 h-px w-28 bg-white/10 overflow-hidden">
+          <motion.div
+            className="h-full bg-neon-blue"
+            initial={{ width: 0 }}
+            animate={{ width: '100%' }}
+            transition={{ duration: INTRO_DURATION_MS / 1000 - 0.1, ease: 'easeInOut' }}
           />
         </div>
-        <div className="flex justify-between mt-2 text-xs text-gray-500 font-bold">
-          <span>LOADING_ASSETS</span>
-          <span>{Math.floor(progress)}%</span>
-        </div>
-
       </div>
     </div>
   );

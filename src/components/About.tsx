@@ -10,7 +10,7 @@ const About: React.FC = () => {
         <h2 className="text-3xl font-bold font-mono text-white mb-8">ABOUT <span className="text-neon-blue">ME</span></h2>
         <div className="bg-mech-surface p-8 rounded-2xl shadow-xl border border-gray-800">
           <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-neon-blue shadow-[0_0_20px_rgba(0,243,255,0.3)] flex-shrink-0">
+            <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-neon-blue shadow-[0_0_20px_rgba(56,189,248,0.3)] flex-shrink-0">
               <img src={ABOUT_DATA.photo} alt="Kaveesha Dhananjaya" className="w-full h-full object-cover" />
             </div>
             <div className="text-left">

@@ -8,19 +8,21 @@ const Process: React.FC = () => {
     <section id="process" className="py-20 bg-mech-surface">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold font-mono text-white mb-4">
-            MY <span className="text-neon-green">JOURNEY</span>
+          <p className="font-code text-xs uppercase tracking-wider text-neon-green mb-3">Journey</p>
+          <h2 className="font-mono font-bold text-4xl md:text-5xl text-white tracking-tight mb-3">
+            How I got here
           </h2>
           <p className="text-gray-400">The milestones that shaped me into the engineer I am today.</p>
         </div>
 
         <div className="relative">
           {/* Central Timeline Line */}
-          <div className="absolute left-4 md:left-1/2 md:-translate-x-0.5 top-0 bottom-0 w-1 bg-gradient-to-b from-neon-green via-neon-green to-gray-800 z-0"></div>
+          <div className="absolute left-4 md:left-1/2 md:-translate-x-0.5 top-0 bottom-0 w-px bg-gradient-to-b from-neon-green/60 via-white/15 to-neon-green/60 z-0"></div>
 
           <div className="flex flex-col gap-16 relative z-10">
             {PROCESS_STEPS.map((step, index) => {
               const isLeft = index % 2 === 0;
+              const isCurrent = index === PROCESS_STEPS.length - 1;
               
               return (
                 <motion.div
@@ -34,8 +36,10 @@ const Process: React.FC = () => {
                   } flex-row`}
                 >
                   {/* Timeline Node */}
-                  <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-neon-green z-20 shadow-lg shadow-neon-green/50">
-                    <div className="absolute inset-0 rounded-full bg-neon-green animate-ping opacity-30"></div>
+                  <div className={`absolute left-4 md:left-1/2 -translate-x-1/2 w-3 h-3 rounded-full z-20 ${
+                    isCurrent ? 'bg-neon-green' : 'bg-mech-surface border-2 border-neon-green/70'
+                  }`}>
+                    {isCurrent && <div className="absolute inset-0 rounded-full bg-neon-green animate-ping opacity-40"></div>}
                   </div>
 
                   {/* Content */}
@@ -47,17 +51,22 @@ const Process: React.FC = () => {
                       className="group"
                     >
                       {/* Year */}
-                      <span className="text-2xl md:text-3xl font-bold font-mono text-neon-green">
+                      <span className={`inline-flex items-center gap-2 font-code text-sm text-neon-green ${isLeft ? 'md:flex-row-reverse' : ''}`}>
                         {step.year}
+                        {isCurrent && (
+                          <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-neon-green/10 border border-neon-green/30">
+                            Now
+                          </span>
+                        )}
                       </span>
                       
                       {/* Title */}
-                      <h3 className="text-xl md:text-2xl font-bold text-white mt-1 mb-3 group-hover:text-neon-green transition-colors whitespace-normal">
+                      <h3 className="font-mono text-xl md:text-2xl font-semibold text-white mt-2 mb-3 group-hover:text-neon-green transition-colors whitespace-normal">
                         {step.title}
                       </h3>
                       
                       {/* Description */}
-                      <p className="text-gray-400 text-sm md:text-base leading-relaxed text-justify">
+                      <p className="text-gray-400 text-sm md:text-base leading-relaxed">
                         {step.description}
                       </p>
                     </motion.div>

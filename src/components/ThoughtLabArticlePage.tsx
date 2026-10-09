@@ -74,7 +74,7 @@ const EQUATION_FONT = "'JetBrains Mono', 'Fira Code', Menlo, Consolas, 'Courier 
 
 const EquationBlock: React.FC<{ content: string }> = ({ content }) => (
   <div className="my-6 flex justify-center">
-    <div className="max-w-full overflow-x-auto px-6 py-4 rounded-lg bg-mech-dark border border-neon-blue/25 shadow-[0_0_20px_rgba(0,243,255,0.08)]">
+    <div className="max-w-full overflow-x-auto px-6 py-4 rounded-lg bg-mech-dark border border-neon-blue/25 shadow-[0_0_20px_rgba(56,189,248,0.08)]">
       <p
         className="text-center text-base md:text-lg text-neon-blue whitespace-nowrap"
         style={{ fontFamily: EQUATION_FONT, letterSpacing: '0.02em' }}
@@ -202,7 +202,7 @@ const ListBlock: React.FC<{ items: string[]; ordered?: boolean }> = ({ items, or
               {idx + 1}
             </span>
           ) : (
-            <span className="flex-shrink-0 mt-2 w-1.5 h-1.5 rounded-full bg-neon-purple shadow-[0_0_6px_rgba(188,19,254,0.7)]" />
+            <span className="flex-shrink-0 mt-2 w-1.5 h-1.5 rounded-full bg-neon-purple shadow-[0_0_6px_rgba(167,139,250,0.7)]" />
           )}
           <span>{linkify(item)}</span>
         </li>
@@ -267,9 +267,9 @@ const OUTPUT_COLS = ['', 'md:grid-cols-1', 'md:grid-cols-2', 'md:grid-cols-3', '
 
 // Phases are colored in order of first appearance: blue -> purple -> green
 const PHASE_STYLES = [
-  { text: 'text-neon-blue', border: 'border-neon-blue/40', bg: 'bg-neon-blue/10', glow: 'shadow-[0_0_18px_rgba(0,243,255,0.35)]' },
-  { text: 'text-neon-purple', border: 'border-neon-purple/40', bg: 'bg-neon-purple/10', glow: 'shadow-[0_0_18px_rgba(188,19,254,0.35)]' },
-  { text: 'text-neon-green', border: 'border-neon-green/40', bg: 'bg-neon-green/10', glow: 'shadow-[0_0_18px_rgba(10,255,10,0.3)]' }
+  { text: 'text-neon-blue', border: 'border-neon-blue/40', bg: 'bg-neon-blue/10', glow: 'shadow-[0_0_18px_rgba(56,189,248,0.35)]' },
+  { text: 'text-neon-purple', border: 'border-neon-purple/40', bg: 'bg-neon-purple/10', glow: 'shadow-[0_0_18px_rgba(167,139,250,0.35)]' },
+  { text: 'text-neon-green', border: 'border-neon-green/40', bg: 'bg-neon-green/10', glow: 'shadow-[0_0_18px_rgba(52,211,153,0.3)]' }
 ];
 
 const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?: string }> = ({ steps, outputs, caption }) => {

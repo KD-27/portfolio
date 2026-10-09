@@ -7,7 +7,7 @@ import Skills from './components/Skills';
 import Achievements from './components/Achievements';
 import About from './components/About';
 import Contact from './components/Contact';
-import BootLoader from './components/BootLoader';
+import BootLoader, { INTRO_SEEN_KEY } from './components/BootLoader';
 import Process from './components/Process';
 import ThoughtLabCTA from './components/ThoughtLabCTA';
 
@@ -38,7 +38,14 @@ const parseHash = (): { page: PageView; articleId: string | null } => {
 };
 
 const App: React.FC = () => {
-  const [loading, setLoading] = useState(true);
+  // Only show the intro on the first visit of a browser session
+  const [loading, setLoading] = useState(() => {
+    try {
+      return !sessionStorage.getItem(INTRO_SEEN_KEY);
+    } catch {
+      return true;
+    }
+  });
   const [currentPage, setCurrentPage] = useState<PageView>(() => parseHash().page);
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(() => parseHash().articleId);
 
@@ -106,11 +113,11 @@ const App: React.FC = () => {
       default:
         return (
           <div className="bg-mech-dark min-h-screen selection:bg-neon-blue selection:text-mech-dark animate-fade-in">
-            <Navbar />
+            <Navbar onThoughtLab={navigateToThoughtLab} />
             <main>
               <Hero />
               <Projects />
-              <ThoughtLabCTA onNavigate={navigateToThoughtLab} />
+              <ThoughtLabCTA onNavigate={navigateToThoughtLab} onSelectArticle={navigateToArticle} />
               <Research />
               <Process />
               <Skills />
@@ -138,7 +145,7 @@ const App: React.FC = () => {
           to { opacity: 1; }
         }
         .animate-fade-in {
-          animation: fadeIn 1s ease-in-out forwards;
+          animation: fadeIn 0.5s ease-out forwards;
         }
       `}</style>
     </>

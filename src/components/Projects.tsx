@@ -285,7 +285,7 @@ const Projects: React.FC = () => {
               aria-modal="true"
               aria-labelledby="project-modal-title"
               tabIndex={-1}
-              className="bg-mech-surface w-full max-w-6xl max-h-[90vh] rounded-2xl border border-neon-blue/30 shadow-[0_0_50px_rgba(0,243,255,0.1)] overflow-hidden flex flex-col relative outline-none"
+              className="bg-mech-surface w-full max-w-6xl max-h-[90vh] rounded-2xl border border-neon-blue/30 shadow-[0_0_50px_rgba(56,189,248,0.1)] overflow-hidden flex flex-col relative outline-none"
             >
                {/* Close Button */}
                <button

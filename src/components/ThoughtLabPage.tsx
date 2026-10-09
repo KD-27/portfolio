@@ -34,7 +34,7 @@ const ArticleCard: React.FC<{
       role="button"
       tabIndex={0}
       aria-label={`Read ${article.title}`}
-      className={`group relative bg-mech-surface border border-white/5 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:border-neon-purple/30 hover:shadow-[0_0_30px_rgba(188,19,254,0.1)] ${isComingSoon ? 'opacity-80' : ''}`}
+      className={`group relative bg-mech-surface border border-white/5 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:border-neon-purple/30 hover:shadow-[0_0_30px_rgba(167,139,250,0.1)] ${isComingSoon ? 'opacity-80' : ''}`}
     >
       <div className="relative h-44 overflow-hidden">
         <img 

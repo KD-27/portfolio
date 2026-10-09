@@ -13,7 +13,7 @@ const Contact: React.FC = () => {
         </p>
         <a 
           href={`mailto:${SOCIAL_LINKS.email}`} 
-          className="inline-flex items-center gap-3 px-8 py-4 bg-neon-blue text-black font-bold text-lg rounded hover:bg-white transition-colors shadow-[0_0_20px_rgba(0,243,255,0.4)]"
+          className="inline-flex items-center gap-3 px-8 py-4 bg-neon-blue text-black font-bold text-lg rounded hover:bg-white transition-colors shadow-[0_0_20px_rgba(56,189,248,0.4)]"
         >
           <Mail /> SAY HELLO
         </a>
