@@ -70,10 +70,10 @@ const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onSelectArticle }) => {
       <main>
         <section className={`${CONTAINER} pt-12 pb-12 md:pt-20 md:pb-16`}>
           <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
-            Thought Lab · {visible.length} entries
+            Writing · {visible.length} entries
           </p>
           <h1 className="font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-7xl">
-            Writing & lab notes
+            Thought Lab
           </h1>
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-muted md:text-lg">
             {THOUGHT_LAB_DATA.introduction}
@@ -88,7 +88,7 @@ const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onSelectArticle }) => {
                     e.preventDefault();
                     document.getElementById(`lab-${g.id}`)?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="rounded-full border border-rule bg-white px-3.5 py-1.5 text-sm text-muted hover:border-ink hover:text-ink transition-colors"
+                  className="rounded-full border border-rule bg-card px-3.5 py-1.5 text-sm text-muted hover:border-ink hover:text-ink transition-colors"
                 >
                   {g.title} <span className="text-faint">{g.articles.length}</span>
                 </a>

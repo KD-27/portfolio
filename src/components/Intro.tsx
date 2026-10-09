@@ -1,19 +1,16 @@
 import React from 'react';
 import { ArrowUpRight, Download } from 'lucide-react';
-import { ABOUT_DATA, ACHIEVEMENTS, HERO_DATA, PROJECTS, RESEARCH_PAPERS, SOCIAL_LINKS } from '../constants';
+import { ABOUT_DATA, HERO_DATA, RESEARCH_PAPERS, SOCIAL_LINKS } from '../constants';
 import { CONTAINER } from '../utils/layout';
 
 const LINKS = [
   { label: 'Email', href: `mailto:${SOCIAL_LINKS.email}` },
-  { label: 'Google Scholar', href: SOCIAL_LINKS.scholar },
   { label: 'GitHub', href: SOCIAL_LINKS.github },
   { label: 'LinkedIn', href: SOCIAL_LINKS.linkedin },
 ];
 
 const STATS = [
   { value: String(RESEARCH_PAPERS.length), label: 'Research papers' },
-  { value: String(PROJECTS.length), label: 'Featured projects' },
-  { value: String(ACHIEVEMENTS.length), label: 'Honours & awards' },
   { value: '3.91', label: 'CGPA, First Class' },
 ];
 
@@ -44,7 +41,7 @@ const Intro: React.FC = () => {
             <p className="mb-3 text-sm font-medium text-ink">Research interests</p>
             <ul className="flex flex-wrap gap-2">
               {HERO_DATA.interests.map((interest) => (
-                <li key={interest} className="rounded-full border border-rule bg-white px-3 py-1 text-sm text-muted">
+                <li key={interest} className="rounded-full border border-rule bg-card px-3 py-1 text-sm text-muted">
                   {interest}
                 </li>
               ))}
@@ -75,30 +72,27 @@ const Intro: React.FC = () => {
         </div>
 
         <div className="order-1 md:order-2">
-          <figure className="w-40 md:w-full">
-            <img
-              src={ABOUT_DATA.photo}
-              alt={`Portrait of ${HERO_DATA.name}`}
-              className="aspect-[4/5] w-full rounded-sm object-cover"
-            />
-            <figcaption className="mt-3 hidden text-xs leading-relaxed text-faint md:block">
-              {HERO_DATA.title}. {HERO_DATA.intro}
-            </figcaption>
-          </figure>
+          <img
+            src={ABOUT_DATA.photo}
+            alt={`Portrait of ${HERO_DATA.name}`}
+            className="aspect-[4/5] w-40 rounded-sm object-cover md:w-full"
+          />
+
+          {/* Headline figures sit right under the photo so they're visible without scrolling */}
+          <dl className="mt-5 grid max-w-xs grid-cols-2 border-y border-rule md:max-w-none">
+            {STATS.map((stat, i) => (
+              <div key={stat.label} className={`flex flex-col-reverse py-4 ${i > 0 ? 'border-l border-rule pl-5' : ''}`}>
+                <dt className="mt-2 text-xs leading-snug text-muted">{stat.label}</dt>
+                <dd className="font-serif text-4xl leading-none tracking-tight text-ink">{stat.value}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <p className="mt-4 hidden text-xs leading-relaxed text-faint md:block">
+            {HERO_DATA.title}. {HERO_DATA.intro}
+          </p>
         </div>
       </div>
-
-      <dl className="mt-16 grid grid-cols-2 border-t border-rule md:mt-20 md:grid-cols-4">
-        {STATS.map((stat, i) => (
-          <div
-            key={stat.label}
-            className={`py-6 ${i % 2 === 1 ? 'pl-6 border-l border-rule' : ''} ${i >= 2 ? 'border-t border-rule md:border-t-0' : ''} md:pl-6 md:first:pl-0 ${i > 0 ? 'md:border-l md:border-rule' : ''}`}
-          >
-            <dt className="text-sm text-muted">{stat.label}</dt>
-            <dd className="mt-1 font-serif text-4xl tracking-tight text-ink">{stat.value}</dd>
-          </div>
-        ))}
-      </dl>
     </section>
   );
 };

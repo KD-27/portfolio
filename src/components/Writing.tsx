@@ -18,8 +18,8 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
   return (
     <Section
       id="writing"
-      label="Thought Lab"
-      title="Writing & lab notes"
+      label="Writing"
+      title="Thought Lab"
       action={
         <button
           onClick={onOpenLab}
@@ -31,7 +31,7 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
       }
     >
       <p className="-mt-6 mb-10 max-w-2xl text-[15px] leading-relaxed text-muted">
-        Essays, hardware builds and AI-assisted tools: the thinking behind the work, written up as I go.
+        Ideas, builds and experiments, written up as I go.
       </p>
 
       {/* Featured entry */}

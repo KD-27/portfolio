@@ -4,7 +4,6 @@ import { HERO_DATA, SOCIAL_LINKS } from '../constants';
 import { CONTAINER } from '../utils/layout';
 
 const LINKS = [
-  { label: 'Google Scholar', href: SOCIAL_LINKS.scholar },
   { label: 'GitHub', href: SOCIAL_LINKS.github },
   { label: 'LinkedIn', href: SOCIAL_LINKS.linkedin },
 ];

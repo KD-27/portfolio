@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { HERO_DATA, SOCIAL_LINKS } from '../constants';
 import { CONTAINER } from '../utils/layout';
+import ThemeToggle from './ThemeToggle';
 
 interface HeaderProps {
   onHome: () => void;
@@ -18,16 +19,35 @@ const SECTIONS = [
   { id: 'contact', label: 'Contact' },
 ];
 
-const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingActive = false }) => {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+type Theme = 'light' | 'dark';
+
+// index.html sets data-theme before first paint; this keeps it in sync after that
+const useTheme = () => {
+  const [theme, setTheme] = useState<Theme>(() =>
+    document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+  );
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    document.documentElement.dataset.theme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#18181b' : '#f4f1ea');
+  }, [theme]);
+
+  const toggle = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      // Storage blocked (private mode): the choice just won't persist
+    }
+  };
+
+  return { theme, toggle };
+};
+
+const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingActive = false }) => {
+  const [open, setOpen] = useState(false);
+  const { theme, toggle } = useTheme();
 
   const go = (fn: () => void) => () => {
     setOpen(false);
@@ -36,15 +56,27 @@ const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingAc
 
   const linkClass = 'text-sm text-muted hover:text-ink transition-colors';
 
+  const themeButton = <ThemeToggle dark={theme === 'dark'} onToggle={toggle} />;
+
   return (
     <header
-      className={`sticky top-0 z-40 bg-paper/85 backdrop-blur-md transition-colors ${
-        scrolled || open ? 'border-b border-rule' : 'border-b border-transparent'
-      }`}
+      className="sticky top-0 z-40 border-b border-rule bg-bar/90 backdrop-blur-md transition-colors"
     >
       <div className={`${CONTAINER} flex h-16 items-center justify-between`}>
-        <button onClick={go(onHome)} className="font-serif text-xl tracking-tight text-ink">
-          {HERO_DATA.name}
+        <button
+          onClick={go(onHome)}
+          aria-label={`${HERO_DATA.name}, home`}
+          title={HERO_DATA.name}
+          className="-ml-1 rounded-sm p-1 opacity-90 transition-opacity hover:opacity-100"
+        >
+          {/* Black mark on transparent; inverted to white in dark mode */}
+          <img
+            src={`${import.meta.env.BASE_URL}logo-mark.png`}
+            alt=""
+            width={315}
+            height={236}
+            className="h-7 w-auto dark:invert"
+          />
         </button>
 
         <nav className="hidden items-center gap-7 md:flex" aria-label="Main">
@@ -65,16 +97,20 @@ const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingAc
           >
             CV
           </a>
+          {themeButton}
         </nav>
 
-        <button
-          onClick={() => setOpen(!open)}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          className="-mr-2 p-2 text-ink md:hidden"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          {themeButton}
+          <button
+            onClick={() => setOpen(!open)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            className="-mr-2 p-2 text-ink"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {open && (

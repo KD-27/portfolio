@@ -68,7 +68,7 @@ const HeadingBlock: React.FC<{ content: string; level?: 2 | 3 | 4 }> = ({ conten
 };
 
 const EquationBlock: React.FC<{ content: string }> = ({ content }) => (
-  <div className="my-8 overflow-x-auto rounded-sm border border-rule bg-white px-6 py-5">
+  <div className="my-8 overflow-x-auto rounded-sm border border-rule bg-card px-6 py-5">
     <p className="whitespace-nowrap text-center font-mono text-[15px] text-ink md:text-base">{content}</p>
   </div>
 );
@@ -123,7 +123,7 @@ const VideoBlock: React.FC<{ src: string; caption?: string; vertical?: boolean; 
 
   return (
     <figure className={`mx-auto ${fit ? 'my-4 w-full' : `my-10 ${vertical ? 'w-2/3 max-w-xs sm:w-2/5' : 'w-full'}`}`}>
-      <div className={`${vertical ? 'aspect-[9/16]' : 'aspect-video'} overflow-hidden rounded-sm bg-ink`}>
+      <div className={`${vertical ? 'aspect-[9/16]' : 'aspect-video'} overflow-hidden rounded-sm bg-black`}>
         {isYouTube ? (
           <iframe
             src={getYoutubeEmbedUrl(src)}
@@ -177,8 +177,8 @@ const CalloutBlock: React.FC<{ content: string; variant?: 'info' | 'warning' | '
 }) => {
   const styles = {
     info: { box: 'bg-accent-soft border-accent/20', icon: <Info className="h-5 w-5 flex-shrink-0 text-accent" /> },
-    warning: { box: 'bg-amber-50 border-amber-200', icon: <AlertCircle className="h-5 w-5 flex-shrink-0 text-amber-700" /> },
-    tip: { box: 'bg-emerald-50 border-emerald-200', icon: <Lightbulb className="h-5 w-5 flex-shrink-0 text-emerald-700" /> }
+    warning: { box: 'bg-warn-soft border-warn/25', icon: <AlertCircle className="h-5 w-5 flex-shrink-0 text-warn" /> },
+    tip: { box: 'bg-ok-soft border-ok/25', icon: <Lightbulb className="h-5 w-5 flex-shrink-0 text-ok" /> }
   };
   const style = styles[variant];
 
@@ -206,8 +206,8 @@ const OUTPUT_COLS = ['', 'md:grid-cols-1', 'md:grid-cols-2', 'md:grid-cols-3', '
 // Phases are coloured in order of first appearance: blue -> green -> amber
 const PHASE_STYLES = [
   { text: 'text-accent', border: 'border-accent/40', bg: 'bg-accent-soft' },
-  { text: 'text-emerald-700', border: 'border-emerald-600/40', bg: 'bg-emerald-50' },
-  { text: 'text-amber-700', border: 'border-amber-600/40', bg: 'bg-amber-50' }
+  { text: 'text-ok', border: 'border-ok/40', bg: 'bg-ok-soft' },
+  { text: 'text-warn', border: 'border-warn/40', bg: 'bg-warn-soft' }
 ];
 
 const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?: string }> = ({ steps, outputs, caption }) => {
@@ -240,7 +240,7 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
                 <div className={`z-10 flex h-10 w-10 items-center justify-center rounded-full border bg-paper ${st.border} ${st.text}`}>
                   <Icon size={18} />
                 </div>
-                <div className="rounded-sm border border-rule bg-white p-4">
+                <div className="rounded-sm border border-rule bg-card p-4">
                   <div className="mb-1 flex items-baseline gap-2">
                     <span className={`font-mono text-xs ${st.text}`}>{String(i + 1).padStart(2, '0')}</span>
                     <span className="font-semibold text-ink">{step.title}</span>
@@ -256,7 +256,7 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
                     </div>
                   )}
                   {step.note && (
-                    <div className="mt-3 flex items-start gap-1.5 rounded-sm border border-dashed border-amber-400 px-2 py-1.5 text-xs text-amber-800">
+                    <div className="mt-3 flex items-start gap-1.5 rounded-sm border border-dashed border-warn/60 px-2 py-1.5 text-xs text-warn">
                       <CornerDownRight size={12} className="mt-0.5 flex-shrink-0" />
                       <span>{step.note}</span>
                     </div>
@@ -275,7 +275,7 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
             {outputs.map(out => {
               const Icon = FLOW_ICONS[out.icon ?? ''] ?? Package;
               return (
-                <div key={out.label} className="rounded-sm border border-rule bg-white p-3 text-center">
+                <div key={out.label} className="rounded-sm border border-rule bg-card p-3 text-center">
                   <Icon size={20} className="mx-auto mb-2 text-accent" />
                   <div className="text-sm font-semibold text-ink">{out.label}</div>
                   {out.detail && <div className="mt-0.5 text-xs text-faint">{out.detail}</div>}
@@ -338,7 +338,7 @@ const TimelineBlock: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => (
                 <p className="text-[15px] leading-relaxed text-muted">{entry.detail}</p>
               </div>
               {entry.stat && (
-                <div className="flex-shrink-0 rounded-sm border border-rule bg-white px-4 py-3 text-center sm:w-36">
+                <div className="flex-shrink-0 rounded-sm border border-rule bg-card px-4 py-3 text-center sm:w-36">
                   <div className="font-serif text-3xl text-accent">{entry.stat.value}</div>
                   <div className="mt-1 text-[11px] leading-snug text-faint">{entry.stat.label}</div>
                 </div>
@@ -480,7 +480,7 @@ const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({
               <button
                 onClick={handleCopyLink}
                 aria-label={copied ? 'Link copied' : 'Copy article link'}
-                className={`inline-flex items-center gap-1.5 transition-colors ${copied ? 'text-emerald-700' : 'hover:text-ink'}`}
+                className={`inline-flex items-center gap-1.5 transition-colors ${copied ? 'text-ok' : 'hover:text-ink'}`}
               >
                 {copied ? <Check size={15} /> : <Link2 size={15} />}
                 <span aria-live="polite">{copied ? 'Link copied' : 'Copy link'}</span>
@@ -499,7 +499,7 @@ const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({
 
             <ul className="mb-12 flex flex-wrap gap-2">
               {article.tags.map(tag => (
-                <li key={tag} className="rounded-full border border-rule bg-white px-3 py-1 text-sm text-muted">{tag}</li>
+                <li key={tag} className="rounded-full border border-rule bg-card px-3 py-1 text-sm text-muted">{tag}</li>
               ))}
             </ul>
 
