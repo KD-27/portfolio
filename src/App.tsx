@@ -1,24 +1,18 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Projects from './components/Projects';
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import Header from './components/Header';
+import Intro from './components/Intro';
 import Research from './components/Research';
+import Projects from './components/Projects';
+import Writing from './components/Writing';
+import Experience from './components/Experience';
+import Honours from './components/Honours';
 import Skills from './components/Skills';
-import Achievements from './components/Achievements';
-import About from './components/About';
 import Contact from './components/Contact';
-import BootLoader, { INTRO_SEEN_KEY } from './components/BootLoader';
-import Process from './components/Process';
-import ThoughtLabCTA from './components/ThoughtLabCTA';
 
 const ThoughtLabPage = lazy(() => import('./components/ThoughtLabPage'));
 const ThoughtLabArticlePage = lazy(() => import('./components/ThoughtLabArticlePage'));
 
-const PageLoading: React.FC = () => (
-  <div className="min-h-screen bg-mech-dark flex items-center justify-center">
-    <div className="w-10 h-10 rounded-full border-2 border-neon-blue/30 border-t-neon-blue animate-spin" />
-  </div>
-);
+const PageLoading: React.FC = () => <div className="min-h-[60vh]" />;
 
 type PageView = 'home' | 'thought-lab' | 'thought-lab-article';
 
@@ -38,20 +32,10 @@ const parseHash = (): { page: PageView; articleId: string | null } => {
 };
 
 const App: React.FC = () => {
-  // Only show the intro on the first visit of a browser session
-  const [loading, setLoading] = useState(() => {
-    try {
-      return !sessionStorage.getItem(INTRO_SEEN_KEY);
-    } catch {
-      return true;
-    }
-  });
   const [currentPage, setCurrentPage] = useState<PageView>(() => parseHash().page);
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(() => parseHash().articleId);
-
-  const handleBootComplete = () => {
-    setLoading(false);
-  };
+  // Section to scroll to once the home page has rendered (when navigating from a Thought Lab page)
+  const pendingSection = useRef<string | null>(null);
 
   const navigateToThoughtLab = () => {
     setCurrentPage('thought-lab');
@@ -68,18 +52,28 @@ const App: React.FC = () => {
   };
 
   const navigateToHome = () => {
-    setCurrentPage('home');
-    setSelectedArticleId(null);
-    window.history.pushState(null, '', window.location.pathname + window.location.search);
+    if (currentPage !== 'home') {
+      setCurrentPage('home');
+      setSelectedArticleId(null);
+      window.history.pushState(null, '', window.location.pathname + window.location.search);
+    }
     window.scrollTo(0, 0);
   };
 
-  const navigateBackToLab = () => {
-    setCurrentPage('thought-lab');
-    setSelectedArticleId(null);
-    window.history.pushState(null, '', '#thought-lab');
-    window.scrollTo(0, 0);
+  const navigateToSection = (sectionId: string) => {
+    if (currentPage === 'home') {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    pendingSection.current = sectionId;
+    navigateToHome();
   };
+
+  useEffect(() => {
+    if (currentPage !== 'home' || !pendingSection.current) return;
+    document.getElementById(pendingSection.current)?.scrollIntoView();
+    pendingSection.current = null;
+  }, [currentPage]);
 
   // Restore state from the URL on browser Back/Forward (rather than always bouncing home)
   useEffect(() => {
@@ -96,59 +90,44 @@ const App: React.FC = () => {
   const renderPage = () => {
     switch (currentPage) {
       case 'thought-lab':
-        return (
-          <ThoughtLabPage 
-            onBack={navigateToHome} 
-            onSelectArticle={navigateToArticle}
-          />
-        );
+        return <ThoughtLabPage onSelectArticle={navigateToArticle} />;
       case 'thought-lab-article':
         return selectedArticleId ? (
-          <ThoughtLabArticlePage 
+          <ThoughtLabArticlePage
             articleId={selectedArticleId}
             onBack={navigateToHome}
-            onBackToLab={navigateBackToLab}
+            onBackToLab={navigateToThoughtLab}
+            onSelectArticle={navigateToArticle}
           />
         ) : null;
       default:
         return (
-          <div className="bg-mech-dark min-h-screen selection:bg-neon-blue selection:text-mech-dark animate-fade-in">
-            <Navbar onThoughtLab={navigateToThoughtLab} />
+          <>
             <main>
-              <Hero />
-              <Projects />
-              <ThoughtLabCTA onNavigate={navigateToThoughtLab} onSelectArticle={navigateToArticle} />
+              <Intro />
               <Research />
-              <Process />
+              <Projects />
+              <Writing onOpenLab={navigateToThoughtLab} onOpenArticle={navigateToArticle} />
+              <Experience />
+              <Honours />
               <Skills />
-              <Achievements />
-              <About />
-              <Contact />
             </main>
-          </div>
+            <Contact />
+          </>
         );
     }
   };
 
   return (
-    <>
-      {loading ? (
-        <BootLoader onComplete={handleBootComplete} />
-      ) : (
-        <Suspense fallback={<PageLoading />}>
-          {renderPage()}
-        </Suspense>
-      )}
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-out forwards;
-        }
-      `}</style>
-    </>
+    <div className="min-h-screen bg-paper text-ink">
+      <Header
+        onHome={navigateToHome}
+        onSection={navigateToSection}
+        onWriting={navigateToThoughtLab}
+        writingActive={currentPage !== 'home'}
+      />
+      <Suspense fallback={<PageLoading />}>{renderPage()}</Suspense>
+    </div>
   );
 };
 

@@ -1,243 +1,124 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import {
-  FlaskConical, ArrowLeft, Clock, ChevronRight, Sparkles, Wrench
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
 import type { ThoughtLabArticle } from '../types';
-import { getThoughtLabIcon } from '../utils/thoughtLabIcons';
+import { CONTAINER } from '../utils/layout';
+import Contact from './Contact';
 
 interface ThoughtLabPageProps {
-  onBack: () => void;
   onSelectArticle: (articleId: string) => void;
 }
 
-const ArticleCard: React.FC<{ 
-  article: ThoughtLabArticle; 
-  index: number;
-  onClick: () => void;
-}> = ({ article, index, onClick }) => {
+const ArticleCard: React.FC<{ article: ThoughtLabArticle; onClick: () => void }> = ({ article, onClick }) => {
   const isComingSoon = article.status === 'coming-soon';
-  
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.08, duration: 0.5 }}
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick();
-        }
-      }}
-      role="button"
-      tabIndex={0}
-      aria-label={`Read ${article.title}`}
-      className={`group relative bg-mech-surface border border-white/5 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:border-neon-purple/30 hover:shadow-[0_0_30px_rgba(167,139,250,0.1)] ${isComingSoon ? 'opacity-80' : ''}`}
-    >
-      <div className="relative h-44 overflow-hidden">
-        <img 
-          src={article.coverImage} 
-          alt={article.title}
-          className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-mech-surface via-mech-surface/50 to-transparent" />
-        
-        <div className="absolute top-4 left-4 w-10 h-10 rounded-lg bg-mech-dark/80 backdrop-blur-sm border border-white/10 flex items-center justify-center text-neon-purple">
-          {getThoughtLabIcon(article.icon, 20)}
-        </div>
 
+  return (
+    <button onClick={onClick} className="group text-left" aria-label={`Read ${article.title}`}>
+      <div className="relative overflow-hidden rounded-sm bg-wash">
+        <img
+          src={article.coverImage}
+          alt=""
+          loading="lazy"
+          className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+        />
         {isComingSoon && (
-          <div className="absolute top-4 right-4 px-3 py-1 bg-neon-purple/20 backdrop-blur-sm border border-neon-purple/30 rounded-full">
-            <span className="text-xs font-mono text-neon-purple">COMING SOON</span>
-          </div>
+          <span className="absolute left-3 top-3 rounded-full bg-paper px-2.5 py-1 text-xs font-medium text-ink">
+            Coming soon
+          </span>
         )}
       </div>
-
-      <div className="p-5">
-        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-neon-purple transition-colors line-clamp-2">
-          {article.title}
-        </h3>
-        <p className="text-sm text-gray-400 mb-4 line-clamp-2">
-          {article.subtitle}
-        </p>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-xs text-gray-500 font-mono">
-            {article.readTime && (
-              <span className="flex items-center gap-1">
-                <Clock size={12} />
-                {article.readTime}
-              </span>
-            )}
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-neon-purple group-hover:translate-x-1 transition-all" />
-        </div>
-
-        <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-white/5">
-          {article.tags.slice(0, 3).map((tag) => (
-            <span 
-              key={tag}
-              className="text-xs font-mono text-gray-500 bg-white/5 px-2 py-1 rounded"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-    </motion.div>
+      <p className="mt-4 text-sm text-faint">
+        {[article.publishedDate, article.readTime].filter(Boolean).join(' · ')}
+      </p>
+      <h3 className="mt-1.5 font-serif text-2xl leading-snug tracking-tight text-ink group-hover:text-accent transition-colors">
+        {article.title}
+      </h3>
+      <p className="mt-2 text-[15px] leading-relaxed text-muted">{article.subtitle}</p>
+      <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-ink">
+        Read
+        <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+      </span>
+    </button>
   );
 };
 
-const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onBack, onSelectArticle }) => {
-  const publishedArticles = THOUGHT_LAB_DATA.articles.filter(a => a.status !== 'draft');
-  const perspectives = publishedArticles.filter(a => a.category !== 'project' && a.category !== 'hardware');
-  const hardwareBuilds = publishedArticles.filter(a => a.category === 'hardware');
-  const aiProjects = publishedArticles.filter(a => a.category === 'project');
+const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onSelectArticle }) => {
+  const visible = THOUGHT_LAB_DATA.articles.filter((a) => a.status !== 'draft');
+  const groups = [
+    {
+      id: 'essays',
+      title: 'Perspectives',
+      blurb: 'Essays and technical deep dives',
+      articles: visible.filter((a) => a.category !== 'project' && a.category !== 'hardware'),
+    },
+    {
+      id: 'hardware',
+      title: 'Built by hand',
+      blurb: "Hardware I've designed, soldered and debugged on the bench",
+      articles: visible.filter((a) => a.category === 'hardware'),
+    },
+    {
+      id: 'ai',
+      title: 'Built with AI',
+      blurb: "Apps and tools I've built with AI as a collaborator",
+      articles: visible.filter((a) => a.category === 'project'),
+    },
+  ].filter((g) => g.articles.length > 0);
 
   return (
-    <div className="min-h-screen bg-mech-dark">
-      <header className="sticky top-0 z-50 bg-mech-dark/90 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 text-gray-400 hover:text-neon-purple transition-colors font-mono text-sm group"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Portfolio
-          </button>
-        </div>
-      </header>
-
-      <section className="relative py-16 md:py-24 overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-neon-purple/5 rounded-full filter blur-[100px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-neon-blue/5 rounded-full filter blur-[100px]" />
-          <div 
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0)`,
-              backgroundSize: '40px 40px'
-            }}
-          />
-        </div>
-
-        <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-neon-purple/10 border border-neon-purple/30 mb-6">
-              <FlaskConical className="w-8 h-8 text-neon-purple" />
-            </div>
-
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-mono text-white mb-4">
-              {THOUGHT_LAB_DATA.pageTitle}
-            </h1>
-            <p className="text-gray-500 font-mono text-sm md:text-base mb-8">
-              {THOUGHT_LAB_DATA.pageSubtitle}
-            </p>
-
-            <div className="max-w-3xl mx-auto">
-              <p className="text-gray-300 text-base md:text-lg leading-relaxed">
-                {THOUGHT_LAB_DATA.introduction}
-              </p>
-            </div>
-          </motion.div>
-
-
-        </div>
-      </section>
-
-      {perspectives.length > 0 && (
-        <section className="py-12 md:py-16">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-neon-blue/10 border border-neon-blue/30 flex items-center justify-center text-neon-blue">
-                <FlaskConical size={18} />
-              </div>
-              <div>
-                <h2 className="text-xl md:text-2xl font-bold font-mono text-white">Perspectives</h2>
-                <p className="text-sm text-gray-500">Essays and technical deep dives</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {perspectives.map((article, index) => (
-                <ArticleCard
-                  key={article.id}
-                  article={article}
-                  index={index}
-                  onClick={() => onSelectArticle(article.id)}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {hardwareBuilds.length > 0 && (
-        <section className="py-12 md:py-16">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-neon-green/10 border border-neon-green/30 flex items-center justify-center text-neon-green">
-                <Wrench size={18} />
-              </div>
-              <div>
-                <h2 className="text-xl md:text-2xl font-bold font-mono text-white">Built by Hand</h2>
-                <p className="text-sm text-gray-500">Hardware I've designed, soldered and debugged on the bench</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {hardwareBuilds.map((article, index) => (
-                <ArticleCard
-                  key={article.id}
-                  article={article}
-                  index={index}
-                  onClick={() => onSelectArticle(article.id)}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {aiProjects.length > 0 && (
-        <section className="py-12 md:py-16">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-neon-purple/10 border border-neon-purple/30 flex items-center justify-center text-neon-purple">
-                <Sparkles size={18} />
-              </div>
-              <div>
-                <h2 className="text-xl md:text-2xl font-bold font-mono text-white">Built with AI</h2>
-                <p className="text-sm text-gray-500">Apps and tools I've built with AI as a collaborator</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {aiProjects.map((article, index) => (
-                <ArticleCard
-                  key={article.id}
-                  article={article}
-                  index={index}
-                  onClick={() => onSelectArticle(article.id)}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      <footer className="py-12 border-t border-white/5">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-gray-600 text-sm font-mono">
-            More articles coming soon. These are my personal perspectives and don't represent any organization.
+    <>
+      <main>
+        <section className={`${CONTAINER} pt-12 pb-12 md:pt-20 md:pb-16`}>
+          <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
+            Thought Lab · {visible.length} entries
           </p>
-        </div>
-      </footer>
-    </div>
+          <h1 className="font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-7xl">
+            Writing & lab notes
+          </h1>
+          <p className="mt-6 max-w-3xl text-base leading-relaxed text-muted md:text-lg">
+            {THOUGHT_LAB_DATA.introduction}
+          </p>
+          {groups.length > 1 && (
+            <nav className="mt-8 flex flex-wrap gap-2" aria-label="Thought Lab sections">
+              {groups.map((g) => (
+                <a
+                  key={g.id}
+                  href={`#thought-lab`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById(`lab-${g.id}`)?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="rounded-full border border-rule bg-white px-3.5 py-1.5 text-sm text-muted hover:border-ink hover:text-ink transition-colors"
+                >
+                  {g.title} <span className="text-faint">{g.articles.length}</span>
+                </a>
+              ))}
+            </nav>
+          )}
+        </section>
+
+        {groups.map((group) => (
+          <section key={group.id} id={`lab-${group.id}`} className="border-t border-rule">
+            <div className={`${CONTAINER} py-14 md:py-20`}>
+              <div className="mb-10 flex flex-wrap items-baseline justify-between gap-2">
+                <h2 className="font-serif text-3xl tracking-tight text-ink">{group.title}</h2>
+                <p className="text-sm text-muted">{group.blurb}</p>
+              </div>
+              <div className="grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+                {group.articles.map((article) => (
+                  <ArticleCard key={article.id} article={article} onClick={() => onSelectArticle(article.id)} />
+                ))}
+              </div>
+            </div>
+          </section>
+        ))}
+
+        <p className={`${CONTAINER} pb-14 text-sm text-faint`}>
+          These are my personal perspectives and don't represent any organisation.
+        </p>
+      </main>
+      <Contact />
+    </>
   );
 };
 

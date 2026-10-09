@@ -30,8 +30,11 @@ export const SOCIAL_LINKS = {
 };
 
 export const HERO_DATA = {
-  name: "KAVEESHA DHANANJAYA",
-  title: "MECHATRONICS ENGINEER",
+  name: "Kaveesha Dhananjaya",
+  title: "Mechatronics Engineer",
+  role: "Senior Robotics Engineer",
+  affiliation: "Hype Insight (Pty) Ltd",
+  interests: ['Robotic grasping', 'Legged locomotion', 'SLAM & navigation', 'Embedded control', 'Applied machine learning'],
   tagline: "I build intelligent machines from the ground up.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };

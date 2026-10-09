@@ -1,51 +1,40 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', sans-serif;
-  --font-mono: 'Space Grotesk', 'Inter', sans-serif;
-  --font-code: 'JetBrains Mono', ui-monospace, monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 
-  --color-neon-blue: #38bdf8;
-  --color-neon-purple: #a78bfa;
-  --color-neon-green: #34d399;
-  --color-mech-dark: #0b0d12;
-  --color-mech-surface: #12151c;
-
-  --animate-spin-slow: spin 8s linear infinite;
-  --animate-pulse-fast: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  /* Paper & ink palette: one accent, everything else neutral */
+  --color-paper: #fbfaf7;
+  --color-wash: #f3f1ec;
+  --color-ink: #17171b;
+  --color-muted: #56565e;
+  --color-faint: #8b8b93;
+  --color-rule: #e5e2db;
+  --color-accent: #1f47c4;
+  --color-accent-soft: #e9eefb;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
-  background-color: #0b0d12;
-  color: #e2e8f0;
-  overflow-x: hidden;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
 }
-::-webkit-scrollbar-track {
-  background: #0b0d12;
-}
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #38bdf8;
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
