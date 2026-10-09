@@ -58,6 +58,12 @@
   color-scheme: dark;
 }
 
+/* Swipe rails (projects on phones): scrollable, but no visible bar */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
