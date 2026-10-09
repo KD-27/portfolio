@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft, Clock, Calendar, Tag, Share2, Check,
-  Construction, Info, AlertCircle, Lightbulb, Play,
+  ArrowLeft, ArrowRight, Check, Link2,
+  Construction, Info, AlertCircle, Lightbulb,
   Download, BarChart3, Crosshair, BookOpen, PenLine, Mic, Clapperboard, Package,
   Monitor, Smartphone, Image as ImageIcon, FileText, CornerDownRight, Workflow,
   Cpu, Wifi, Compass, Activity, Footprints, Ruler, Gauge, SlidersHorizontal, Filter,
@@ -10,19 +9,25 @@ import {
 } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
 import type { ContentBlock, FlowStep, FlowOutput, TimelineEntry } from '../types';
-import { getThoughtLabIcon } from '../utils/thoughtLabIcons';
+import { getYoutubeEmbedUrl } from '../utils/media';
+import { categoryLabel } from '../utils/thoughtLab';
+import Contact from './Contact';
 
 interface ThoughtLabArticlePageProps {
   articleId: string;
   onBack: () => void;
   onBackToLab: () => void;
+  onSelectArticle: (articleId: string) => void;
 }
+
+// Reading column width, shared by the header and the body so they align
+const COLUMN = 'mx-auto w-full max-w-[720px] px-5';
 
 // =========================================
 // CONTENT BLOCK RENDERERS
 // =========================================
 
-// Turns raw URLs inside a string into clickable neon links
+// Turns raw URLs inside a string into clickable links
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
 const linkify = (text: string): React.ReactNode => {
   const parts = text.split(URL_REGEX);
@@ -34,7 +39,7 @@ const linkify = (text: string): React.ReactNode => {
         href={part}
         target="_blank"
         rel="noreferrer"
-        className="text-neon-blue hover:text-neon-purple underline decoration-neon-blue/40 hover:decoration-neon-purple/60 underline-offset-2 break-all transition-colors"
+        className="break-all text-accent underline decoration-accent/30 underline-offset-2 hover:decoration-accent"
       >
         {part}
       </a>
@@ -45,60 +50,42 @@ const linkify = (text: string): React.ReactNode => {
 };
 
 const TextBlock: React.FC<{ content: string }> = ({ content }) => (
-  <p className="text-gray-300 leading-relaxed mb-6">{linkify(content)}</p>
+  <p className="mb-6 text-[17px] leading-[1.75] text-ink/85">{linkify(content)}</p>
 );
 
 const HeadingBlock: React.FC<{ content: string; level?: 2 | 3 | 4 }> = ({ content, level = 2 }) => {
   if (level === 4) {
-    return (
-      <h4 className="text-lg font-semibold text-gray-300 mt-6 mb-3 tracking-wide">
-        {content}
-      </h4>
-    );
+    return <h4 className="mt-6 mb-3 text-base font-semibold text-ink">{content}</h4>;
   }
   if (level === 3) {
-    return (
-      <h3 className="text-xl font-bold text-neon-blue mt-8 mb-4">
-        {content}
-      </h3>
-    );
+    return <h3 className="mt-10 mb-4 font-serif text-2xl leading-snug text-ink">{content}</h3>;
   }
   return (
-    <h2 className="text-2xl md:text-3xl font-bold text-white mt-14 mb-6 pb-3 border-b border-white/10">
+    <h2 className="mt-16 mb-6 border-t border-rule pt-8 font-serif text-3xl leading-tight tracking-tight text-ink">
       {content}
     </h2>
   );
 };
 
-const EQUATION_FONT = "'JetBrains Mono', 'Fira Code', Menlo, Consolas, 'Courier New', monospace";
-
 const EquationBlock: React.FC<{ content: string }> = ({ content }) => (
-  <div className="my-6 flex justify-center">
-    <div className="max-w-full overflow-x-auto px-6 py-4 rounded-lg bg-mech-dark border border-neon-blue/25 shadow-[0_0_20px_rgba(0,243,255,0.08)]">
-      <p
-        className="text-center text-base md:text-lg text-neon-blue whitespace-nowrap"
-        style={{ fontFamily: EQUATION_FONT, letterSpacing: '0.02em' }}
-      >
-        {content}
-      </p>
-    </div>
+  <div className="my-8 overflow-x-auto rounded-sm border border-rule bg-card px-6 py-5">
+    <p className="whitespace-nowrap text-center font-mono text-[15px] text-ink md:text-base">{content}</p>
   </div>
 );
 
+const Caption: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <figcaption className="mt-3 text-sm leading-relaxed text-faint">{children}</figcaption>
+);
+
 const ImageBlock: React.FC<{ src: string; caption?: string; alt?: string }> = ({ src, caption, alt }) => (
-  <figure className="my-8">
-    <div className="rounded-lg overflow-hidden border border-white/10 bg-mech-surface">
-      <img 
-        src={src} 
-        alt={alt || caption || 'Article image'} 
-        className="w-full h-auto object-cover"
-      />
-    </div>
-    {caption && (
-      <figcaption className="mt-3 text-sm text-gray-500 text-center italic">
-        {caption}
-      </figcaption>
-    )}
+  <figure className="my-10">
+    <img
+      src={src}
+      alt={alt || caption || 'Article image'}
+      loading="lazy"
+      className="h-auto w-full rounded-sm border border-rule bg-white"
+    />
+    {caption && <Caption>{caption}</Caption>}
   </figure>
 );
 
@@ -133,61 +120,34 @@ const VideoBlock: React.FC<{ src: string; caption?: string; vertical?: boolean; 
       video.removeEventListener('play', pauseOthers);
     };
   }, []);
-  
-  // Convert YouTube URL to embed URL
-  const getEmbedUrl = (url: string) => {
-    if (url.includes('youtube.com/watch?v=')) {
-      return url.replace('watch?v=', 'embed/');
-    }
-    if (url.includes('youtu.be/')) {
-      const videoId = url.split('youtu.be/')[1];
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-    return url;
-  };
 
   return (
-    <figure className={`group mx-auto ${fit ? 'my-4 w-full' : `my-8 ${vertical ? 'w-2/3 sm:w-2/5 max-w-xs' : 'w-full sm:w-3/5'}`}`}>
-      <div className={`${vertical ? 'aspect-[9/16]' : 'aspect-video'} rounded-lg overflow-hidden border border-white/10 group-hover:border-neon-blue/40 bg-black relative shadow-lg shadow-black/40 transition-colors duration-300`}>
+    <figure className={`mx-auto ${fit ? 'my-4 w-full' : `my-10 ${vertical ? 'w-2/3 max-w-xs sm:w-2/5' : 'w-full'}`}`}>
+      <div className={`${vertical ? 'aspect-[9/16]' : 'aspect-video'} overflow-hidden rounded-sm bg-black`}>
         {isYouTube ? (
           <iframe
-            src={getEmbedUrl(src)}
-            className="w-full h-full"
+            src={getYoutubeEmbedUrl(src)}
+            title={caption || 'Video'}
+            className="h-full w-full"
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
         ) : (
-          <video
-            ref={videoRef}
-            src={src}
-            controls
-            muted
-            loop
-            playsInline
-            className="w-full h-full"
-            preload="metadata"
-          >
+          <video ref={videoRef} src={src} controls muted loop playsInline className="h-full w-full" preload="metadata">
             <source src={src} />
             Your browser does not support the video tag.
           </video>
         )}
       </div>
-      {caption && (
-        <figcaption className="mt-3 text-sm text-gray-400 text-center flex items-center justify-center gap-2 font-mono">
-          <Play size={12} className="text-neon-blue" />
-          {caption}
-        </figcaption>
-      )}
+      {caption && <Caption>{caption}</Caption>}
     </figure>
   );
 };
 
 const QuoteBlock: React.FC<{ content: string; author?: string }> = ({ content, author }) => (
-  <blockquote className="my-8 border-l-4 border-neon-purple pl-6 py-2">
-    <p className="text-lg text-gray-300 italic leading-relaxed">"{content}"</p>
-    {author && (
-      <footer className="mt-3 text-sm text-gray-500">— {author}</footer>
-    )}
+  <blockquote className="my-10 border-l-2 border-accent pl-6">
+    <p className="font-serif text-2xl italic leading-snug text-ink">“{content}”</p>
+    {author && <footer className="mt-3 text-sm text-muted">— {author}</footer>}
   </blockquote>
 );
 
@@ -196,58 +156,36 @@ const ListBlock: React.FC<{ items: string[]; ordered?: boolean }> = ({ items, or
   return (
     <ListTag className="my-6 space-y-3">
       {items.map((item, idx) => (
-        <li key={idx} className="flex items-start gap-3 text-gray-300 leading-relaxed">
+        <li key={idx} className="flex items-start gap-3 text-[17px] leading-[1.7] text-ink/85">
           {ordered ? (
-            <span className="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full border border-neon-blue/40 text-neon-blue text-xs font-mono flex items-center justify-center">
-              {idx + 1}
-            </span>
+            <span className="mt-[3px] w-5 flex-shrink-0 font-mono text-sm text-faint">{idx + 1}.</span>
           ) : (
-            <span className="flex-shrink-0 mt-2 w-1.5 h-1.5 rounded-full bg-neon-purple shadow-[0_0_6px_rgba(188,19,254,0.7)]" />
+            <span className="mt-[11px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent/70" />
           )}
-          <span>{linkify(item)}</span>
+          <span className="min-w-0">{linkify(item)}</span>
         </li>
       ))}
     </ListTag>
   );
 };
 
-const DividerBlock: React.FC = () => (
-  <hr className="my-10 border-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-);
+const DividerBlock: React.FC = () => <hr className="my-12 border-rule" />;
 
-const CalloutBlock: React.FC<{ content: string; variant?: 'info' | 'warning' | 'tip' }> = ({ 
-  content, 
-  variant = 'info' 
+const CalloutBlock: React.FC<{ content: string; variant?: 'info' | 'warning' | 'tip' }> = ({
+  content,
+  variant = 'info'
 }) => {
   const styles = {
-    info: {
-      bg: 'bg-neon-blue/10',
-      border: 'border-neon-blue/30',
-      icon: <Info className="w-5 h-5 text-neon-blue flex-shrink-0" />,
-      text: 'text-neon-blue'
-    },
-    warning: {
-      bg: 'bg-orange-500/10',
-      border: 'border-orange-500/30',
-      icon: <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0" />,
-      text: 'text-orange-400'
-    },
-    tip: {
-      bg: 'bg-neon-green/10',
-      border: 'border-neon-green/30',
-      icon: <Lightbulb className="w-5 h-5 text-neon-green flex-shrink-0" />,
-      text: 'text-neon-green'
-    }
+    info: { box: 'bg-accent-soft border-accent/20', icon: <Info className="h-5 w-5 flex-shrink-0 text-accent" /> },
+    warning: { box: 'bg-warn-soft border-warn/25', icon: <AlertCircle className="h-5 w-5 flex-shrink-0 text-warn" /> },
+    tip: { box: 'bg-ok-soft border-ok/25', icon: <Lightbulb className="h-5 w-5 flex-shrink-0 text-ok" /> }
   };
-
   const style = styles[variant];
 
   return (
-    <div className={`my-6 p-4 rounded-lg border ${style.bg} ${style.border}`}>
-      <div className="flex items-start gap-3">
-        {style.icon}
-        <p className="text-gray-300 text-sm leading-relaxed">{content}</p>
-      </div>
+    <div className={`my-8 flex items-start gap-3 rounded-sm border p-4 ${style.box}`}>
+      {style.icon}
+      <p className="text-[15px] leading-relaxed text-ink/85">{content}</p>
     </div>
   );
 };
@@ -265,11 +203,11 @@ const FLOW_ICONS: Record<string, LucideIcon> = {
 // Static class names so Tailwind keeps them; the output grid matches the fork's branch count
 const OUTPUT_COLS = ['', 'md:grid-cols-1', 'md:grid-cols-2', 'md:grid-cols-3', 'md:grid-cols-4'];
 
-// Phases are colored in order of first appearance: blue -> purple -> green
+// Phases are coloured in order of first appearance: blue -> green -> amber
 const PHASE_STYLES = [
-  { text: 'text-neon-blue', border: 'border-neon-blue/40', bg: 'bg-neon-blue/10', glow: 'shadow-[0_0_18px_rgba(0,243,255,0.35)]' },
-  { text: 'text-neon-purple', border: 'border-neon-purple/40', bg: 'bg-neon-purple/10', glow: 'shadow-[0_0_18px_rgba(188,19,254,0.35)]' },
-  { text: 'text-neon-green', border: 'border-neon-green/40', bg: 'bg-neon-green/10', glow: 'shadow-[0_0_18px_rgba(10,255,10,0.3)]' }
+  { text: 'text-accent', border: 'border-accent/40', bg: 'bg-accent-soft' },
+  { text: 'text-ok', border: 'border-ok/40', bg: 'bg-ok-soft' },
+  { text: 'text-warn', border: 'border-warn/40', bg: 'bg-warn-soft' }
 ];
 
 const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?: string }> = ({ steps, outputs, caption }) => {
@@ -277,13 +215,13 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
   const styleFor = (phase?: string) => PHASE_STYLES[Math.max(0, phases.indexOf(phase ?? '')) % PHASE_STYLES.length];
 
   return (
-    <figure className="my-10">
+    <figure className="my-12">
       {phases.length > 0 && (
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
+        <div className="mb-8 flex flex-wrap gap-2">
           {phases.map(phase => {
             const st = styleFor(phase);
             return (
-              <span key={phase} className={`px-3 py-1 rounded-full border text-xs font-mono tracking-wider ${st.border} ${st.bg} ${st.text}`}>
+              <span key={phase} className={`rounded-full border px-3 py-1 font-mono text-[11px] uppercase tracking-wider ${st.border} ${st.bg} ${st.text}`}>
                 {phase}
               </span>
             );
@@ -292,99 +230,63 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
       )}
 
       <div className="relative">
-        {/* Spine, with a pulse travelling down it */}
-        <div className="absolute top-0 bottom-0 left-5 md:left-1/2 -translate-x-1/2 w-px bg-gradient-to-b from-neon-blue/50 via-neon-purple/50 to-neon-green/50" />
-        <motion.div
-          className="absolute left-5 md:left-1/2 -translate-x-1/2 w-1.5 h-10 rounded-full bg-gradient-to-b from-transparent via-white to-transparent opacity-70"
-          animate={{ top: ['0%', '100%'] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-        />
-
-        <ol className="space-y-6">
+        <div className="absolute top-0 bottom-0 left-5 w-px -translate-x-1/2 bg-rule" />
+        <ol className="space-y-5">
           {steps.map((step, i) => {
             const st = styleFor(step.phase);
             const Icon = FLOW_ICONS[step.icon ?? ''] ?? Workflow;
-            const leftSide = i % 2 === 0;
             return (
-              <motion.li
-                key={i}
-                className="relative grid grid-cols-[2.5rem_1fr] md:grid-cols-[1fr_3rem_1fr] gap-x-4 items-center"
-                initial={{ opacity: 0, x: leftSide ? -24 : 24 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.45 }}
-              >
-                <div className={`row-start-1 col-start-1 md:col-start-2 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full border-2 bg-mech-dark flex items-center justify-center ${st.border} ${st.text} ${st.glow}`}>
-                  <Icon size={20} />
+              <li key={i} className="relative grid grid-cols-[2.5rem_1fr] items-start gap-x-4">
+                <div className={`z-10 flex h-10 w-10 items-center justify-center rounded-full border bg-paper ${st.border} ${st.text}`}>
+                  <Icon size={18} />
                 </div>
-                <div className={`row-start-1 col-start-2 ${leftSide ? 'md:col-start-1 md:text-right' : 'md:col-start-3'} p-4 rounded-lg bg-mech-surface border border-white/10 hover:border-white/25 transition-colors`}>
-                  <div className={`flex items-center gap-2 mb-1 ${leftSide ? 'md:justify-end' : ''}`}>
+                <div className="rounded-sm border border-rule bg-card p-4">
+                  <div className="mb-1 flex items-baseline gap-2">
                     <span className={`font-mono text-xs ${st.text}`}>{String(i + 1).padStart(2, '0')}</span>
-                    <span className="font-bold text-white">{step.title}</span>
+                    <span className="font-semibold text-ink">{step.title}</span>
                   </div>
-                  <p className="text-sm text-gray-400 leading-relaxed">{step.detail}</p>
+                  <p className="text-[15px] leading-relaxed text-muted">{step.detail}</p>
                   {step.tools && step.tools.length > 0 && (
-                    <div className={`flex flex-wrap gap-1.5 mt-3 ${leftSide ? 'md:justify-end' : ''}`}>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
                       {step.tools.map(tool => (
-                        <span key={tool} className="px-2 py-0.5 rounded text-[11px] font-mono bg-white/5 border border-white/10 text-gray-300">
+                        <span key={tool} className="rounded-sm bg-wash px-2 py-0.5 font-mono text-[11px] text-muted">
                           {tool}
                         </span>
                       ))}
                     </div>
                   )}
                   {step.note && (
-                    <div className={`flex items-start gap-1.5 mt-3 px-2 py-1.5 rounded border border-dashed border-orange-400/40 text-[11px] text-orange-300 ${leftSide ? 'md:flex-row-reverse md:text-right' : ''}`}>
-                      <CornerDownRight size={12} className="flex-shrink-0 mt-0.5" />
+                    <div className="mt-3 flex items-start gap-1.5 rounded-sm border border-dashed border-warn/60 px-2 py-1.5 text-xs text-warn">
+                      <CornerDownRight size={12} className="mt-0.5 flex-shrink-0" />
                       <span>{step.note}</span>
                     </div>
                   )}
                 </div>
-              </motion.li>
+              </li>
             );
           })}
         </ol>
       </div>
 
       {outputs && outputs.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* Fork: the spine splits into one branch per output */}
-          <div className="relative h-12 mx-5 md:mx-0">
-            <div className="absolute left-0 md:left-1/2 -translate-x-1/2 top-0 h-8 w-px bg-neon-green/50" />
-            <div
-              className="hidden md:block absolute top-8 h-px bg-neon-green/50"
-              style={{ left: `${50 / outputs.length}%`, right: `${50 / outputs.length}%` }}
-            />
-            {outputs.length > 1 && outputs.map((out, i) => (
-              <div
-                key={out.label}
-                className="hidden md:block absolute top-8 h-4 w-px bg-neon-green/50 -translate-x-1/2"
-                style={{ left: `${((i + 0.5) / outputs.length) * 100}%` }}
-              />
-            ))}
-          </div>
-          <div className={`grid grid-cols-2 ${OUTPUT_COLS[Math.min(outputs.length, 4)]} gap-3`}>
+        <div className="mt-6 pl-14">
+          <p className="mb-3 font-mono text-[11px] uppercase tracking-wider text-faint">Outputs</p>
+          <div className={`grid grid-cols-2 gap-3 ${OUTPUT_COLS[Math.min(outputs.length, 4)]}`}>
             {outputs.map(out => {
               const Icon = FLOW_ICONS[out.icon ?? ''] ?? Package;
               return (
-                <div key={out.label} className="p-3 rounded-lg border border-neon-green/30 bg-neon-green/5 text-center">
-                  <Icon size={22} className="mx-auto mb-2 text-neon-green" />
-                  <div className="text-sm font-semibold text-white">{out.label}</div>
-                  {out.detail && <div className="text-xs text-gray-500 mt-0.5">{out.detail}</div>}
+                <div key={out.label} className="rounded-sm border border-rule bg-card p-3 text-center">
+                  <Icon size={20} className="mx-auto mb-2 text-accent" />
+                  <div className="text-sm font-semibold text-ink">{out.label}</div>
+                  {out.detail && <div className="mt-0.5 text-xs text-faint">{out.detail}</div>}
                 </div>
               );
             })}
           </div>
-        </motion.div>
+        </div>
       )}
 
-      {caption && (
-        <figcaption className="mt-5 text-sm text-gray-500 text-center italic">{caption}</figcaption>
-      )}
+      {caption && <Caption>{caption}</Caption>}
     </figure>
   );
 };
@@ -394,20 +296,21 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
 // =========================================
 
 const GalleryBlock: React.FC<{ images: { src: string; caption?: string }[]; caption?: string }> = ({ images, caption }) => (
-  <figure className="my-8">
-    <div className={`grid grid-cols-2 ${images.length % 3 === 0 ? 'md:grid-cols-3' : ''} gap-3`}>
+  <figure className="my-10">
+    <div className={`grid grid-cols-2 gap-3 ${images.length % 3 === 0 ? 'md:grid-cols-3' : ''}`}>
       {images.map(img => (
         <div key={img.src}>
-          <div className="rounded-lg overflow-hidden border border-white/10 bg-mech-surface hover:border-neon-blue/40 transition-colors">
-            <img src={img.src} alt={img.caption || caption || 'Gallery image'} className="w-full aspect-[4/3] object-cover" loading="lazy" />
-          </div>
-          {img.caption && <p className="mt-2 text-xs text-gray-500 text-center font-mono">{img.caption}</p>}
+          <img
+            src={img.src}
+            alt={img.caption || caption || 'Gallery image'}
+            loading="lazy"
+            className="aspect-[4/3] w-full rounded-sm border border-rule bg-white object-cover"
+          />
+          {img.caption && <p className="mt-2 text-xs leading-snug text-faint">{img.caption}</p>}
         </div>
       ))}
     </div>
-    {caption && (
-      <figcaption className="mt-4 text-sm text-gray-500 text-center italic">{caption}</figcaption>
-    )}
+    {caption && <Caption>{caption}</Caption>}
   </figure>
 );
 
@@ -416,73 +319,58 @@ const GalleryBlock: React.FC<{ images: { src: string; caption?: string }[]; capt
 // =========================================
 
 const TimelineBlock: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => (
-  <div className="relative my-10">
-    <div className="absolute top-2 bottom-2 left-5 -translate-x-1/2 w-px bg-gradient-to-b from-neon-blue/60 via-neon-purple/60 to-neon-green/60" />
+  <div className="relative my-12">
+    <div className="absolute top-2 bottom-2 left-4 w-px -translate-x-1/2 bg-rule" />
     <ol className="space-y-10">
       {entries.map((entry, i) => {
-        // Color progresses blue -> purple -> green across the timeline
-        const st = PHASE_STYLES[Math.min(PHASE_STYLES.length - 1, Math.floor((i * PHASE_STYLES.length) / entries.length))];
         const wide = entry.media?.filter(m => !m.vertical) ?? [];
         const tall = entry.media?.filter(m => m.vertical) ?? [];
         return (
-          <motion.li
-            key={i}
-            className="relative pl-14"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className={`absolute left-5 top-1 -translate-x-1/2 w-10 h-10 rounded-full border-2 bg-mech-dark flex items-center justify-center font-mono text-sm font-bold ${st.border} ${st.text} ${st.glow}`}>
+          <li key={i} className="relative pl-12">
+            <div className="absolute left-4 top-0 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full border border-accent/40 bg-paper font-mono text-xs text-accent">
               {i + 1}
             </div>
 
-            <div className="rounded-xl bg-mech-surface border border-white/10 p-5">
-              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                <div className="flex-1">
-                  <span className={`inline-block px-2 py-0.5 mb-2 rounded border text-[11px] font-mono tracking-widest ${st.border} ${st.bg} ${st.text}`}>
-                    {entry.label}
-                  </span>
-                  <h4 className="text-lg font-bold text-white mb-2">{entry.title}</h4>
-                  <p className="text-sm text-gray-400 leading-relaxed">{entry.detail}</p>
-                </div>
-                {entry.stat && (
-                  <div className={`sm:w-40 flex-shrink-0 rounded-lg border px-4 py-3 text-center ${st.border} ${st.bg}`}>
-                    <div className={`text-3xl font-black ${st.text}`}>{entry.stat.value}</div>
-                    <div className="text-[11px] text-gray-400 mt-1 leading-snug">{entry.stat.label}</div>
-                  </div>
-                )}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+              <div className="flex-1">
+                <p className="mb-1 font-mono text-[11px] uppercase tracking-wider text-faint">{entry.label}</p>
+                <h4 className="mb-2 font-serif text-xl leading-snug text-ink">{entry.title}</h4>
+                <p className="text-[15px] leading-relaxed text-muted">{entry.detail}</p>
               </div>
-
-              {entry.added && entry.added.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5 mt-4">
-                  <span className="text-[11px] font-mono text-gray-500 mr-1">+ ADDED</span>
-                  {entry.added.map(item => (
-                    <span key={item} className="px-2 py-0.5 rounded text-[11px] bg-white/5 border border-white/10 text-gray-300">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {wide.map(m => (
-                <div key={m.src} className="mt-2">
-                  {m.type === 'video'
-                    ? <VideoBlock src={m.src} caption={m.caption} fit />
-                    : <ImageBlock src={m.src} caption={m.caption} />}
-                </div>
-              ))}
-              {tall.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-6 mt-2">
-                  {tall.map(m => (
-                    <div key={m.src} className="w-44 sm:w-52">
-                      <VideoBlock src={m.src} caption={m.caption} vertical fit />
-                    </div>
-                  ))}
+              {entry.stat && (
+                <div className="flex-shrink-0 rounded-sm border border-rule bg-card px-4 py-3 text-center sm:w-36">
+                  <div className="font-serif text-3xl text-accent">{entry.stat.value}</div>
+                  <div className="mt-1 text-[11px] leading-snug text-faint">{entry.stat.label}</div>
                 </div>
               )}
             </div>
-          </motion.li>
+
+            {entry.added && entry.added.length > 0 && (
+              <div className="mt-4 flex flex-wrap items-center gap-1.5">
+                <span className="mr-1 font-mono text-[11px] text-faint">+ ADDED</span>
+                {entry.added.map(item => (
+                  <span key={item} className="rounded-sm bg-wash px-2 py-0.5 text-xs text-muted">{item}</span>
+                ))}
+              </div>
+            )}
+
+            {wide.map(m => (
+              <div key={m.src} className="mt-2">
+                {m.type === 'video'
+                  ? <VideoBlock src={m.src} caption={m.caption} fit />
+                  : <ImageBlock src={m.src} caption={m.caption} />}
+              </div>
+            ))}
+            {tall.length > 0 && (
+              <div className="mt-2 flex flex-wrap justify-center gap-6">
+                {tall.map(m => (
+                  <div key={m.src} className="w-44 sm:w-52">
+                    <VideoBlock src={m.src} caption={m.caption} vertical fit />
+                  </div>
+                ))}
+              </div>
+            )}
+          </li>
         );
       })}
     </ol>
@@ -490,60 +378,46 @@ const TimelineBlock: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => (
 );
 
 // Main content block renderer
-const ContentBlockRenderer: React.FC<{ block: ContentBlock; index: number }> = ({ block, index }) => {
-  const rendered = (() => {
-    switch (block.type) {
-      case 'text':
-        return <TextBlock content={block.content} />;
-      case 'heading':
-        return <HeadingBlock content={block.content} level={block.level} />;
-      case 'image':
-        return <ImageBlock src={block.src} caption={block.caption} alt={block.alt} />;
-      case 'video':
-        return <VideoBlock src={block.src} caption={block.caption} vertical={block.vertical} />;
-      case 'quote':
-        return <QuoteBlock content={block.content} author={block.author} />;
-      case 'list':
-        return <ListBlock items={block.items} ordered={block.ordered} />;
-      case 'divider':
-        return <DividerBlock />;
-      case 'callout':
-        return <CalloutBlock content={block.content} variant={block.variant} />;
-      case 'equation':
-        return <EquationBlock content={block.content} />;
-      case 'flow':
-        return <FlowBlock steps={block.steps} outputs={block.outputs} caption={block.caption} />;
-      case 'timeline':
-        return <TimelineBlock entries={block.entries} />;
-      case 'gallery':
-        return <GalleryBlock images={block.images} caption={block.caption} />;
-      default:
-        return null;
-    }
-  })();
-
-  if (block.type === 'divider') return rendered;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: Math.min(index * 0.02, 0.2) }}
-    >
-      {rendered}
-    </motion.div>
-  );
+const ContentBlockRenderer: React.FC<{ block: ContentBlock }> = ({ block }) => {
+  switch (block.type) {
+    case 'text':
+      return <TextBlock content={block.content} />;
+    case 'heading':
+      return <HeadingBlock content={block.content} level={block.level} />;
+    case 'image':
+      return <ImageBlock src={block.src} caption={block.caption} alt={block.alt} />;
+    case 'video':
+      return <VideoBlock src={block.src} caption={block.caption} vertical={block.vertical} />;
+    case 'quote':
+      return <QuoteBlock content={block.content} author={block.author} />;
+    case 'list':
+      return <ListBlock items={block.items} ordered={block.ordered} />;
+    case 'divider':
+      return <DividerBlock />;
+    case 'callout':
+      return <CalloutBlock content={block.content} variant={block.variant} />;
+    case 'equation':
+      return <EquationBlock content={block.content} />;
+    case 'flow':
+      return <FlowBlock steps={block.steps} outputs={block.outputs} caption={block.caption} />;
+    case 'timeline':
+      return <TimelineBlock entries={block.entries} />;
+    case 'gallery':
+      return <GalleryBlock images={block.images} caption={block.caption} />;
+    default:
+      return null;
+  }
 };
 
 // =========================================
 // MAIN COMPONENT
 // =========================================
 
-const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({ 
-  articleId, 
+const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({
+  articleId,
   onBack,
-  onBackToLab
+  onBackToLab,
+  onSelectArticle
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -557,202 +431,116 @@ const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({
     }
   };
 
+  const visible = THOUGHT_LAB_DATA.articles.filter(a => a.status !== 'draft');
   const article = THOUGHT_LAB_DATA.articles.find(a => a.id === articleId);
-  
+
   if (!article) {
     return (
-      <div className="min-h-screen bg-mech-dark flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-400 mb-4">Article not found</p>
-          <button 
-            onClick={onBackToLab}
-            className="text-neon-purple hover:underline font-mono"
-          >
-            Return to Thought Lab
-          </button>
-        </div>
+      <div className={`${COLUMN} py-32 text-center`}>
+        <p className="mb-4 text-muted">Article not found.</p>
+        <button onClick={onBackToLab} className="font-medium text-accent hover:underline">
+          Return to Thought Lab
+        </button>
       </div>
     );
   }
 
   const isComingSoon = article.status === 'coming-soon';
   const hasContent = article.contentBlocks && article.contentBlocks.length > 0;
+  const position = visible.findIndex(a => a.id === article.id);
+  const next = visible.length > 1 ? visible[(position + 1) % visible.length] : null;
 
   return (
-    <div className="min-h-screen bg-mech-dark">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-mech-dark/90 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <button
-            onClick={onBackToLab}
-            className="flex items-center gap-2 text-gray-400 hover:text-neon-purple transition-colors font-mono text-sm group"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Thought Lab
-          </button>
-          <div className="relative flex items-center">
-            <AnimatePresence>
-              {copied && (
-                <motion.span
-                  initial={{ opacity: 0, x: 8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 8 }}
-                  transition={{ duration: 0.2 }}
-                  aria-live="polite"
-                  className="absolute right-full mr-2 whitespace-nowrap text-xs font-mono text-neon-green"
-                >
-                  Link copied
-                </motion.span>
-              )}
-            </AnimatePresence>
-            <button
-              onClick={handleCopyLink}
-              className={`p-2 transition-colors ${copied ? 'text-neon-green' : 'text-gray-400 hover:text-neon-purple'}`}
-              title="Copy link"
-              aria-label={copied ? 'Link copied' : 'Copy article link'}
-            >
-              {copied ? <Check size={18} /> : <Share2 size={18} />}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className="relative">
-        <div className="relative h-64 md:h-96 overflow-hidden">
-          <img 
-            src={article.coverImage}
-            alt={article.title}
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-mech-dark via-mech-dark/80 to-transparent" />
-        </div>
-
-        <div className="absolute inset-0 flex items-end">
-          <div className="max-w-4xl mx-auto px-4 pb-12 w-full">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 rounded-xl bg-neon-purple/20 border border-neon-purple/40 flex items-center justify-center text-neon-purple">
-                  {getThoughtLabIcon(article.icon, 24)}
-                </div>
-                {isComingSoon && (
-                  <span className="px-3 py-1 bg-neon-purple/20 border border-neon-purple/40 rounded-full text-xs font-mono text-neon-purple">
-                    COMING SOON
-                  </span>
-                )}
-              </div>
-
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                {article.title}
-              </h1>
-
-              <p className="text-xl text-gray-300 mb-6">
-                {article.subtitle}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-mono">
-                {article.readTime && (
-                  <span className="flex items-center gap-2">
-                    <Clock size={14} />
-                    {article.readTime}
-                  </span>
-                )}
-                {article.publishedDate && (
-                  <span className="flex items-center gap-2">
-                    <Calendar size={14} />
-                    {article.publishedDate}
-                  </span>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Article Content */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            {/* Introduction */}
-            <div className="bg-mech-surface border border-white/10 rounded-xl p-6 md:p-8 mb-12">
-              <div className="flex items-start gap-4">
-                <div className="w-1 self-stretch bg-neon-purple rounded-full flex-shrink-0" />
-                <p className="text-lg text-gray-300 leading-relaxed italic">
-                  {article.introduction}
-                </p>
-              </div>
-            </div>
-
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-12">
-              {article.tags.map((tag) => (
-                <span 
-                  key={tag}
-                  className="flex items-center gap-1 text-sm font-mono text-gray-400 bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg"
-                >
-                  <Tag size={12} />
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            {/* Main Content */}
-            {isComingSoon && !hasContent ? (
-              <div className="bg-mech-surface border border-dashed border-white/20 rounded-xl p-12 text-center">
-                <Construction className="w-16 h-16 text-gray-600 mx-auto mb-6" />
-                <h3 className="text-xl font-bold text-white mb-4">Content Coming Soon</h3>
-                <p className="text-gray-400 max-w-md mx-auto mb-6">
-                  I'm currently working on this article. Check back later for my thoughts, photos, and videos on this topic.
-                </p>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <button
-                    onClick={onBackToLab}
-                    className="px-6 py-3 bg-neon-purple/10 border border-neon-purple/30 text-neon-purple font-mono rounded-lg hover:bg-neon-purple/20 transition-colors"
-                  >
-                    Explore Other Topics
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <article>
-                {article.contentBlocks.map((block, index) => (
-                  <ContentBlockRenderer key={index} block={block} index={index} />
-                ))}
-              </article>
-            )}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Navigation */}
-      <section className="py-12 border-t border-white/5">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <>
+      <main>
+        <article>
+          {/* Title block */}
+          <header className={`${COLUMN} pt-10 md:pt-16`}>
             <button
               onClick={onBackToLab}
-              className="flex items-center gap-2 text-gray-400 hover:text-neon-purple transition-colors font-mono"
+              className="group mb-10 inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink transition-colors"
             >
-              <ArrowLeft size={16} />
-              Back to Thought Lab
+              <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
+              Thought Lab
             </button>
-            <button
-              onClick={onBack}
-              className="text-gray-500 hover:text-white transition-colors font-mono text-sm"
-            >
-              Return to Portfolio
-            </button>
+
+            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-accent">
+              {categoryLabel(article)}
+              {isComingSoon && <span className="text-faint"> · Coming soon</span>}
+            </p>
+            <h1 className="mt-4 font-serif text-4xl leading-[1.08] tracking-tight text-ink md:text-6xl">
+              {article.title}
+            </h1>
+            <p className="mt-5 font-serif text-xl leading-snug text-muted md:text-2xl">{article.subtitle}</p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-rule py-4 text-sm text-muted">
+              <span>
+                {[article.publishedDate, article.readTime].filter(Boolean).join(' · ')}
+              </span>
+              <button
+                onClick={handleCopyLink}
+                aria-label={copied ? 'Link copied' : 'Copy article link'}
+                className={`inline-flex items-center gap-1.5 transition-colors ${copied ? 'text-ok' : 'hover:text-ink'}`}
+              >
+                {copied ? <Check size={15} /> : <Link2 size={15} />}
+                <span aria-live="polite">{copied ? 'Link copied' : 'Copy link'}</span>
+              </button>
+            </div>
+          </header>
+
+          {/* Cover */}
+          <figure className="mx-auto mt-10 w-full max-w-[960px] px-5">
+            <img src={article.coverImage} alt={article.title} className="max-h-[540px] w-full rounded-sm object-cover" />
+          </figure>
+
+          {/* Body */}
+          <div className={`${COLUMN} py-12 md:py-16`}>
+            <p className="mb-8 font-serif text-[1.35rem] leading-relaxed text-ink">{article.introduction}</p>
+
+            <ul className="mb-12 flex flex-wrap gap-2">
+              {article.tags.map(tag => (
+                <li key={tag} className="rounded-full border border-rule bg-card px-3 py-1 text-sm text-muted">{tag}</li>
+              ))}
+            </ul>
+
+            {isComingSoon && !hasContent ? (
+              <div className="rounded-sm border border-dashed border-rule p-12 text-center">
+                <Construction className="mx-auto mb-5 h-10 w-10 text-faint" />
+                <h3 className="mb-3 font-serif text-2xl text-ink">Coming soon</h3>
+                <p className="mx-auto mb-6 max-w-md text-muted">
+                  I'm currently working on this article. Check back later for my thoughts, photos, and videos on this topic.
+                </p>
+                <button onClick={onBackToLab} className="font-medium text-accent hover:underline">
+                  Explore other entries
+                </button>
+              </div>
+            ) : (
+              article.contentBlocks.map((block, index) => <ContentBlockRenderer key={index} block={block} />)
+            )}
           </div>
-        </div>
-      </section>
-    </div>
+        </article>
+
+        {/* Next entry */}
+        <nav className="border-t border-rule" aria-label="More from the Thought Lab">
+          <div className={`${COLUMN} flex flex-col gap-8 py-12 sm:flex-row sm:items-end sm:justify-between`}>
+            {next ? (
+              <button onClick={() => onSelectArticle(next.id)} className="group text-left">
+                <span className="text-sm text-faint">Next entry</span>
+                <span className="mt-1 flex items-center gap-2 font-serif text-2xl text-ink group-hover:text-accent transition-colors">
+                  {next.title}
+                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </button>
+            ) : <span />}
+            <div className="flex gap-5 text-sm">
+              <button onClick={onBackToLab} className="text-muted hover:text-ink">All entries</button>
+              <button onClick={onBack} className="text-muted hover:text-ink">Home</button>
+            </div>
+          </div>
+        </nav>
+      </main>
+      <Contact />
+    </>
   );
 };
 

@@ -1,50 +1,83 @@
 @import "tailwindcss";
 
+/* Dark mode follows data-theme on <html>, set before first paint in index.html */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 @theme {
-  --font-sans: 'Inter', sans-serif;
-  --font-mono: 'Orbitron', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 
-  --color-neon-blue: #00f3ff;
-  --color-neon-purple: #bc13fe;
-  --color-neon-green: #0aff0a;
-  --color-mech-dark: #0a0a0f;
-  --color-mech-surface: #13131f;
+  /* Paper & ink palette: one accent, everything else neutral */
+  --color-paper: #fbfaf7;
+  --color-wash: #f3f1ec;
+  --color-bar: #f4f1ea;
+  --color-card: #ffffff;
+  --color-ink: #17171b;
+  --color-muted: #56565e;
+  --color-faint: #8b8b93;
+  --color-rule: #e5e2db;
+  --color-accent: #1f47c4;
+  --color-accent-soft: #e9eefb;
 
-  --animate-spin-slow: spin 8s linear infinite;
-  --animate-pulse-fast: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* Status colours (paper status, callouts, flow phases) */
+  --color-ok: #047857;
+  --color-ok-soft: #ecfdf5;
+  --color-warn: #b45309;
+  --color-warn-soft: #fffbeb;
+
+  --animate-fade-in: fade-in 200ms ease-out;
+  --animate-modal-in: modal-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes modal-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+  }
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+/* Same tokens, re-inked for night reading */
+[data-theme=dark] {
+  --color-paper: #121214;
+  --color-wash: #1c1c20;
+  --color-bar: #18181b;
+  --color-card: #1a1a1e;
+  --color-ink: #ecebe6;
+  --color-muted: #a6a6ad;
+  --color-faint: #76767e;
+  --color-rule: #2c2c31;
+  --color-accent: #8aa5ff;
+  --color-accent-soft: #1d2440;
+  --color-ok: #34d399;
+  --color-ok-soft: #0f2a21;
+  --color-warn: #fbbf24;
+  --color-warn-soft: #2d2410;
+  color-scheme: dark;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
-  background-color: #0a0a0f;
-  color: #e2e8f0;
-  overflow-x: hidden;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
 }
-::-webkit-scrollbar-track {
-  background: #0a0a0f;
-}
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #00f3ff;
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }

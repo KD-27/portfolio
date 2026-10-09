@@ -11,7 +11,9 @@ export interface Project {
 
 export interface SkillCategory {
   title: string;
-  skills: { name: string; level: number }[]; // level 0-100
+  skills: string[];
+  /** Projects on this site where these tools were used */
+  usedIn?: string[];
   icon: string;
 }
 
@@ -29,6 +31,8 @@ export interface ResearchPaper {
   image: string;
   link: string;
   publisher: string;
+  /** Short venue name shown on the badge, e.g. 'ACRA' */
+  venue: string;
   date: string;
   tags: string[];
 }

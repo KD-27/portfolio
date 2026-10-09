@@ -24,13 +24,17 @@ import type { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement, T
 export const SOCIAL_LINKS = {
   email: 'kaveeshadhananjaya2002@gmail.com',
   linkedin: 'https://www.linkedin.com/in/kaveesha-dhananjaya/',
+  scholar: 'https://scholar.google.com/citations?user=s9AT2TYAAAAJ',
   github: 'https://github.com/KD-27',
   resume: `${import.meta.env.BASE_URL}resume.pdf`
 };
 
 export const HERO_DATA = {
-  name: "KAVEESHA DHANANJAYA",
-  title: "MECHATRONICS ENGINEER",
+  name: "Kaveesha Dhananjaya",
+  title: "Mechatronics Engineer",
+  role: "Senior Robotics Engineer",
+  affiliation: "Hype Insight (Pty) Ltd",
+  interests: ['Robotic grasping', 'Legged locomotion', 'SLAM & navigation', 'Embedded control', 'Applied machine learning'],
   tagline: "I build intelligent machines from the ground up.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };
@@ -209,6 +213,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     image: `${import.meta.env.BASE_URL}research_papers/FusionGrasp_paper.png`,
     link: '#',
     publisher: 'Australasian Conference on Robotics and Automation (ACRA)',
+    venue: 'ACRA',
     date: 'Under Review',
     tags: ['Multimodal Grasping', '6D Grasp Planning', 'Waste Sorting']
   },
@@ -219,6 +224,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     image: `${import.meta.env.BASE_URL}research_papers/Quadruped_Robot.png`,
     link: '#',
     publisher: 'International Journal of Control, Automation, and System (ICROS KIEE)',
+    venue: 'IJCAS',
     date: 'Under Review',
     tags: ['Quadruped robot', 'Five-bar parallel mechanism', 'Trajectory optimization']
   },
@@ -227,18 +233,20 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     title: 'Prediction of Coronary Artery Disease Using Artificial Neural Network',
     abstract: 'An ANN for early CAD diagnosis achieved ~90% accuracy using SMOTE, expert-guided feature selection, optimized hyperparameters, and stratified k-fold validation. The model showed strong reliability and clinical relevance, outperforming conventional machine-learning methods',
     image: `${import.meta.env.BASE_URL}research_papers/CAD_Diagnosis.png`,
-    link: 'https://scholar.google.com/citations?view_op=view_citation&hl=en&user=s9AT2TYAAAAJ&citation_for_view=s9AT2TYAAAAJ:9yKSN-GCB0IC',
+    link: 'https://ir.kdu.ac.lk/handle/345/8770',
     publisher: 'International Research Conference (KDU IRC)',
+    venue: 'KDU IRC',
     date: '2024',
-    tags: ['Neural Networks', 'Coranary Artery Disease', 'SMOTE']
+    tags: ['Neural Networks', 'Coronary Artery Disease', 'SMOTE']
   },
   {
     id: 'p3',
     title: 'Development of an automated clothesline system',
     abstract: 'An automated clothes-drying system integrates sensors and actuators to detect rain and darkness, automatically sheltering garments while offering manual and remote control. It reduces household inconvenience, protects clothes from weather, and demonstrates how smart technology streamlines everyday domestic tasks.',
     image: `${import.meta.env.BASE_URL}research_papers/Automated_Clothesline.png`,
-    link: 'https://scholar.google.com/citations?view_op=view_citation&hl=en&user=s9AT2TYAAAAJ&citation_for_view=s9AT2TYAAAAJ:u5HHmVD_uO8C',
+    link: 'https://ir.kdu.ac.lk/handle/345/7491',
     publisher: 'International Research Conference (KDU IRC)',
+    venue: 'KDU IRC',
     date: '2023',
     tags: ['Automation', 'Clothesline', 'Smart']
   }
@@ -247,63 +255,36 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
 export const SKILLS: SkillCategory[] = [
   {
     title: 'Mechanical Design',
+    usedIn: ['Elissa 1.0 quadruped', 'Mars rover'],
     icon: 'PenTool',
-    skills: [
-      { name: 'SolidWorks', level: 90 },
-      { name: 'Fusion 360', level: 75 },
-      { name: 'ANSYS', level: 70 },
-      { name: 'MATLAB/Simulink', level: 85 }
-    ]
+    skills: ['SolidWorks', 'Fusion 360', 'ANSYS', 'MATLAB/Simulink']
   },
   {
     title: 'PCB & Electronics',
     icon: 'Layers',
-    skills: [
-      { name: 'KiCAD', level: 90 },
-      { name: 'EasyEDA', level: 75 },
-      { name: 'Proteus', level: 80 },
-      { name: 'LTSpice', level: 80 }
-    ]
+    skills: ['KiCAD', 'EasyEDA', 'Proteus', 'LTSpice']
   },
   {
     title: 'Robotics',
+    usedIn: ['Elissa 1.0 quadruped', 'Mars rover'],
     icon: 'Bot',
-    skills: [
-      { name: 'ROS2', level: 80 },
-      { name: 'Gazebo Simulation', level: 85 },
-      { name: 'Kinematic Modeling', level: 85 },
-      { name: 'SLAM/Navigation', level: 80 }
-    ]
+    skills: ['ROS2', 'Gazebo Simulation', 'Kinematic Modeling', 'SLAM/Navigation']
   },
   {
     title: 'Programming & AI',
+    usedIn: ['CAD prediction ANN', 'Mars rover'],
     icon: 'Code',
-    skills: [
-      { name: 'Python', level: 85 },
-      { name: 'C++', level: 80 },
-      { name: 'Machine Learning', level: 75 },
-      { name: 'CNN/Computer Vision', level: 75 }
-    ]
+    skills: ['Python', 'C++', 'Machine Learning', 'CNN/Computer Vision']
   },
   {
     title: 'PLC & Automation',
     icon: 'Cpu',
-    skills: [
-      { name: 'ISPSoft', level: 85 },
-      { name: 'SIMATIC STEP7', level: 80 },
-      { name: 'HMI Programming', level: 80 },
-      { name: 'Nextion IDE', level: 75 }
-    ]
+    skills: ['ISPSoft', 'SIMATIC STEP7', 'HMI Programming', 'Nextion IDE']
   },
   {
     title: 'Rapid Prototyping',
     icon: 'Wrench',
-    skills: [
-      { name: '3D Printing', level: 90 },
-      { name: 'Laser Cutting', level: 85 },
-      { name: 'Electronics Assembly', level: 85 },
-      { name: 'System Integration', level: 80 }
-    ]
+    skills: ['3D Printing', 'Laser Cutting', 'Electronics Assembly', 'System Integration']
   }
 ];
 

@@ -1,95 +1,101 @@
-
-import React from 'react';
-import { motion } from 'framer-motion';
-import { FileText, Calendar, Bookmark } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowUpRight } from 'lucide-react';
 import { RESEARCH_PAPERS } from '../constants';
+import type { ResearchPaper } from '../types';
+import Section from './Section';
+
+const isUnderReview = (date: string) => date.toLowerCase() === 'under review';
+
+const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
+  const [showAbstract, setShowAbstract] = useState(false);
+  const pending = isUnderReview(paper.date);
+  const hasLink = paper.link && paper.link !== '#';
+  const abstractId = `abstract-${paper.id}`;
+
+  const cover = (
+    <div className="overflow-hidden rounded-sm border border-rule bg-white shadow-sm">
+      <img
+        src={paper.image}
+        alt=""
+        loading="lazy"
+        className="aspect-[4/3] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+      />
+    </div>
+  );
+
+  return (
+    <li className="grid gap-5 py-10 first:pt-0 sm:grid-cols-[1fr_220px] sm:gap-10 lg:grid-cols-[1fr_300px]">
+      <div className="min-w-0">
+        <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+          <span
+            className={`inline-flex items-center gap-1.5 font-medium ${pending ? 'text-warn' : 'text-ok'}`}
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${pending ? 'bg-warn' : 'bg-ok'}`} />
+            {pending ? 'Under review' : paper.date}
+          </span>
+          <span className="text-rule">/</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-faint">{paper.venue}</span>
+        </div>
+
+        <h3 className="font-serif text-xl leading-snug text-ink md:text-[1.4rem]">{paper.title}</h3>
+        <p className="mt-2 text-sm italic text-muted">{paper.publisher}</p>
+
+        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          <button
+            onClick={() => setShowAbstract(!showAbstract)}
+            aria-expanded={showAbstract}
+            aria-controls={abstractId}
+            className="font-medium text-ink underline decoration-rule underline-offset-4 hover:decoration-accent"
+          >
+            {showAbstract ? 'Hide abstract' : 'Abstract'}
+          </button>
+          {hasLink && (
+            <a
+              href={paper.link}
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center gap-0.5 font-medium text-accent hover:underline underline-offset-4"
+            >
+              View paper <ArrowUpRight size={14} />
+            </a>
+          )}
+          <span className="text-faint">{paper.tags.join(' · ')}</span>
+        </div>
+
+        {showAbstract && (
+          <p id={abstractId} className="mt-4 max-w-2xl border-l-2 border-accent/40 pl-4 text-[15px] leading-relaxed text-muted">
+            {paper.abstract}
+          </p>
+        )}
+      </div>
+
+      <div className="hidden sm:block">
+        {hasLink ? (
+          <a href={paper.link} target="_blank" rel="noreferrer" tabIndex={-1} aria-hidden="true" className="group block">
+            {cover}
+          </a>
+        ) : (
+          cover
+        )}
+      </div>
+    </li>
+  );
+};
 
 const Research: React.FC = () => {
+  const underReview = RESEARCH_PAPERS.filter((p) => isUnderReview(p.date)).length;
+
   return (
-    <section id="research" className="py-20 bg-mech-surface relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-neon-purple/5 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-neon-blue/5 rounded-full filter blur-3xl"></div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="mb-12 flex items-center gap-4">
-          <div className="p-3 bg-mech-dark rounded-lg border border-white/10">
-             <FileText className="text-neon-purple" size={24} />
-          </div>
-          <div>
-            <h2 className="text-3xl font-mono font-bold text-white tracking-tight">
-              ACADEMIC <span className="text-neon-purple">RESEARCH</span>
-            </h2>
-            <p className="text-gray-400 font-mono text-sm">
-              // PUBLICATIONS & CONFERENCE PROCEEDINGS
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 auto-rows-fr gap-8">
-          {RESEARCH_PAPERS.map((paper, index) => (
-            <motion.div
-              key={paper.id}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group relative bg-mech-dark border border-white/5 rounded-xl overflow-hidden hover:border-neon-purple/50 transition-all duration-300"
-            >
-              <div className="flex flex-col md:flex-row h-full">
-                {/* Abstract Visual Representation */}
-                <div className="w-full md:w-1/3 h-48 md:h-auto relative overflow-hidden">
-                  <img 
-                    src={paper.image} 
-                    alt={paper.title} 
-                    className="w-full h-full object-cover opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-mech-dark/90 md:bg-gradient-to-l md:from-mech-dark md:to-transparent" />
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
-                  <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-gray-500 mb-3">
-                     <span className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded">
-                       <Calendar size={12} /> {paper.date}
-                     </span>
-                     <span className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded text-neon-purple">
-                       <Bookmark size={12} /> {paper.publisher}
-                     </span>
-                  </div>
-
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-4 group-hover:text-neon-purple transition-colors">
-                    {paper.title}
-                  </h3>
-
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                    {paper.abstract}
-                  </p>
-
-                  <div className="flex items-center justify-between mt-auto">
-                     <div className="flex gap-2 flex-wrap">
-                        {paper.tags.map((tag, tagIndex) => (
-                          <motion.span 
-                            key={tag}
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            // Calculate delay: Base card delay + 0.4s pause + staggered index
-                            transition={{ delay: (index * 0.1) + 0.4 + (tagIndex * 0.1), duration: 0.3 }}
-                            className="text-xs text-gray-500 font-mono border border-gray-800 px-2 py-1 rounded"
-                          >
-                            {tag}
-                          </motion.span>
-                        ))}
-                     </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <Section id="research" label="Research" title="Publications">
+      <p className="-mt-6 mb-10 text-sm text-muted">
+        {RESEARCH_PAPERS.length} papers · {RESEARCH_PAPERS.length - underReview} published · {underReview} under review
+      </p>
+      <ol className="divide-y divide-rule">
+        {RESEARCH_PAPERS.map((paper) => (
+          <PaperRow key={paper.id} paper={paper} />
+        ))}
+      </ol>
+    </Section>
   );
 };
 

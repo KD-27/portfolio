@@ -1,82 +1,23 @@
-
 import React from 'react';
-import { motion } from 'framer-motion';
-import { PenTool, Cpu, Code, Layers, Bot, Eye, Wrench } from 'lucide-react';
 import { SKILLS } from '../constants';
-import type { SkillCategory } from '../types';
+import Section from './Section';
 
-const icons: Record<string, React.ReactNode> = {
-  PenTool: <PenTool size={18} />,
-  Cpu: <Cpu size={18} />,
-  Code: <Code size={18} />,
-  Layers: <Layers size={18} />,
-  Bot: <Bot size={18} />,
-  Eye: <Eye size={18} />,
-  Wrench: <Wrench size={18} />
-};
-
-const SkillCard: React.FC<{ category: SkillCategory; index: number }> = ({ category, index }) => {
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="group bg-[#0f0f13] border border-white/5 p-6 rounded-sm hover:border-neon-blue/50 transition-colors duration-300 h-full"
-    >
-      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
-        <div className="text-gray-500 group-hover:text-neon-blue transition-colors">
-          {icons[category.icon]}
+const Skills: React.FC = () => (
+  <Section id="skills" label="Skills" title="Skills & tools">
+    <dl className="divide-y divide-rule border-y border-rule">
+      {SKILLS.map((category) => (
+        <div key={category.title} className="grid gap-2 py-5 md:grid-cols-[200px_1fr] md:gap-8">
+          <dt className="text-[15px] font-medium text-ink">{category.title}</dt>
+          <dd>
+            <p className="text-[15px] leading-relaxed text-muted">{category.skills.join(', ')}</p>
+            {category.usedIn && category.usedIn.length > 0 && (
+              <p className="mt-1 text-sm text-faint">Applied in {category.usedIn.join(', ')}</p>
+            )}
+          </dd>
         </div>
-        <h3 className="font-mono text-sm font-bold text-gray-200 group-hover:text-neon-blue tracking-widest uppercase transition-colors">{category.title}</h3>
-      </div>
-
-      <div className="space-y-6">
-        {category.skills.map((skill, idx) => (
-          <div key={idx}>
-            <div className="flex justify-between text-xs font-mono mb-2">
-              <span className="text-gray-400">{skill.name}</span>
-              <span className="text-gray-600">{skill.level}%</span>
-            </div>
-            {/* Animated Progress Bar */}
-            <div className="h-1 w-full bg-gray-900 overflow-hidden">
-              <motion.div 
-                className="h-full bg-gray-500 group-hover:bg-neon-blue transition-colors" 
-                initial={{ width: 0 }}
-                whileInView={{ width: `${skill.level}%` }}
-                transition={{ duration: 1.5, ease: "circOut", delay: idx * 0.1 }}
-                viewport={{ once: true }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </motion.div>
-  );
-};
-
-const Skills: React.FC = () => {
-  return (
-    <section id="skills" className="py-24 bg-mech-dark relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 border-l-2 border-neon-blue pl-6">
-          <h2 className="text-2xl font-bold font-mono text-white mb-2 tracking-tight">
-            TECHNICAL SPECIFICATIONS
-          </h2>
-          <p className="text-gray-500 font-mono text-xs uppercase tracking-wide">
-            Competency Matrix & Toolchain
-          </p>
-        </div>
-
-        {/* Updated Grid for 6 items: 1 col mobile, 2 col tablet, 3 col desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SKILLS.map((category, index) => (
-            <SkillCard key={index} category={category} index={index} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
+      ))}
+    </dl>
+  </Section>
+);
 
 export default Skills;
