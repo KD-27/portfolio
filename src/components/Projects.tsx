@@ -286,14 +286,37 @@ const Projects: React.FC = () => {
   const close = useCallback(() => setSelected(null), []);
   const navigate = useCallback((i: number) => setSelected((i + PROJECTS.length) % PROJECTS.length), []);
 
+  // Phones: cards sit in a horizontal swipe row; track which one is in view for the dots
+  const railRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(0);
+
+  const onRailScroll = () => {
+    const rail = railRef.current;
+    const first = rail?.children[0] as HTMLElement | undefined;
+    if (!rail || !first) return;
+    const step = first.offsetWidth + parseFloat(getComputedStyle(rail).columnGap || '0');
+    setInView(Math.min(PROJECTS.length - 1, Math.round(rail.scrollLeft / step)));
+  };
+
+  const scrollToCard = (i: number) => {
+    const rail = railRef.current;
+    const card = rail?.children[i] as HTMLElement | undefined;
+    // The rail is `relative`, so offsetLeft is measured from its own edge
+    if (rail && card) rail.scrollTo({ left: card.offsetLeft - parseFloat(getComputedStyle(rail).paddingLeft), behavior: 'smooth' });
+  };
+
   return (
     <Section id="projects" label="Projects" title="Selected projects">
-      <div className="grid gap-6 sm:grid-cols-2 lg:gap-8">
+      <div
+        ref={railRef}
+        onScroll={onRailScroll}
+        className="no-scrollbar relative -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 pb-1 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:gap-8"
+      >
         {PROJECTS.map((project, index) => (
           <button
             key={project.id}
             onClick={() => setSelected(index)}
-            className="group flex flex-col rounded-lg border border-rule bg-bar p-3 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-faint/50 hover:shadow-lg hover:shadow-black/5 sm:p-4"
+            className="group flex w-[84%] flex-shrink-0 snap-start flex-col rounded-lg border border-rule bg-bar p-3 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-faint/50 hover:shadow-lg hover:shadow-black/5 sm:w-auto sm:p-4"
             aria-label={`Open project: ${project.title}`}
           >
             <div className="overflow-hidden rounded-md bg-wash">
@@ -322,6 +345,21 @@ const Projects: React.FC = () => {
             </div>
           </button>
         ))}
+      </div>
+
+      <div className="mt-5 flex items-center justify-center gap-2 sm:hidden">
+        {PROJECTS.map((project, i) => (
+          <button
+            key={project.id}
+            onClick={() => scrollToCard(i)}
+            aria-label={`Show project ${i + 1}: ${project.title}`}
+            aria-current={i === inView}
+            className={`h-1.5 rounded-full transition-all duration-300 ${i === inView ? 'w-6 bg-ink' : 'w-1.5 bg-faint/50'}`}
+          />
+        ))}
+        <span className="ml-2 font-mono text-[11px] text-faint">
+          {inView + 1} / {PROJECTS.length}
+        </span>
       </div>
 
       {selected !== null && (

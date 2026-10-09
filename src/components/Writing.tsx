@@ -30,7 +30,7 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
         </button>
       }
     >
-      <p className="-mt-6 mb-10 max-w-2xl text-[15px] leading-relaxed text-muted">
+      <p className="-mt-6 mb-8 md:mb-10 max-w-2xl text-[15px] leading-relaxed text-muted">
         Ideas, builds and experiments, written up as I go.
       </p>
 

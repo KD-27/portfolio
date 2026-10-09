@@ -14,8 +14,8 @@ interface SectionProps {
 // Two-column academic layout: a quiet label in the margin, content on the right.
 const Section: React.FC<SectionProps> = ({ id, label, title, action, children }) => (
   <section id={id} className="border-t border-rule">
-    <div className={`${CONTAINER} py-16 md:py-24`}>
-      <div className="grid gap-6 md:grid-cols-[160px_1fr] md:gap-12">
+    <div className={`${CONTAINER} py-12 md:py-24`}>
+      <div className="grid gap-4 md:grid-cols-[160px_1fr] md:gap-12">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint md:sticky md:top-24">
             {label}
@@ -23,7 +23,7 @@ const Section: React.FC<SectionProps> = ({ id, label, title, action, children })
         </div>
         <div className="min-w-0">
           {(title || action) && (
-            <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
               {title && (
                 <h2 className="font-serif text-3xl md:text-[2.5rem] leading-tight tracking-tight text-ink">
                   {title}
