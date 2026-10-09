@@ -40,7 +40,7 @@ export const HERO_DATA = {
 };
 
 export const ABOUT_DATA = {
-  photo: `${import.meta.env.BASE_URL}my_pic.jpeg`,
+  photo: `${import.meta.env.BASE_URL}my_pic.webp`,
   bio: `I am a multidisciplinary engineer obsessed with making things move. With a background in Mechatronic Engineering, I thrive in the "messy middle" where hardware meets software.
 
 My goal is to build robust, intelligent robotic systems that solve real-world problems. Whether it's designing a custom PCB, machining a chassis, or writing ROS nodes, I love every step of the process.`
@@ -50,47 +50,47 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'a1',
     title: 'Best Academic Performance | Mechatronic Engineering',
-    image: `${import.meta.env.BASE_URL}achievements/academic_p.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/academic_p.webp`,
   },
   {
     id: 'a2',
     title: 'Publication at KDU IRC 2024',
-    image: `${import.meta.env.BASE_URL}achievements/KDUIRC24.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/KDUIRC24.webp`,
   },
   {
     id: 'a3',
     title: 'Genesis 23',
-    image: `${import.meta.env.BASE_URL}achievements/Genisis23.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/Genisis23.webp`,
   },
   {
     id: 'a4',
     title: 'Genesis 22',
-    image: `${import.meta.env.BASE_URL}achievements/Genisis22.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/Genisis22.webp`,
   },
   {
     id: 'a5',
     title: 'MATRIX 23',
-    image: `${import.meta.env.BASE_URL}achievements/Mathrix23.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/Mathrix23.webp`,
   },
   {
     id: 'a6',
     title: 'MATRIX 24 | Champions',
-    image: `${import.meta.env.BASE_URL}achievements/Mathrix24.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/Mathrix24.webp`,
   },
   {
     id: 'a7',
     title: 'Ignite Exhibition',
-    image: `${import.meta.env.BASE_URL}achievements/Ignite Exhibition.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/Ignite Exhibition.webp`,
   },
   {
     id: 'a8',
     title: 'MSD Competition | Champions',
-    image: `${import.meta.env.BASE_URL}achievements/box_p_robot.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/box_p_robot.webp`,
   },
   {
     id: 'a9',
     title: 'ERIC | Research In Charge',
-    image: `${import.meta.env.BASE_URL}achievements/ERIC Research In Charge.jpg`,
+    image: `${import.meta.env.BASE_URL}achievements/ERIC Research In Charge.webp`,
   }
 ];
 
@@ -107,11 +107,11 @@ export const PROJECTS: Project[] = [
       `${import.meta.env.BASE_URL}projects/ID1/robot motion.mp4`,
       `${import.meta.env.BASE_URL}projects/ID1/quad model.mp4`,
       `${import.meta.env.BASE_URL}projects/ID1/Walking.mp4`,
-      `${import.meta.env.BASE_URL}projects/ID1/Architecture.png`,
+      `${import.meta.env.BASE_URL}projects/ID1/Architecture.webp`,
       `${import.meta.env.BASE_URL}projects/ID1/TkinterGUI.mp4`,
       `${import.meta.env.BASE_URL}projects/ID1/balancing POV1.mp4`,
       `${import.meta.env.BASE_URL}projects/ID1/balancing POV2.mp4`,
-      `${import.meta.env.BASE_URL}projects/ID1/Simulink.png`
+      `${import.meta.env.BASE_URL}projects/ID1/Simulink.webp`
     ],
     details: [
       'Five-bar parallel leg mechanism with curved links',
@@ -135,11 +135,11 @@ export const PROJECTS: Project[] = [
     Designed for practical deployment in industrial inspection, warehouse logistics, and research applications, the system demonstrates that robust autonomous navigation can be achieved with accessible hardware. The rocker-bogie-inspired suspension enables operation on rough terrain under manual control, while autonomous mode handles structured indoor environments.`,
     tags: ['ROS', 'LiDAR', 'SLAM', 'Python', 'Arduino', 'SolidWorks', 'Path Planning'],
     gallery: [
-      `${import.meta.env.BASE_URL}projects/ID2/rover.jpg`,
+      `${import.meta.env.BASE_URL}projects/ID2/rover.webp`,
       `${import.meta.env.BASE_URL}projects/ID2/robot_ assembly.mp4`,
-      `${import.meta.env.BASE_URL}projects/ID2/model 6.png`,
-      `${import.meta.env.BASE_URL}projects/ID2/Mapping.png`,
-      `${import.meta.env.BASE_URL}projects/ID2/Navigation.png`,
+      `${import.meta.env.BASE_URL}projects/ID2/model 6.webp`,
+      `${import.meta.env.BASE_URL}projects/ID2/Mapping.webp`,
+      `${import.meta.env.BASE_URL}projects/ID2/Navigation.webp`,
       `${import.meta.env.BASE_URL}projects/ID2/mapping Vid.mp4`,
       `${import.meta.env.BASE_URL}projects/ID2/Navigation Vid.mp4`,
     ],
@@ -164,7 +164,7 @@ export const PROJECTS: Project[] = [
     tags: ['Arduino', 'Motor Control', 'Sensors', 'Competition', 'Mechatronics'],
     gallery: [
       `${import.meta.env.BASE_URL}projects/ID3/rick vid.mp4`,
-      `${import.meta.env.BASE_URL}projects/ID3/rick robot.jpg`,
+      `${import.meta.env.BASE_URL}projects/ID3/rick robot.webp`,
     ],
     details: [
       'Differential drive for precise maneuvering',
@@ -185,14 +185,14 @@ export const PROJECTS: Project[] = [
     The model was built with direct input from cardiologists, ensuring the features it analyzes are clinically meaningful rather than just statistically convenient. This collaboration between data science and medical expertise resulted in a tool that's both accurate and practical for real-world clinical settings.`,
     tags: ['Python', 'TensorFlow', 'Machine Learning', 'ANN', 'Healthcare', 'SMOTE'],
     gallery: [
-      `${import.meta.env.BASE_URL}projects/ID4/CAD.png`,
-      `${import.meta.env.BASE_URL}projects/ID4/ArchitectureCAD.png`,
-      `${import.meta.env.BASE_URL}projects/ID4/SMOTE.png`,
-      `${import.meta.env.BASE_URL}projects/ID4/Neural Network.png`,
-      `${import.meta.env.BASE_URL}projects/ID4/confusion matrix.png`,
-      `${import.meta.env.BASE_URL}projects/ID4/metrics.png`,
-      `${import.meta.env.BASE_URL}projects/ID4/accuraccy plot.png`,
-      `${import.meta.env.BASE_URL}projects/ID4/loss plot.png`,
+      `${import.meta.env.BASE_URL}projects/ID4/CAD.webp`,
+      `${import.meta.env.BASE_URL}projects/ID4/ArchitectureCAD.webp`,
+      `${import.meta.env.BASE_URL}projects/ID4/SMOTE.webp`,
+      `${import.meta.env.BASE_URL}projects/ID4/Neural Network.webp`,
+      `${import.meta.env.BASE_URL}projects/ID4/confusion matrix.webp`,
+      `${import.meta.env.BASE_URL}projects/ID4/metrics.webp`,
+      `${import.meta.env.BASE_URL}projects/ID4/accuraccy plot.webp`,
+      `${import.meta.env.BASE_URL}projects/ID4/loss plot.webp`,
     ],
     details: [
       'Four-layer ANN with ReLU and sigmoid activation functions',
@@ -210,7 +210,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     id: 'p4',
     title: 'FusionGrasp: A Modular Framework for Integrating Heterogeneous 6D Grasp Planners for Multimodal Cluttered Sorting',
     abstract: 'FusionGrasp integrates independently trained 6D grasp planners for multimodal cluttered waste sorting without retraining or labelled grasp outcomes. A quantile-based confidence harmonisation layer makes their scores comparable, and real-world UR10 experiments achieved a 74.53% grasp success rate, exceeding both single-modality baselines.',
-    image: `${import.meta.env.BASE_URL}research_papers/FusionGrasp_paper.png`,
+    image: `${import.meta.env.BASE_URL}research_papers/FusionGrasp_paper.webp`,
     link: '#',
     publisher: 'Australasian Conference on Robotics and Automation (ACRA)',
     venue: 'ACRA',
@@ -221,7 +221,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     id: 'p1',
     title: 'Design & Development of a Quadruped Robot for Inspection in Human-Inaccessible Structured Areas',
     abstract: 'A quadruped robot using a five-bar leg mechanism was developed for inspection in structured, inaccessible areas. Its optimized kinematics, stable locomotion, long-range ESP-NOW communication, and ROS2/MicroROS control architecture enable accurate, reliable, and modular operation on flat terrains.',
-    image: `${import.meta.env.BASE_URL}research_papers/Quadruped_Robot.png`,
+    image: `${import.meta.env.BASE_URL}research_papers/Quadruped_Robot.webp`,
     link: '#',
     publisher: 'International Journal of Control, Automation, and System (ICROS KIEE)',
     venue: 'IJCAS',
@@ -232,7 +232,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     id: 'p2',
     title: 'Prediction of Coronary Artery Disease Using Artificial Neural Network',
     abstract: 'An ANN for early CAD diagnosis achieved ~90% accuracy using SMOTE, expert-guided feature selection, optimized hyperparameters, and stratified k-fold validation. The model showed strong reliability and clinical relevance, outperforming conventional machine-learning methods',
-    image: `${import.meta.env.BASE_URL}research_papers/CAD_Diagnosis.png`,
+    image: `${import.meta.env.BASE_URL}research_papers/CAD_Diagnosis.webp`,
     link: 'https://ir.kdu.ac.lk/handle/345/8770',
     publisher: 'International Research Conference (KDU IRC)',
     venue: 'KDU IRC',
@@ -243,7 +243,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     id: 'p3',
     title: 'Development of an automated clothesline system',
     abstract: 'An automated clothes-drying system integrates sensors and actuators to detect rain and darkness, automatically sheltering garments while offering manual and remote control. It reduces household inconvenience, protects clothes from weather, and demonstrates how smart technology streamlines everyday domestic tasks.',
-    image: `${import.meta.env.BASE_URL}research_papers/Automated_Clothesline.png`,
+    image: `${import.meta.env.BASE_URL}research_papers/Automated_Clothesline.webp`,
     link: 'https://ir.kdu.ac.lk/handle/345/7491',
     publisher: 'International Research Conference (KDU IRC)',
     venue: 'KDU IRC',
@@ -431,7 +431,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       subtitle: 'Core ideology and mathematical foundation of a physics-inspired path planner',
       icon: 'Cpu',
       category: 'perspective',
-      coverImage: `${import.meta.env.BASE_URL}thought_lab/lcp/Coverpage.jpeg`,
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/lcp/Coverpage.webp`,
       introduction: "The Lazy Coulomb Planner (LCP) treats navigation as a correction problem, not a search problem: start with a straight line from start to goal, and apply localized, physics-inspired corrections only where the path actually collides with an obstacle. Borrowing the inverse-square repulsion of Coulomb's Law from electrostatics, LCP aims for fast, interpretable path planning in open environments — implemented both as a JavaScript visualization and as a full ROS 2 Nav2 global planner plugin.",
       tags: ['Path Planning', 'Physics-Inspired Robotics', 'ROS2 Nav2', 'Autonomous Navigation'],
       status: 'published',
@@ -666,7 +666,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       subtitle: 'A gamified daily discipline tracker, modeled on the "System" from Solo Leveling',
       icon: 'Trophy',
       category: 'project',
-      coverImage: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/calendar.png`,
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/calendar.webp`,
       introduction: "Monthly Plan is a single-page, offline daily discipline tracker built for exactly one user: me. Every day is a quest with assigned tasks, the day locks in at midnight, and failing a task costs points instead of just earning none. It's not a neutral habit checklist — the penalty is the point. It started in August 2026 as a calendar and a score, and daily use grew it into a journal, a finances drawer, deadlines, mind maps, a focus timer, a dark theme and a phone app that stays in sync with the laptop. It was designed and built end-to-end through iterative collaboration with Claude.",
       tags: ['Gamification', 'Self-Improvement', 'Habit Tracking', 'Claude', 'Local-First', 'Firebase', 'PWA'],
       status: 'published',
@@ -676,7 +676,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         { type: 'heading', content: 'Why It Exists', level: 2 },
         { type: 'text', content: "Monthly Plan exists to keep one person honest about a daily routine — diet, gym, water, sleep, spending, and weight — by scoring each day and turning the run into a visible rank, level, and set of titles. It was built after the previous version's log was silently wiped by Chrome clearing local storage, so the whole architecture is designed around one hard rule: opening the app must never require a manual step, or the log goes cold and the habit dies with it." },
 
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/calendar.png`, caption: 'The main screen — sticky notes on the left, the month colored by score in the middle, deadlines and mind maps on the right, with the flip clock and Focus tile below' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/calendar.webp`, caption: 'The main screen — sticky notes on the left, the month colored by score in the middle, deadlines and mind maps on the right, with the flip clock and Focus tile below' },
 
         { type: 'heading', content: 'How It Runs', level: 3 },
         {
@@ -693,7 +693,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
 
         { type: 'heading', content: 'The Day Sheet', level: 2 },
         { type: 'text', content: "Tapping any day opens its sheet: tasks grouped into All day / Morning / Afternoon / Evening / Night, with a live score bar against that day's maximum. Water is entered in millilitres and scored on a curve toward a 3.0 L target (bottle icons fill at 1 L each), and sleep is scored on a curve that gives full points inside 6–8 hours and falls off outside it. Ticking \"Went to gym\" swaps the morning tasks to their gym-day variants." },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/day-sheet.png`, caption: 'Day sheet — every unticked task shows the points it will cost' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/day-sheet.webp`, caption: 'Day sheet — every unticked task shows the points it will cost' },
 
         { type: 'heading', content: 'The Design Signature: Penalty-Based Scoring', level: 2 },
         { type: 'quote', content: "An unchecked task actively subtracts its weight rather than simply not adding — it mirrors a game system's daily quest penalty, not a forgiving habit tracker." },
@@ -703,7 +703,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         { type: 'heading', content: 'Rank and Level', level: 3 },
         { type: 'text', content: "Rank (E → D → C → B → A → S) is a rolling 7-day average that can rise or fall, with a 3-day confirmation before promotion and a 3-day grace period before demotion, so one great or one bad day can't whipsaw it. The top two ranks are gated: A needs full hygiene on 5 of the 7 days, and S needs all 7 plus last week's gym quota." },
         { type: 'text', content: "Level is the permanent record and never falls. XP is the sum of positive day scores, so a bad day earns nothing but takes nothing back. Nothing derived is stored anywhere — rank, level and titles are recomputed from the log on every load, so editing a past day correctly rewrites everything downstream." },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/rank.png`, caption: 'Rank & Level drawer — the ladder, the gates on A and S, and how the rank has moved' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/rank.webp`, caption: 'Rank & Level drawer — the ladder, the gates on A and S, and how the rank has moved' },
 
         { type: 'heading', content: 'Titles Instead of Points', level: 3 },
         { type: 'text', content: "Weekly body-weight and daily spending are deliberately kept outside the score — logged, charted and totaled, but never penalized, because biology and money don't answer to willpower the way a checklist does. Each earns a title instead: weight climbs Unforged → Kindled → Tempered → Ironclad → Ascendant, and spending climbs Spendthrift → Steward → Warden → Ironpurse → Vaultkeeper." },
@@ -712,10 +712,10 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
 
         { type: 'heading', content: 'Analytics', level: 2 },
         { type: 'text', content: 'The Analytics view shows the stat tiles, the rank history, a daily score chart shaded by zone, the weekly average with the gym-quota table, a per-task breakdown of where the points actually go, weight progress toward the target, and hydration month by month.' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-overview.png`, caption: 'Stat tiles, rank history and the daily score chart' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weekly.png`, caption: 'Weekly average — weeks under the gym quota lose 5 points' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weight.png`, caption: 'Where the points go, and weight progress toward the target' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/hydration.png`, caption: 'Hydration — each month against the 3.0 L target' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-overview.webp`, caption: 'Stat tiles, rank history and the daily score chart' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weekly.webp`, caption: 'Weekly average — weeks under the gym quota lose 5 points' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/analytics-weight.webp`, caption: 'Where the points go, and weight progress toward the target' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/hydration.webp`, caption: 'Hydration — each month against the 3.0 L target' },
 
         { type: 'divider' },
 
@@ -732,18 +732,18 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
             'Flip clock and Focus — a 24-hour flip clock that grows to full screen, and a Forest-style focus timer where every session grows a different generated tree.'
           ]
         },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/journal.png`, caption: 'Journal — one page per day, saved as you type' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/finances.png`, caption: 'Finances drawer — money stays apart from the daily score' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/mind-map.png`, caption: 'Mind map linked to a deadline — finished branches fade toward the centre' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/focus.png`, caption: 'Focus — drag the ring to set 10–120 minutes, then plant' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/journal.webp`, caption: 'Journal — one page per day, saved as you type' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/finances.webp`, caption: 'Finances drawer — money stays apart from the daily score' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/mind-map.webp`, caption: 'Mind map linked to a deadline — finished branches fade toward the centre' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/focus.webp`, caption: 'Focus — drag the ring to set 10–120 minutes, then plant' },
 
         { type: 'divider' },
 
         { type: 'heading', content: 'Phone, Sync and Dark Mode', level: 2 },
         { type: 'text', content: 'Under 640 px wide the app turns into pages picked from a bar at the bottom: Today, Calendar, Notes, Deadlines and More. Hosted on GitHub Pages, it installs from Chrome as a full-screen app, and a service worker keeps an offline copy. Firestore keeps a copy on the device too, so the app opens without signal and sends queued changes once it is back online.' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/phone.png`, caption: 'The phone layout — Today and Calendar' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/phone.webp`, caption: 'The phone layout — Today and Calendar' },
         { type: 'text', content: 'Settings hold the Google sign-in, your name, which parts are shown, data and backups, and the theme. Switching between light and dark spreads the new theme out in a circle from the button you pressed.' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/dark-mode.png`, caption: 'Dark theme' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/Monthly%20plan/dark-mode.webp`, caption: 'Dark theme' },
 
         { type: 'divider' },
 
@@ -771,7 +771,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       subtitle: 'One month of trying to run a YouTube chess channel on an automated video pipeline',
       icon: 'Clapperboard',
       category: 'project',
-      coverImage: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/cover.jpg`,
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/cover.webp`,
       introduction: "Blunder Breakdown started as a simple question: could my own Lichess games become YouTube videos with almost no manual editing? Over about a month I built, with Claude as a pair programmer, a pipeline that fetches my games, uses Stockfish to find the most dramatic mistake, writes and voices a narration, renders the board animation, and outputs a finished video with its thumbnail, title, description and tags. It then grew into five video formats, a local dashboard, a YouTube analytics tab and scheduled uploads. The channel published 60+ videos and passed 11,000 views, mostly from Shorts.",
       tags: ['Content Automation', 'Python', 'Stockfish', 'LLM Narration', 'ElevenLabs', 'YouTube API', 'Claude'],
       status: 'published',
@@ -805,7 +805,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
           caption: 'One run: from a raw PGN file to an upload-ready folder'
         },
 
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/thumb_blunder.jpg`, caption: 'An auto-generated thumbnail: the key square highlighted, text drawn from the highlight type' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/thumb_blunder.webp`, caption: 'An auto-generated thumbnail: the key square highlighted, text drawn from the highlight type' },
 
         { type: 'divider' },
 
@@ -853,17 +853,17 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
           ]
         },
 
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/shorts_covers.jpg`, caption: 'Auto-generated 9:16 covers for three formats: blunder Short, full game replay, brilliancy puzzle' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/shorts_covers.webp`, caption: 'Auto-generated 9:16 covers for three formats: blunder Short, full game replay, brilliancy puzzle' },
 
         { type: 'divider' },
 
         { type: 'heading', content: 'The Control Room: A Local Dashboard', level: 2 },
         { type: 'text', content: "Running a dozen scripts from a terminal every day doesn't last, so the whole pipeline sits behind a local Flask dashboard opened from a desktop shortcut. Each format has its own tab with live progress and logs. Every generated video can be previewed with its thumbnail and copy-ready metadata, and a password-protected settings area keeps the API keys out of the code." },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_home.jpg`, caption: 'Dashboard: fetch games, run the lesson pipeline, or build a full game replay with one click' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_media.jpg`, caption: 'Media tab: every run in its own folder, with the video, thumbnail and one-click copy for titles, description and tags' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_theory.jpg`, caption: 'Theory tab: the opening catalog with done and published tracking' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_database.jpg`, caption: 'Database tab: the Stockfish drama ranking that decides which game becomes the next video' },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_analytics.jpg`, caption: 'Analytics tab: live YouTube numbers, monetization progress and daily views, pulled over OAuth' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_home.webp`, caption: 'Dashboard: fetch games, run the lesson pipeline, or build a full game replay with one click' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_media.webp`, caption: 'Media tab: every run in its own folder, with the video, thumbnail and one-click copy for titles, description and tags' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_theory.webp`, caption: 'Theory tab: the opening catalog with done and published tracking' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_database.webp`, caption: 'Database tab: the Stockfish drama ranking that decides which game becomes the next video' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/blunder_breakdown/dash_analytics.webp`, caption: 'Analytics tab: live YouTube numbers, monetization progress and daily views, pulled over OAuth' },
 
         { type: 'divider' },
 
@@ -916,7 +916,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       subtitle: 'A wearable that learns how I walk, then tells me what changed and when',
       icon: 'Footprints',
       category: 'hardware',
-      coverImage: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cover.jpg`,
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cover.webp`,
       introduction: "Seven motion sensors strapped to the thighs, shins, feet and lower back, one ESP32-S3 at the waist, and a Wi-Fi stream into a Python pipeline that turns raw accelerometer and gyroscope readings into knee, hip and ankle angles. The goal was narrow and testable: record one good walk to learn what normal looks like for me, then check any other walk against it and say what was wrong and when. On a deliberately stiff-kneed walk it flagged the right joint in the right 45–86 second window, without being told the fault was there.",
       tags: ['Wearables', 'ESP32-S3', 'IMU Sensor Fusion', 'Gait Analysis', 'Python', 'SolidWorks'],
       status: 'published',
@@ -928,7 +928,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         { type: 'quote', content: "Faults are local in time, so detection has to be local in time too." },
 
         { type: 'heading', content: 'The Hardware', level: 2 },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/kit.jpg`, caption: 'The harness: waist band with the electronics, and six leg bands with printed sensor mounts' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/kit.webp`, caption: 'The harness: waist band with the electronics, and six leg bands with printed sensor mounts' },
         { type: 'list', items: [
           'ESP32-S3 at the waist, streaming over Wi-Fi',
           '7 × MPU6050 6-axis IMUs: thigh, shank and foot on each leg, plus one on the pelvis',
@@ -941,10 +941,10 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         {
           type: 'gallery',
           images: [
-            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cad_waist.jpg`, caption: 'Waist band (CAD)' },
-            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cad_sensor.jpg`, caption: 'Sensor mount (CAD)' },
-            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cover.jpg`, caption: 'Waist electronics' },
-            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/straps.jpg`, caption: 'Printed sensor mounts' }
+            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cad_waist.webp`, caption: 'Waist band (CAD)' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cad_sensor.webp`, caption: 'Sensor mount (CAD)' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/cover.webp`, caption: 'Waist electronics' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/straps.webp`, caption: 'Printed sensor mounts' }
           ]
         },
 
@@ -976,7 +976,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
               detail: "One complementary filter per body segment fuses the gyroscope (smooth but drifts) with the accelerometer (noisy but drift-free). Heel strikes from the foot sensors cut the walk into strides, each one stretched onto a 0–100% gait cycle. The first right-knee curve peaked in completely the wrong place because only the thigh's sign was being corrected, not the shank's. Fixing that took the left/right difference from 37° down to 5°.",
               stat: { value: '5.2°', label: 'left vs right knee difference over the gait cycle' },
               added: ['Complementary filter', 'Heel-strike detection', 'Stride normalization'],
-              media: [{ type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/gaitcycle.jpg`, caption: 'Normalized knee gait cycle, mean ± SD across strides, both legs' }]
+              media: [{ type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/gaitcycle.webp`, caption: 'Normalized knee gait cycle, mean ± SD across strides, both legs' }]
             },
             {
               label: 'PHASE 4',
@@ -984,7 +984,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
               detail: "A short routine at the start of each session (stand, sit, extend each knee, flex each ankle) pins down how every sensor is actually sitting on the leg. Then the real test: a walk that was normal for the first half, then deliberately stiff-kneed. Averaging all its strides only showed a mild change. Tracking knee swing in short windows along the walk showed the fault clearly, and exactly when it started and stopped.",
               stat: { value: '45–86 s', label: 'fault window found without being told' },
               added: ['Per-session calibration', 'Windowed detector', 'gait_monitor.py'],
-              media: [{ type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/alert.jpg`, caption: 'Alert timeline: knee swing per window against my normal band. Red = under-flexion, grey = standing' }]
+              media: [{ type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/alert.webp`, caption: 'Alert timeline: knee swing per window against my normal band. Red = under-flexion, grey = standing' }]
             }
           ]
         },
@@ -1014,7 +1014,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
 
         { type: 'heading', content: 'The Lesson: Don\'t Average a Fault Away', level: 2 },
         { type: 'text', content: "My first attempt pooled every stride of the faulty walk into one average and compared it against normal. The result was a weak, everywhere-at-once change of a few degrees, easy to dismiss as noise. In reality the fault was strong (knee swing roughly halved) but only lasted about 40 seconds, and averaging it together with the normal half of the walk hid it. The fix was to judge the walk window by window along the timeline and leave out the periods spent standing still. The per-stride overlay below makes the same point from the other side: the faulty strides fall clearly outside the band." },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/vs_normal_cycle.jpg`, caption: 'Strides from the faulty walk (red) against my good-walk band (green)' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/gait_imu/vs_normal_cycle.webp`, caption: 'Strides from the faulty walk (red) against my good-walk band (green)' },
         { type: 'heading', content: 'An Alert You Can Hear', level: 2 },
         { type: 'text', content: "The pipeline needs a laptop, so I also wrote a much lighter stiff-knee check that runs on the ESP32 itself and sounds the buzzer. It needs no calibration, so it still works after the rig is taken off and put back on. When the knee bends, the thigh and shank rotate at different rates. When it's held stiff, they move together. The firmware watches that difference on both legs, learns my normal level from the first 30–40 seconds of walking, and buzzes if either knee drops below 60% of it for a few seconds while I'm walking. Standing still is ignored." },
         { type: 'callout', content: "Replayed against the recorded walks, the good walk never triggered the buzzer, and the stiff-knee walk set it off from about 51 to 86 seconds on both legs. That matches the window the full pipeline found.", variant: 'tip' },
@@ -1050,7 +1050,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       subtitle: 'Three knobs, one LED, and a hex code on a tiny screen, running all day on one battery',
       icon: 'Palette',
       category: 'hardware',
-      coverImage: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/violet.jpg`,
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/violet.webp`,
       introduction: "A small battery-powered instrument built on an ESP32-C3. Three potentiometers set the red, green and blue levels of an RGB LED, and a 0.96\" OLED shows each value as a number and a bar, along with the colour's hex code. It's a simple idea, but getting it right on a perfboard with whatever parts were in the drawer took real circuit maths, a few firmware workarounds and a careful power budget.",
       tags: ['Embedded Systems', 'ESP32-C3', 'PWM', 'Circuit Design', 'Arduino', 'Power Budgeting'],
       status: 'published',
@@ -1058,7 +1058,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       readTime: '5 min read',
       contentBlocks: [
         { type: 'heading', content: 'The Build', level: 2 },
-        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/board.jpg`, caption: 'Component placement on the perfboard before wiring: OLED, ESP32-C3 SuperMini, power switch, LED resistors and the three knobs' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/board.webp`, caption: 'Component placement on the perfboard before wiring: OLED, ESP32-C3 SuperMini, power switch, LED resistors and the three knobs' },
         { type: 'list', items: [
           'ESP32-C3 SuperMini, clocked down to 80 MHz with the radio never started',
           '3 × 10 kΩ linear potentiometers on the ADC1 pins',
@@ -1098,10 +1098,10 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         {
           type: 'gallery',
           images: [
-            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/red.jpg`, caption: '255 / 0 / 0 · #FF0000' },
-            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/green.jpg`, caption: '0 / 255 / 0 · #00FF00' },
-            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/blue.jpg`, caption: '0 / 0 / 255 · #0000FF' },
-            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/violet.jpg`, caption: '143 / 13 / 237 · #8F0DED' }
+            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/red.webp`, caption: '255 / 0 / 0 · #FF0000' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/green.webp`, caption: '0 / 255 / 0 · #00FF00' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/blue.webp`, caption: '0 / 0 / 255 · #0000FF' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/rgb_mixer/violet.webp`, caption: '143 / 13 / 237 · #8F0DED' }
           ]
         },
 
