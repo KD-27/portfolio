@@ -123,7 +123,7 @@ const App: React.FC = () => {
       <Header
         onHome={navigateToHome}
         onSection={navigateToSection}
-        onWriting={navigateToThoughtLab}
+        onWriting={() => navigateToSection('writing')}
         writingActive={currentPage !== 'home'}
       />
       <Suspense fallback={<PageLoading />}>{renderPage()}</Suspense>
