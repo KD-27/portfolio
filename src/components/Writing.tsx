@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
 import { categoryLabel } from '../utils/thoughtLab';
 import Section from './Section';
+import BentoTemplate from './writing/BentoTemplate';
+import TabsTemplate from './writing/TabsTemplate';
+import IndexTemplate from './writing/IndexTemplate';
+import ShelvesTemplate from './writing/ShelvesTemplate';
+import TemplateSwitcher from './writing/TemplateSwitcher';
+import { readTemplate, type TemplateId } from './writing/templates';
 
 interface WritingProps {
   onOpenLab: () => void;
   onOpenArticle: (articleId: string) => void;
 }
 
-const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
+const CurrentTemplate: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
   const published = THOUGHT_LAB_DATA.articles.filter((a) => a.status === 'published');
   const [featured, ...rest] = published;
 
@@ -95,6 +101,24 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
         </ul>
       )}
     </Section>
+  );
+};
+
+// Layout previews: the dev server shows a switcher; production always renders the current layout
+const Writing: React.FC<WritingProps> = (props) => {
+  const [template, setTemplate] = useState<TemplateId>(() => (import.meta.env.DEV ? readTemplate() : 'current'));
+  const articles = THOUGHT_LAB_DATA.articles.filter((a) => a.status === 'published');
+  const shared = { ...props, articles };
+
+  return (
+    <>
+      {template === 'bento' && <BentoTemplate {...shared} />}
+      {template === 'tabs' && <TabsTemplate {...shared} />}
+      {template === 'index' && <IndexTemplate {...shared} />}
+      {template === 'shelves' && <ShelvesTemplate {...shared} />}
+      {template === 'current' && <CurrentTemplate {...props} />}
+      {import.meta.env.DEV && <TemplateSwitcher value={template} onChange={setTemplate} />}
+    </>
   );
 };
 
