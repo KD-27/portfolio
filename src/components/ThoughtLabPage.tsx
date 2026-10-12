@@ -104,7 +104,7 @@ const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onSelectArticle }) => {
                 <h2 className="font-serif text-3xl tracking-tight text-ink">{group.title}</h2>
                 <p className="text-sm text-muted">{group.blurb}</p>
               </div>
-              <div className="grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid items-start gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
                 {group.articles.map((article) => (
                   <ArticleCard key={article.id} article={article} onClick={() => onSelectArticle(article.id)} />
                 ))}
