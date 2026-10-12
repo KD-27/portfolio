@@ -140,6 +140,7 @@ export const PROJECTS: Project[] = [
     Designed for practical deployment in industrial inspection, warehouse logistics, and research applications, the system demonstrates that robust autonomous navigation can be achieved with accessible hardware. The rocker-bogie-inspired suspension enables operation on rough terrain under manual control, while autonomous mode handles structured indoor environments.`,
     tags: ['ROS', 'LiDAR', 'SLAM', 'Python', 'Arduino', 'SolidWorks', 'Path Planning'],
     gallery: [
+      `${import.meta.env.BASE_URL}projects/ID2/rover_photo.webp`,
       `${import.meta.env.BASE_URL}projects/ID2/rover.webp`,
       `${import.meta.env.BASE_URL}projects/ID2/robot_ assembly.mp4`,
       `${import.meta.env.BASE_URL}projects/ID2/model 6.webp`,
@@ -168,6 +169,7 @@ export const PROJECTS: Project[] = [
     The result: first place in the competition. The robot's success came from optimizing the hammer's rotation speed and timing to maximize sweep coverage while the differential drive system maintained precise table-edge awareness.`,
     tags: ['Arduino', 'Motor Control', 'Sensors', 'Competition', 'Mechatronics'],
     gallery: [
+      `${import.meta.env.BASE_URL}projects/ID3/rick_photo.webp`,
       `${import.meta.env.BASE_URL}projects/ID3/rick vid.mp4`,
       `${import.meta.env.BASE_URL}projects/ID3/rick robot.webp`,
     ],
