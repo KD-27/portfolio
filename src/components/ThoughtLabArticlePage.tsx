@@ -491,7 +491,7 @@ const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({
           </header>
 
           {/* Cover */}
-          <figure className="mx-auto mt-10 w-full max-w-[960px] px-5">
+          <figure className={`${COLUMN} mt-10`}>
             <img src={article.coverImage} alt={article.title} className="max-h-[540px] w-full rounded-sm object-cover" />
           </figure>
 
