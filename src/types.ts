@@ -41,6 +41,8 @@ export interface Achievement {
   id: string;
   title: string;
   image: string;
+  /** One line under the title, for awards whose name doesn't explain itself */
+  description?: string;
 }
 
 // =========================================

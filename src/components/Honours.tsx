@@ -21,6 +21,7 @@ const Honours: React.FC = () => (
               <figcaption className="mt-3">
                 <span className="block text-[15px] font-medium leading-snug text-ink">{name}</span>
                 {distinction && <span className="mt-0.5 block text-sm text-accent">{distinction}</span>}
+                {item.description && <span className="mt-1 block text-sm leading-snug text-muted">{item.description}</span>}
               </figcaption>
             </figure>
           </li>

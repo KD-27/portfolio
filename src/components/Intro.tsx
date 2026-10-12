@@ -125,7 +125,7 @@ const Intro: React.FC = () => {
             ))}
           </dl>
 
-          <p className="mt-4 text-justify text-xs leading-relaxed text-faint hyphens-auto">
+          <p className="mt-4 text-xs leading-relaxed text-faint">
             {HERO_DATA.title}. {HERO_DATA.intro}
           </p>
         </div>
