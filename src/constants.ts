@@ -23,7 +23,7 @@ import type { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement, T
 // =========================================
 export const SOCIAL_LINKS = {
   email: 'kaveeshadhananjaya2002@gmail.com',
-  linkedin: 'https://www.linkedin.com/in/kaveesha-dhananjaya/',
+  linkedin: 'https://www.linkedin.com/in/kaveesha-dhananjaya-270531239/',
   scholar: 'https://scholar.google.com/citations?user=s9AT2TYAAAAJ',
   github: 'https://github.com/KD-27',
   resume: `${import.meta.env.BASE_URL}resume.pdf`

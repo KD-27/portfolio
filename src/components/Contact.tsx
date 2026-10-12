@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { HERO_DATA, SOCIAL_LINKS } from '../constants';
 import { CONTAINER } from '../utils/layout';
+import EmailLink from './EmailLink';
 
 const LINKS = [
   { label: 'GitHub', href: SOCIAL_LINKS.github },
@@ -17,12 +18,11 @@ const Contact: React.FC = () => (
           <h2 className="max-w-2xl font-serif text-3xl leading-tight tracking-tight text-ink md:text-5xl">
             Open to roles and research collaborations in robotics, automation and embedded systems.
           </h2>
-          <a
-            href={`mailto:${SOCIAL_LINKS.email}`}
+          <EmailLink
             className="mt-8 inline-block break-all font-serif text-xl text-accent underline decoration-accent/30 underline-offset-[6px] hover:decoration-accent md:text-2xl"
           >
             {SOCIAL_LINKS.email}
-          </a>
+          </EmailLink>
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
             {LINKS.map((link) => (
               <a
