@@ -658,6 +658,172 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
     },
 
     // =====================================================================
+    // SDIS - rule-based expert system for swallowing difficulty screening
+    // =====================================================================
+    {
+      id: 'swallowing-expert-system',
+      title: 'Swallowing Difficulty Identification System',
+      subtitle: 'A rule-based expert system that screens adults for swallowing difficulty and explains every result',
+      icon: 'Stethoscope',
+      category: 'project',
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/expert_system/cover.webp`,
+      introduction: "Dysphagia, difficulty moving food, drink or saliva from the mouth to the stomach, is common in older adults and people with neurological conditions, and reaching a speech pathologist can be slow, especially outside the cities. SDIS is a screening tool a person can complete about themselves. It asks 29 questions, records 4 medical conditions and applies 31 rules to reach one of six outcomes, from \"Call 000 now\" to \"No swallowing difficulty identified\". There is no machine learning in it: it is a classic expert system, a knowledge base of IF–THEN rules and a forward-chaining inference engine, so every result can be traced back to the answers that produced it. I built it over seven weekly iterations with Claude as a collaborator, and it runs as a single offline HTML file.",
+      tags: ['Expert Systems', 'Forward Chaining', 'Explainable AI', 'Healthcare', 'Rule-Based Reasoning', 'JavaScript', 'Claude'],
+      status: 'published',
+      publishedDate: 'October 2026',
+      readTime: '9 min read',
+      contentBlocks: [
+        { type: 'heading', content: 'Why an Expert System', level: 2 },
+        { type: 'text', content: "Existing swallowing screens give an observation, a pass or fail, or a score against a cut-off. None of them tells the person or their clinician why. For a screening decision that sends someone to, or away from, a speech pathologist, the reasoning has to be visible. That ruled out a trained model explained after the fact, and pointed straight at the oldest form of AI: production rules, where the knowledge is written down and the explanation is simply the list of rules that fired." },
+        { type: 'quote', content: "The rules named in the explanation are the rules that produced the result. The explanation is faithful by construction, not a guess about a black box." },
+        { type: 'text', content: "Rule-based systems lost ground to machine learning wherever data is plentiful. They are still a good fit when the knowledge already exists in written guidance, labelled data is scarce, and the people responsible for the decision need to read the reasoning. Screening from a validated questionnaire meets all three." },
+
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/verdict.webp`, caption: 'A finished screen: the outcome, and the plain-language reasons from the rules that fired' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Where the Knowledge Comes From', level: 2 },
+        { type: 'text', content: "Expert systems are usually built by interviewing an expert, which Feigenbaum famously called the knowledge acquisition bottleneck. I reversed the order: the knowledge base was built first from published sources, and clinical review comes afterwards. That way every rule carries a source string a reviewer can check, instead of relying on anyone's memory of an interview." },
+        {
+          type: 'list',
+          items: [
+            'Sydney Swallow Questionnaire (SSQ) — the 17-item validated self-report instrument the swallowing questions are adapted from, and its normative study, which set 234 as the upper limit of normal.',
+            'ASHA Adult Dysphagia Practice Portal — the signs of dysphagia, the risk conditions, and the principle that signs should be weighed together rather than one at a time.',
+            'MedlinePlus — the emergency question and the reflux-related symptoms.'
+          ]
+        },
+        { type: 'text', content: "Where no source gave a usable answer, such as a threshold for a single question, I made a judgement and marked it PROVISIONAL in the tool itself. There are 24 such items: the total score, three subscores and 20 rules. Together they form a defined list for a speech pathologist to confirm, revise or remove, rather than a request to endorse the whole system." },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'How It Reasons', level: 2 },
+        {
+          type: 'flow',
+          steps: [
+            { title: 'Ask', detail: '1 safety question, 16 swallowing items adapted from the SSQ, 10 further signs, and 2 on medication and teeth, one per screen. 4 medical conditions are answered on the details page.', icon: 'ClipboardList', phase: 'KNOWLEDGE', tools: ['29 questions', '4 conditions'] },
+            { title: 'Store', detail: 'Numbers go into a values store, everything else into a facts set. Nothing is ever stored as false: answering "no" asserts no_voice_change, so a missing fact always means "not answered".', icon: 'Database', phase: 'KNOWLEDGE', tools: ['values', 'facts'] },
+            { title: 'Derive', detail: 'Each item is weighted to 0–100, giving a total out of 1600 and three subscores. Derivation is all or nothing: a partial total would look like a low score and give false reassurance.', icon: 'Calculator', phase: 'KNOWLEDGE', tools: ['total', '3 subscores'] },
+            { title: 'Infer', detail: 'Forward chaining: fire every eligible rule, add its conclusion to the facts, and repeat until a full pass fires nothing new. No conflict resolution, and each rule fires at most once.', icon: 'Repeat', phase: 'REASONING', tools: ['31 rules', 'fixed point'], note: '"Not breathing properly" stops the screen at once → Call 000' },
+            { title: 'Decide', detail: 'After inference, the six outcomes are ranked by severity and the most serious one proposed by any fired rule wins. Every rule that proposed it becomes a reason.', icon: 'ListOrdered', phase: 'REASONING', tools: ['severity ladder'] },
+            { title: 'Explain', detail: 'The report walks back through the chain of fired rules to the person\'s own answers, and a second view shows all 31 rules with every condition ticked or crossed.', icon: 'MessageSquareText', phase: 'EXPLANATION', tools: ['rule trace', 'sources'] }
+          ],
+          outputs: [
+            { label: 'Outcome', detail: '1 of 6, ranked', icon: 'ShieldAlert' },
+            { label: 'Reasons', detail: 'from fired rules', icon: 'MessageSquareText' },
+            { label: 'Rule trace', detail: 'all 31 evaluated', icon: 'ListOrdered' },
+            { label: 'PDF report', detail: 'with review box', icon: 'FileDown' }
+          ],
+          caption: 'From answers to an explained result, entirely in the browser'
+        },
+
+        { type: 'heading', content: 'Four Operators, 31 Rules', level: 3 },
+        { type: 'text', content: "Every rule condition is built from just four operators. Fact tests whether a fact is present. AtLeast and AtMost compare a raw or derived value against a threshold. CountAtLeast counts how many items in a list are satisfied, which is how the ASHA principle of weighing signs together is encoded: R09 fires when 3 of the 5 airway items reach 3. Missing data always makes a condition false, never true and never an error." },
+        { type: 'text', content: "Several rules often feed one shared fact that a single downstream rule turns into an outcome. Five different rules can each assert elevated_airway_risk from different evidence, and none of them refers the person on its own. R11 then turns that fact into a speech pathology referral, however it was reached. That funnel keeps the referral logic in one place." },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/cycles.webp`, caption: 'The inference sequence for the worked case: cycle 1 asserts the intermediate findings, cycle 2 turns them into referrals' },
+
+        { type: 'heading', content: 'Six Outcomes', level: 3 },
+        {
+          type: 'list',
+          ordered: true,
+          items: [
+            'EMERGENCY — Call 000 now',
+            'REFER_URGENT — Speak to a health professional today',
+            'REFER_SLP — Ask for a speech pathology assessment',
+            'REFER_GP — Talk to your doctor about these symptoms',
+            'RESCREEN — Nothing needing a referral right now',
+            'NO_ACTION — No swallowing difficulty identified'
+          ]
+        },
+        { type: 'text', content: "The outcome is chosen after inference, not during it. Other findings above a rescreen are still reported, so a GP referral isn't lost when a speech pathology referral takes precedence." },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/emergency.webp`, caption: 'Answering "no" to "Are you breathing properly right now?" ends the screen immediately' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'The Journey: Seven Weeks', level: 2 },
+        { type: 'text', content: "The tool was built in weekly increments, each one shown at a weekly review. Throughout, the knowledge base and the engine stayed separate, so growing the knowledge never meant touching the reasoning." },
+        {
+          type: 'timeline',
+          entries: [
+            {
+              label: 'WEEK 1',
+              title: 'Prove the engine on a toy domain',
+              detail: "Before any clinical content, a small expert system that diagnoses why a car won't start, with a live architecture diagram, a goal-driven mode that only asks what it needs, and a trace of every rule it matches. The footer says it plainly: the engine does not know what a car is.",
+              stat: { value: '6', label: 'rules, car diagnosis' },
+              added: ['Forward chaining', 'Goal-driven mode', 'Live trace', 'Explanation module'],
+              media: [{ type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/week1_engine.webp`, caption: 'Week 1 — watching the engine reason, mid-consultation' }]
+            },
+            {
+              label: 'WEEK 2',
+              title: 'Reasoning over a scaled questionnaire',
+              detail: 'The car rules were swapped for 8 swallowing questions and 10 rules. This introduced the split between numeric values and boolean facts, all-or-nothing derivation, and an explanation that walks each conclusion back to the answer behind it.',
+              stat: { value: '8 / 10', label: 'questions / rules' },
+              added: ['values vs facts', 'Weighted scores', 'Airway subscore'],
+              media: [{ type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/week2_ssq.webp`, caption: 'Week 2 — the same engine, now reasoning over swallowing answers' }]
+            },
+            {
+              label: 'WEEKS 3–5',
+              title: 'The full questionnaire and a real interface',
+              detail: 'The full 17-item SSQ with its real maximum of 1700 and the published limit of 234, so every threshold shown was the real one. Then the knowledge base grew to 36 questions and 29 rules, with a one-question-per-screen interface and a downloadable PDF report.',
+              stat: { value: '36 / 29', label: 'questions / rules' },
+              added: ['Full SSQ', 'Clinical red flags', 'PDF report', 'Draft recovery']
+            },
+            {
+              label: 'WEEK 7',
+              title: 'Version 5, after review',
+              detail: 'The questions were reviewed and reworked for a better flow: five removed, four moved to the details page, two added, and "not applicable" answers with scaling. Rules went to 31, and the whole change was verified against 48,000 random patients.',
+              stat: { value: '29 / 31', label: 'questions / rules' },
+              added: ['Not applicable answers', 'Vomiting rule', 'Conditions on details page'],
+              media: [{ type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/question.webp`, caption: 'Version 5 — one question per screen, keyboard shortcuts for every answer' }]
+            }
+          ]
+        },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'A Session, Start to Finish', level: 2 },
+        { type: 'text', content: "A session has three stages. Details and the four medical conditions are entered first, and the screen won't start without a name, a valid date of birth and an answer to every condition. The questions are then answered one per screen. Finally a report is produced. Nothing is ever sent anywhere: an unfinished session is kept on the device so a refresh doesn't lose it, and it is deleted the moment the report is produced. The patient below is invented." },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/intake.webp`, caption: 'Details and medical conditions — head and neck cancer is highlighted because it directly affects swallowing' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/scores.webp`, caption: 'Scores — every score derived from the project\'s own thresholds carries a PROVISIONAL badge' },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/explain.webp`, caption: '"How this result was reached" — the rules that carried the outcome, the intermediate findings behind them, and the source of each' },
+
+        { type: 'heading', content: 'Rule Evaluation: Reasoning You Can Inspect', level: 3 },
+        { type: 'text', content: "The second tab is the main evidence that the reasoning can be inspected rather than taken on trust. It lists all 31 rules, including the ones that didn't fire, with every condition evaluated against the actual value tested. If a clinician disagrees with a result, they can point at the exact rule and threshold responsible and challenge that piece of knowledge, instead of rejecting the whole tool." },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/expert_system/rules.webp`, caption: 'Each rule with its conditions ticked or crossed, the fact it concludes, the outcome it proposes, and its source' },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Verification', level: 2 },
+        {
+          type: 'list',
+          items: [
+            '48,000 random patients compared against the previous version, with the differences predicted in advance. Fired rules matched the prediction for all 48,000.',
+            '40,000 random version-5 patients: all 31 rules fired at least once and all six outcomes were reached.',
+            '21 cases worked out by hand to reach every branch, including the borderline band, the age boundary at 65 and score scaling with not-applicable answers. All 21 matched.',
+            'A consistency check over the knowledge base: no rule reads a fact that nothing asserts.',
+            'Complete sessions driven in a headless browser, including an emergency stop, a refresh part-way through, and no network requests.',
+            'The question and rule appendices of the documentation are generated from the code by script, so the docs cannot drift from the implementation.'
+          ]
+        },
+        { type: 'callout', content: 'These checks test the logic, not clinical accuracy. The 24 provisional items are awaiting review by a speech pathologist, and accuracy will next be measured against case vignettes written by clinicians. Until then, SDIS is a transparent basis for clinical review, not a screening service.', variant: 'warning' },
+
+        { type: 'heading', content: 'What I Learned', level: 2 },
+        {
+          type: 'list',
+          items: [
+            "Prove the engine before the domain. Week 1's car diagnoser had nothing to do with swallowing, and that was the point: once the engine was right, every later week was only knowledge.",
+            'Never store "false". Giving every answer its own named fact means an unanswered question can never be mistaken for a "no", which matters a lot in a medical screen.',
+            'Fire everything, decide at the end. Letting every eligible rule fire removes conflict resolution entirely, so rule order can never change the result.',
+            'A faithful explanation is not automatically a good one. A trace through 31 rules is honest but long, so the report leads with plain-language reasons and keeps the full trace in its own tab.',
+            'Mark your guesses. Labelling every unsourced threshold as provisional, right in the interface, turned a vague "please review this" into a list of 24 specific decisions.',
+            'Working with Claude as a collaborator made a new, reviewable version every week realistic, from the interface and PDF report to the random-patient test harnesses.'
+          ]
+        },
+
+        { type: 'callout', content: 'SDIS is a single HTML file with no dependencies on a server. It runs fully offline in any modern browser, and the PDF report includes a clinician review box on its first page.', variant: 'tip' }
+      ]
+    },
+
+    // =====================================================================
     // Monthly Plan - self-help gamified daily discipline tracker
     // =====================================================================
     {

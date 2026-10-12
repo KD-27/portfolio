@@ -5,6 +5,7 @@ import {
   Download, BarChart3, Crosshair, BookOpen, PenLine, Mic, Clapperboard, Package,
   Monitor, Smartphone, Image as ImageIcon, FileText, CornerDownRight, Workflow,
   Cpu, Wifi, Compass, Activity, Footprints, Ruler, Gauge, SlidersHorizontal, Filter,
+  ClipboardList, Database, Calculator, Repeat, ListOrdered, MessageSquareText, ShieldAlert, FileDown,
   type LucideIcon
 } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
@@ -197,7 +198,8 @@ const CalloutBlock: React.FC<{ content: string; variant?: 'info' | 'warning' | '
 const FLOW_ICONS: Record<string, LucideIcon> = {
   Download, BarChart3, Crosshair, BookOpen, PenLine, Mic, Clapperboard, Package,
   Monitor, Smartphone, Image: ImageIcon, FileText,
-  Cpu, Wifi, Compass, Activity, Footprints, Ruler, Gauge, SlidersHorizontal, Filter, Lightbulb
+  Cpu, Wifi, Compass, Activity, Footprints, Ruler, Gauge, SlidersHorizontal, Filter, Lightbulb,
+  ClipboardList, Database, Calculator, Repeat, ListOrdered, MessageSquareText, ShieldAlert, FileDown
 };
 
 // Static class names so Tailwind keeps them; the output grid matches the fork's branch count
@@ -489,7 +491,7 @@ const ThoughtLabArticlePage: React.FC<ThoughtLabArticlePageProps> = ({
           </header>
 
           {/* Cover */}
-          <figure className="mx-auto mt-10 w-full max-w-[960px] px-5">
+          <figure className={`${COLUMN} mt-10`}>
             <img src={article.coverImage} alt={article.title} className="max-h-[540px] w-full rounded-sm object-cover" />
           </figure>
 
