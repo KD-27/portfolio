@@ -3,6 +3,7 @@ import { ArrowUpRight, Download, Menu, X } from 'lucide-react';
 import { HERO_DATA, SOCIAL_LINKS } from '../constants';
 import { CONTAINER } from '../utils/layout';
 import ThemeToggle from './ThemeToggle';
+import EmailLink from './EmailLink';
 
 interface HeaderProps {
   onHome: () => void;
@@ -85,7 +86,6 @@ const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingAc
   ];
 
   const socials = [
-    { label: 'Email', href: `mailto:${SOCIAL_LINKS.email}` },
     { label: 'GitHub', href: SOCIAL_LINKS.github },
     { label: 'LinkedIn', href: SOCIAL_LINKS.linkedin },
   ];
@@ -206,11 +206,14 @@ const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingAc
             <Download size={16} /> Download CV
           </a>
           <div className="flex items-center justify-center gap-6">
+            <EmailLink className="inline-flex items-center gap-0.5 text-sm font-medium text-muted hover:text-ink">
+              Email <ArrowUpRight size={13} />
+            </EmailLink>
             {socials.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+                target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-0.5 text-sm font-medium text-muted hover:text-ink"
               >

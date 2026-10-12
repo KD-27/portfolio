@@ -2,9 +2,9 @@ import React from 'react';
 import { ArrowUpRight, Download } from 'lucide-react';
 import { ABOUT_DATA, HERO_DATA, RESEARCH_PAPERS, SOCIAL_LINKS } from '../constants';
 import { CONTAINER } from '../utils/layout';
+import EmailLink from './EmailLink';
 
 const LINKS = [
-  { label: 'Email', href: `mailto:${SOCIAL_LINKS.email}` },
   { label: 'GitHub', href: SOCIAL_LINKS.github },
   { label: 'LinkedIn', href: SOCIAL_LINKS.linkedin },
 ];
@@ -89,11 +89,15 @@ const Intro: React.FC = () => {
 
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 md:mt-10">
             <CvButton className="hidden px-5 py-2.5 text-sm md:inline-flex" />
+            <EmailLink className="group inline-flex items-center gap-0.5 text-sm font-medium text-ink underline decoration-rule decoration-1 underline-offset-4 hover:decoration-accent transition-colors">
+              Email
+              <ArrowUpRight size={14} className="text-faint group-hover:text-accent transition-colors" />
+            </EmailLink>
             {LINKS.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+                target="_blank"
                 rel="noreferrer"
                 className="group inline-flex items-center gap-0.5 text-sm font-medium text-ink underline decoration-rule decoration-1 underline-offset-4 hover:decoration-accent transition-colors"
               >
