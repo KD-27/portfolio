@@ -41,7 +41,7 @@ export const HERO_DATA = {
 
 export const ABOUT_DATA = {
   photo: `${import.meta.env.BASE_URL}my_pic.webp`,
-  bio: `I am a multidisciplinary engineer obsessed with making things move. With a background in Mechatronic Engineering, I thrive in the "messy middle" where hardware meets software.
+  bio: `I am a multidisciplinary engineer obsessed with making things move. With a background in Mechatronics Engineering, I thrive in the "messy middle" where hardware meets software.
 
 My goal is to build robust, intelligent robotic systems that solve real-world problems. Whether it's designing a custom PCB, machining a chassis, or writing ROS nodes, I love every step of the process.`
 };
@@ -49,7 +49,7 @@ My goal is to build robust, intelligent robotic systems that solve real-world pr
 export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'a1',
-    title: 'Best Academic Performance | Mechatronic Engineering',
+    title: 'Best Academic Performance | Mechatronics Engineering',
     image: `${import.meta.env.BASE_URL}achievements/academic_p.webp`,
   },
   {
@@ -59,23 +59,27 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'a3',
-    title: 'Genesis 23',
+    title: 'Genesis 23 | Research In Charge',
     image: `${import.meta.env.BASE_URL}achievements/Genisis23.webp`,
+    description: "Ran the research side of ERIC KDU's national competition, open to students from universities across the country.",
   },
   {
     id: 'a4',
     title: 'Genesis 22',
     image: `${import.meta.env.BASE_URL}achievements/Genisis22.webp`,
+    description: 'Part of the ERIC KDU team that organised the competition.',
   },
   {
     id: 'a5',
     title: 'MATRIX 23',
     image: `${import.meta.env.BASE_URL}achievements/Mathrix23.webp`,
+    description: 'Maths quiz competition run by the Mathematical Society, Faculty of Engineering, KDU. Our first year competing.',
   },
   {
     id: 'a6',
     title: 'MATRIX 24 | Champions',
     image: `${import.meta.env.BASE_URL}achievements/Mathrix24.webp`,
+    description: 'Came back the following year and won.',
   },
   {
     id: 'a7',
@@ -104,6 +108,7 @@ export const PROJECTS: Project[] = [
     Designed for real-world deployment, the system features extended wireless range for operation in large facilities and a modular architecture that allows easy integration of additional sensors and tools for specific inspection requirements.`,
     tags: ['ROS2', 'ESP32', 'MATLAB', 'Simscape', 'MicroROS', 'Quadruped', 'Parallel Mechanism'],
     gallery: [
+      `${import.meta.env.BASE_URL}projects/ID1/Elissa.webp`,
       `${import.meta.env.BASE_URL}projects/ID1/robot motion.mp4`,
       `${import.meta.env.BASE_URL}projects/ID1/quad model.mp4`,
       `${import.meta.env.BASE_URL}projects/ID1/Walking.mp4`,
@@ -223,7 +228,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     abstract: 'A quadruped robot using a five-bar leg mechanism was developed for inspection in structured, inaccessible areas. Its optimized kinematics, stable locomotion, long-range ESP-NOW communication, and ROS2/MicroROS control architecture enable accurate, reliable, and modular operation on flat terrains.',
     image: `${import.meta.env.BASE_URL}research_papers/Quadruped_Robot.webp`,
     link: '#',
-    publisher: 'International Journal of Control, Automation, and System (ICROS KIEE)',
+    publisher: 'International Journal of Control, Automation, and Systems (ICROS KIEE)',
     venue: 'IJCAS',
     date: 'Under Review',
     tags: ['Quadruped robot', 'Five-bar parallel mechanism', 'Trajectory optimization']
@@ -241,7 +246,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
   },
   {
     id: 'p3',
-    title: 'Development of an automated clothesline system',
+    title: 'Development of an Automated Clothesline System',
     abstract: 'An automated clothes-drying system integrates sensors and actuators to detect rain and darkness, automatically sheltering garments while offering manual and remote control. It reduces household inconvenience, protects clothes from weather, and demonstrates how smart technology streamlines everyday domestic tasks.',
     image: `${import.meta.env.BASE_URL}research_papers/Automated_Clothesline.webp`,
     link: 'https://ir.kdu.ac.lk/handle/345/7491',
@@ -292,37 +297,37 @@ export const PROCESS_STEPS: ProcessStep[] = [
   {
     title: 'BSc (Hons) Mechatronics Engineering',
     year: '2021 - 2025',
-    description: 'Graduated from General Sir John Kotelawela Defense University with First class : 3.91 CGPA. Awarded for the Best Academic Performance in Mechatronics Engineering',
+    description: 'Graduated from General Sir John Kotelawala Defence University with First Class Honours (CGPA 3.91), and received the award for Best Academic Performance in Mechatronics Engineering.',
     image: ''
   },
   {
     title: 'Intern | Autonomation Engineer',
     year: '2023 - 2024',
-    description: 'Developed self driven sewing machines and designed autonomus pipeline systems at Autonomation Lab, MAS Capital (Pvt) Ltd, Ratmalana. ',
+    description: 'Developed self-driven sewing machines and designed autonomous pipeline systems at Autonomation Lab, MAS Capital (Pvt) Ltd, Ratmalana.',
     image: ''
   },
   {
     title: 'STEM Tutor | Engineer',
     year: '2023 - 2024',
-    description: 'Delivered robotics courses in schools,designed STEM kits and led workshops to engage students aged 5–20 in STEM concepts at 360Labs, Borelasgamuwa.',
+    description: 'Delivered robotics courses in schools, designed STEM kits and led workshops for students aged 5–20 at 360Labs, Boralesgamuwa.',
     image: ''
   },
   {
     title: '3D Modeling & Printing | Freelancer',
     year: '2024 - 2025',
-    description: 'Designed mechanical models and gave it life using my ENDER 3 PRO (FDM Printer) ',
+    description: 'Designed mechanical models and brought them to life on my Ender 3 Pro FDM printer.',
     image: ''
   },
   {
     title: 'Product Development Engineer',
     year: '2025',
-    description: 'Fabricated and Developed Mechanical systems to enhance process Efficiency and researched on new technologies to Develop Product at Innovation, MAS Capital (Pvt) Ltd, Biyagama ',
+    description: 'Fabricated and developed mechanical systems to improve process efficiency, and researched new technologies for product development at Innovation, MAS Capital (Pvt) Ltd, Biyagama.',
     image: ''
   },
   {
     title: 'Senior Robotics Engineer',
     year: '2025',
-    description: 'Developed a four-wheel AI-driven robot, explore rover and drone concepts, and build a mic array with an audio-processing pipeline at Hype Insight (Pty) Ltd.',
+    description: 'Developed a four-wheel AI-driven robot, explored rover and drone concepts, and built a microphone array with an audio-processing pipeline at Hype Insight (Pty) Ltd.',
     image: ''
   }
 ];
