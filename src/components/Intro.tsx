@@ -12,11 +12,11 @@ const LINKS = [
 // Published and under-review papers are counted separately so neither reads as the other
 const underReview = RESEARCH_PAPERS.filter((p) => p.date.toLowerCase() === 'under review').length;
 
-// `short` is used in the cramped phone row next to the CV button
+// `label` breaks onto two even lines under the photo; `short` fits the cramped phone row
 const STATS = [
-  { value: String(RESEARCH_PAPERS.length - underReview), label: 'Papers published', short: 'Published' },
-  { value: String(underReview), label: 'Under review', short: 'In review' },
-  { value: '3.91', label: 'CGPA, First Class', short: 'CGPA' },
+  { value: String(RESEARCH_PAPERS.length - underReview), label: 'Papers\npublished', short: 'Published' },
+  { value: String(underReview), label: 'Under\nreview', short: 'In review' },
+  { value: '3.91', label: 'CGPA,\nFirst Class', short: 'CGPA' },
 ];
 
 const CvButton: React.FC<{ className?: string }> = ({ className = '' }) => (
@@ -124,7 +124,7 @@ const Intro: React.FC = () => {
           <dl className="mt-5 grid grid-cols-3 border-y border-rule">
             {STATS.map((stat, i) => (
               <div key={stat.label} className={`flex flex-col-reverse items-center justify-end py-4 text-center ${i > 0 ? 'border-l border-rule' : ''}`}>
-                <dt className="mt-2 text-xs leading-snug text-muted">{stat.label}</dt>
+                <dt className="mt-2 whitespace-pre-line text-xs leading-snug text-muted">{stat.label}</dt>
                 <dd className="font-serif text-4xl leading-none tracking-tight text-ink">{stat.value}</dd>
               </div>
             ))}

@@ -28,7 +28,7 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
       <div className={`${CONTAINER} py-12 md:py-24`}>
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
           <div>
-            <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">Writing</p>
+            <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">Side projects</p>
             <h2 className="font-serif text-3xl leading-tight tracking-tight text-ink md:text-[2.5rem]">Thought Lab</h2>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
               Ideas, builds and experiments, written up as I go.

@@ -35,15 +35,15 @@ export const HERO_DATA = {
   role: "Senior Robotics Engineer",
   affiliation: "Hype Insight (Pty) Ltd",
   interests: ['Robotic grasping', 'Legged locomotion', 'SLAM & navigation', 'Embedded control', 'Applied machine learning'],
-  tagline: "I build robots that walk, map and grasp.",
+  tagline: "I build robots that walk, map and navigate.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };
 
 export const ABOUT_DATA = {
   photo: `${import.meta.env.BASE_URL}my_pic.webp`,
-  bio: `I've built a quadruped with five-bar parallel legs and a ROS2/MicroROS control stack, a six-wheeled rover that maps and navigates with LiDAR SLAM, and co-developed FusionGrasp, a framework that combines 6D grasp planners for cluttered waste sorting, tested on a UR10 arm.
+  bio: `I've built a quadruped with five-bar parallel legs and a ROS2/MicroROS control stack, a six-wheeled rover that maps and navigates with LiDAR SLAM, and designed the Lazy Coulomb Planner, a physics-inspired path planner I released as a ROS 2 Nav2 plugin.
 
-I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now build AI-driven robots at Hype Insight. I work across the whole stack, from mechanism design and PCBs to firmware and ROS nodes.`
+I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now build AI-driven robots at Hype Insight. I work across the whole stack, from mechanism design and electronics to firmware and ROS nodes.`
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
@@ -222,6 +222,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     link: '#',
     publisher: 'Australasian Conference on Robotics and Automation (ACRA)',
     venue: 'ACRA',
+    role: 'Co-author: wrote the paper',
     date: 'Under Review',
     tags: ['Multimodal Grasping', '6D Grasp Planning', 'Waste Sorting']
   },
@@ -446,35 +447,6 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       publishedDate: 'August 2026',
       readTime: '15 min read',
       contentBlocks: [
-        { type: 'heading', content: 'External References', level: 2 },
-
-        { type: 'heading', content: 'Stage 1 — JavaScript Visualization', level: 3 },
-        {
-          type: 'list',
-          items: [
-            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/main',
-            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7403726788021116928/'
-          ]
-        },
-        { type: 'heading', content: 'Demonstration', level: 4 },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid4.mp4`, caption: 'LCP Stage 1 demo' },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid1.mp4`, caption: 'LCP Stage 1 demo' },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid2.mp4`, caption: 'LCP Stage 1 demo' },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid3.mp4`, caption: 'LCP Stage 1 demo' },
-
-        { type: 'heading', content: 'Stage 2 — Nav2 Global Planner Plugin (ROS 2 Humble)', level: 3 },
-        {
-          type: 'list',
-          items: [
-            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/humble',
-            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7442531996205109250/'
-          ]
-        },
-        { type: 'heading', content: 'Demonstration', level: 4 },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid5.mp4`, caption: 'LCP Stage 2 — Nav2 global planner plugin demo' },
-
-        { type: 'divider' },
-
         { type: 'heading', content: 'The Core Idea', level: 2 },
         { type: 'quote', content: 'Assume the simplest path is valid — and only react when reality proves otherwise.' },
         { type: 'text', content: "Most planners approach navigation as a search problem. They explore the environment, weigh costs across a grid or graph, and produce an optimal path before the robot moves a single meter. The Lazy Coulomb Planner (LCP) rejects this premise entirely." },
@@ -661,7 +633,36 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
             'Post-lock shortcutting: after full solution, attempt to remove redundant locked points by checking if their neighboring segments are obstacle-free',
             'Smoothing re-validation: run a lightweight cost map check on the Chaikin-smoothed path and revert locally if violations are introduced'
           ]
-        }
+        },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'External References', level: 2 },
+
+        { type: 'heading', content: 'Stage 1 — JavaScript Visualization', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/main',
+            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7403726788021116928/'
+          ]
+        },
+        { type: 'heading', content: 'Demonstration', level: 4 },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid4.mp4`, caption: 'LCP Stage 1 demo' },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid1.mp4`, caption: 'LCP Stage 1 demo' },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid2.mp4`, caption: 'LCP Stage 1 demo' },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid3.mp4`, caption: 'LCP Stage 1 demo' },
+
+        { type: 'heading', content: 'Stage 2 — Nav2 Global Planner Plugin (ROS 2 Humble)', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/humble',
+            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7442531996205109250/'
+          ]
+        },
+        { type: 'heading', content: 'Demonstration', level: 4 },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid5.mp4`, caption: 'LCP Stage 2 — Nav2 global planner plugin demo' },
       ]
     },
 

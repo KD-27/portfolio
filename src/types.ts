@@ -33,6 +33,8 @@ export interface ResearchPaper {
   publisher: string;
   /** Short venue name shown on the badge, e.g. 'ACRA' */
   venue: string;
+  /** What the author did on the paper, shown under the venue, e.g. 'Co-author: wrote the paper' */
+  role?: string;
   date: string;
   tags: string[];
 }

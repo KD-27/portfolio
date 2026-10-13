@@ -50,6 +50,7 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
 
             <h3 className="font-serif text-xl leading-snug text-ink md:text-[1.4rem]">{paper.title}</h3>
             <p className="mt-2 text-sm italic text-muted">{paper.publisher}</p>
+            {paper.role && <p className="mt-1 text-sm text-ink">{paper.role}</p>}
           </div>
 
           {/* Phones: small first-page preview beside the title (the big one is hidden below sm) */}
