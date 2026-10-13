@@ -49,16 +49,19 @@ I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and
 export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'a1',
+    featured: true,
     title: 'Best Academic Performance | Mechatronics Engineering',
     image: `${import.meta.env.BASE_URL}achievements/academic_p.webp`,
   },
   {
     id: 'a2',
+    featured: true,
     title: 'Publication at KDU IRC 2024',
     image: `${import.meta.env.BASE_URL}achievements/KDUIRC24.webp`,
   },
   {
     id: 'a3',
+    featured: true,
     title: 'Genesis 23 | Research In Charge',
     image: `${import.meta.env.BASE_URL}achievements/Genisis23.webp`,
     description: "Ran the research side of ERIC KDU's national competition, open to students from universities across the country.",
@@ -77,6 +80,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'a6',
+    featured: true,
     title: 'MATRIX 24 | Champions',
     image: `${import.meta.env.BASE_URL}achievements/Mathrix24.webp`,
     description: 'Came back the following year and won.',
@@ -88,11 +92,13 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'a8',
+    featured: true,
     title: 'MSD Competition | Champions',
     image: `${import.meta.env.BASE_URL}achievements/box_p_robot.webp`,
   },
   {
     id: 'a9',
+    featured: true,
     title: 'ERIC | Research In Charge',
     image: `${import.meta.env.BASE_URL}achievements/ERIC Research In Charge.webp`,
   }
@@ -271,7 +277,8 @@ export const SKILLS: SkillCategory[] = [
   {
     title: 'PCB & Electronics',
     icon: 'Layers',
-    skills: ['KiCAD', 'EasyEDA', 'Proteus', 'LTSpice']
+    context: 'KiCad and EasyEDA for small boards: buck converters, servo power distribution and LED chasers. Proteus and LTspice from university coursework.',
+    skills: ['KiCad', 'EasyEDA', 'Proteus', 'LTspice']
   },
   {
     title: 'Robotics',
@@ -288,6 +295,7 @@ export const SKILLS: SkillCategory[] = [
   {
     title: 'PLC & Automation',
     icon: 'Cpu',
+    context: "Used at MAS to build a strap sawing, ironing and cutting machine. The work is IP-protected, so it isn't shown here.",
     skills: ['ISPSoft', 'SIMATIC STEP7', 'HMI Programming', 'Nextion IDE']
   },
   {

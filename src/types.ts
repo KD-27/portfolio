@@ -14,6 +14,8 @@ export interface SkillCategory {
   skills: string[];
   /** Projects on this site where these tools were used */
   usedIn?: string[];
+  /** Where the skills came from when there's no project on the site to point to */
+  context?: string;
   icon: string;
 }
 
@@ -45,6 +47,8 @@ export interface Achievement {
   image: string;
   /** One line under the title, for awards whose name doesn't explain itself */
   description?: string;
+  /** Shown before "See all"; the rest appear when the list is expanded */
+  featured?: boolean;
 }
 
 // =========================================

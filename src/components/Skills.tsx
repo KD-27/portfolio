@@ -13,6 +13,7 @@ const Skills: React.FC = () => (
             {category.usedIn && category.usedIn.length > 0 && (
               <p className="mt-1 text-sm text-faint">Applied in {category.usedIn.join(', ')}</p>
             )}
+            {category.context && <p className="mt-1 text-sm text-faint">{category.context}</p>}
           </dd>
         </div>
       ))}

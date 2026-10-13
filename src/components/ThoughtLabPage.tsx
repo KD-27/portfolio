@@ -70,7 +70,7 @@ const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onSelectArticle }) => {
       <main>
         <section className={`${CONTAINER} pt-12 pb-12 md:pt-20 md:pb-16`}>
           <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
-            Writing · {visible.length} entries
+            Side projects · {visible.length} entries
           </p>
           <h1 className="font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-7xl">
             Thought Lab
