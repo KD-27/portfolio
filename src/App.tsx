@@ -99,9 +99,9 @@ const App: React.FC = () => {
   const renderPage = () => {
     switch (currentPage) {
       case 'thought-lab':
-        return <ThoughtLabPage onSelectArticle={navigateToArticle} />;
+        return <ThoughtLabPage onSelectArticle={navigateToArticle} onBack={() => navigateToSection('writing')} />;
       case 'honours':
-        return <HonoursPage />;
+        return <HonoursPage onBack={() => navigateToSection('honours')} />;
       case 'thought-lab-article':
         return selectedArticleId ? (
           <ThoughtLabArticlePage

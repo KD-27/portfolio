@@ -1,16 +1,18 @@
 import React from 'react';
 import { ACHIEVEMENTS } from '../constants';
 import { CONTAINER } from '../utils/layout';
+import BackLink from './BackLink';
 import Contact from './Contact';
 import HonourTile from './HonourTile';
 
 // Every award, featured ones first, on its own page (#honours)
 const ALL = [...ACHIEVEMENTS.filter((a) => a.featured), ...ACHIEVEMENTS.filter((a) => !a.featured)];
 
-const HonoursPage: React.FC = () => (
+const HonoursPage: React.FC<{ onBack: () => void }> = ({ onBack }) => (
   <>
     <main>
-      <section className={`${CONTAINER} pt-12 pb-12 md:pt-20 md:pb-16`}>
+      <section className={`${CONTAINER} pt-10 pb-12 md:pt-14 md:pb-16`}>
+        <BackLink onClick={onBack}>Home</BackLink>
         <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
           Honours · {ALL.length} entries
         </p>
