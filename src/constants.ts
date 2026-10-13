@@ -193,7 +193,6 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'TensorFlow', 'Machine Learning', 'ANN', 'Healthcare', 'SMOTE'],
     gallery: [
       `${import.meta.env.BASE_URL}projects/ID4/CAD_cover.webp`,
-      `${import.meta.env.BASE_URL}projects/ID4/CAD_collage.webp`,
       `${import.meta.env.BASE_URL}projects/ID4/CAD.webp`,
       `${import.meta.env.BASE_URL}projects/ID4/ArchitectureCAD.webp`,
       `${import.meta.env.BASE_URL}projects/ID4/SMOTE.webp`,
