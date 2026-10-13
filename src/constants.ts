@@ -33,32 +33,35 @@ export const HERO_DATA = {
   name: "Kaveesha Dhananjaya",
   title: "Mechatronics Engineer",
   role: "Senior Robotics Engineer",
-  affiliation: "Hype Insight (Pty) Ltd",
+  affiliation: "Hype Insight Global",
   interests: ['Robotic grasping', 'Legged locomotion', 'SLAM & navigation', 'Embedded control', 'Applied machine learning'],
-  tagline: "I build robots that walk, map and grasp.",
+  tagline: "I build robots that walk, map and navigate.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };
 
 export const ABOUT_DATA = {
   photo: `${import.meta.env.BASE_URL}my_pic.webp`,
-  bio: `I've built a quadruped with five-bar parallel legs and a ROS2/MicroROS control stack, a six-wheeled rover that maps and navigates with LiDAR SLAM, and co-developed FusionGrasp, a framework that combines 6D grasp planners for cluttered waste sorting, tested on a UR10 arm.
+  bio: `I've built a quadruped with five-bar parallel legs and a ROS2/MicroROS control stack, a six-wheeled rover that maps and navigates with LiDAR SLAM, and designed the Lazy Coulomb Planner, a physics-inspired path planner I released as a ROS 2 Nav2 plugin.
 
-I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now build AI-driven robots at Hype Insight. I work across the whole stack, from mechanism design and PCBs to firmware and ROS nodes.`
+I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now build AI-driven robots at Hype Insight Global. I work across the whole stack, from mechanism design and electronics to firmware and ROS nodes.`
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'a1',
+    featured: true,
     title: 'Best Academic Performance | Mechatronics Engineering',
     image: `${import.meta.env.BASE_URL}achievements/academic_p.webp`,
   },
   {
     id: 'a2',
+    featured: true,
     title: 'Publication at KDU IRC 2024',
     image: `${import.meta.env.BASE_URL}achievements/KDUIRC24.webp`,
   },
   {
     id: 'a3',
+    featured: true,
     title: 'Genesis 23 | Research In Charge',
     image: `${import.meta.env.BASE_URL}achievements/Genisis23.webp`,
     description: "Ran the research side of ERIC KDU's national competition, open to students from universities across the country.",
@@ -77,6 +80,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'a6',
+    featured: true,
     title: 'MATRIX 24 | Champions',
     image: `${import.meta.env.BASE_URL}achievements/Mathrix24.webp`,
     description: 'Came back the following year and won.',
@@ -88,11 +92,13 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'a8',
+    featured: true,
     title: 'MSD Competition | Champions',
     image: `${import.meta.env.BASE_URL}achievements/box_p_robot.webp`,
   },
   {
     id: 'a9',
+    featured: true,
     title: 'ERIC | Research In Charge',
     image: `${import.meta.env.BASE_URL}achievements/ERIC Research In Charge.webp`,
   }
@@ -222,6 +228,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     link: '#',
     publisher: 'Australasian Conference on Robotics and Automation (ACRA)',
     venue: 'ACRA',
+    role: 'Co-author: wrote the paper',
     date: 'Under Review',
     tags: ['Multimodal Grasping', '6D Grasp Planning', 'Waste Sorting']
   },
@@ -270,7 +277,8 @@ export const SKILLS: SkillCategory[] = [
   {
     title: 'PCB & Electronics',
     icon: 'Layers',
-    skills: ['KiCAD', 'EasyEDA', 'Proteus', 'LTSpice']
+    context: 'KiCad and EasyEDA for small boards: buck converters, servo power distribution and LED chasers. Proteus and LTspice from university coursework.',
+    skills: ['KiCad', 'EasyEDA', 'Proteus', 'LTspice']
   },
   {
     title: 'Robotics',
@@ -287,6 +295,7 @@ export const SKILLS: SkillCategory[] = [
   {
     title: 'PLC & Automation',
     icon: 'Cpu',
+    context: "Used at MAS to build a strap sawing, ironing and cutting machine. The work is IP-protected, so it isn't shown here.",
     skills: ['ISPSoft', 'SIMATIC STEP7', 'HMI Programming', 'Nextion IDE']
   },
   {
@@ -299,38 +308,38 @@ export const SKILLS: SkillCategory[] = [
 export const PROCESS_STEPS: ProcessStep[] = [
   {
     title: 'BSc (Hons) Mechatronics Engineering',
-    year: '2021 - 2025',
+    year: 'Aug 2021 – Jul 2025',
     description: 'Graduated from General Sir John Kotelawala Defence University with First Class Honours (CGPA 3.91), and received the award for Best Academic Performance in Mechatronics Engineering.',
     image: ''
   },
   {
-    title: 'Intern | Autonomation Engineer',
-    year: '2023 - 2024',
-    description: 'Developed self-driven sewing machines and designed autonomous pipeline systems at Autonomation Lab, MAS Capital (Pvt) Ltd, Ratmalana.',
+    title: 'Autonomation Engineer | Intern',
+    year: 'Oct 2023 – Mar 2024',
+    description: 'Developed self-driven sewing machines and designed autonomous pipeline systems at Autonomation Lab, MAS Intimates, Ratmalana.',
     image: ''
   },
   {
-    title: 'STEM Tutor | Engineer',
-    year: '2023 - 2024',
-    description: 'Delivered robotics courses in schools, designed STEM kits and led workshops for students aged 5–20 at 360Labs, Boralesgamuwa.',
+    title: 'Tutor, then Head of Operations | 360Labs',
+    year: 'Dec 2023 – Dec 2024',
+    description: 'Delivered robotics courses in schools and designed STEM learning kits. Promoted to Head of Operations in Sep 2024, running automation projects for agriculture and workshops in Colombo for students aged 5–20.',
     image: ''
   },
   {
     title: '3D Modeling & Printing | Freelancer',
-    year: '2024 - 2025',
+    year: 'Jan 2024 – Apr 2025',
     description: 'Designed mechanical models and brought them to life on my Ender 3 Pro FDM printer.',
     image: ''
   },
   {
     title: 'Product Development Engineer',
-    year: '2025',
-    description: 'Fabricated and developed mechanical systems to improve process efficiency, and researched new technologies for product development at Innovation, MAS Capital (Pvt) Ltd, Biyagama.',
+    year: 'Apr 2025 – Aug 2025',
+    description: 'Fabricated and developed mechanical systems to improve process efficiency, and researched new technologies for product development at Innovation, MAS Intimates, Biyagama.',
     image: ''
   },
   {
     title: 'Senior Robotics Engineer',
-    year: '2025',
-    description: 'Developed a four-wheel AI-driven robot, explored rover and drone concepts, and built a microphone array with an audio-processing pipeline at Hype Insight (Pty) Ltd.',
+    year: 'Sep 2025 –',
+    description: 'Developed a four-wheel AI-driven robot, explored rover and drone concepts, and built a microphone array with an audio-processing pipeline at Hype Insight Global.',
     image: ''
   }
 ];
@@ -446,35 +455,6 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       publishedDate: 'August 2026',
       readTime: '15 min read',
       contentBlocks: [
-        { type: 'heading', content: 'External References', level: 2 },
-
-        { type: 'heading', content: 'Stage 1 — JavaScript Visualization', level: 3 },
-        {
-          type: 'list',
-          items: [
-            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/main',
-            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7403726788021116928/'
-          ]
-        },
-        { type: 'heading', content: 'Demonstration', level: 4 },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid4.mp4`, caption: 'LCP Stage 1 demo' },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid1.mp4`, caption: 'LCP Stage 1 demo' },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid2.mp4`, caption: 'LCP Stage 1 demo' },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid3.mp4`, caption: 'LCP Stage 1 demo' },
-
-        { type: 'heading', content: 'Stage 2 — Nav2 Global Planner Plugin (ROS 2 Humble)', level: 3 },
-        {
-          type: 'list',
-          items: [
-            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/humble',
-            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7442531996205109250/'
-          ]
-        },
-        { type: 'heading', content: 'Demonstration', level: 4 },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid5.mp4`, caption: 'LCP Stage 2 — Nav2 global planner plugin demo' },
-
-        { type: 'divider' },
-
         { type: 'heading', content: 'The Core Idea', level: 2 },
         { type: 'quote', content: 'Assume the simplest path is valid — and only react when reality proves otherwise.' },
         { type: 'text', content: "Most planners approach navigation as a search problem. They explore the environment, weigh costs across a grid or graph, and produce an optimal path before the robot moves a single meter. The Lazy Coulomb Planner (LCP) rejects this premise entirely." },
@@ -661,7 +641,36 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
             'Post-lock shortcutting: after full solution, attempt to remove redundant locked points by checking if their neighboring segments are obstacle-free',
             'Smoothing re-validation: run a lightweight cost map check on the Chaikin-smoothed path and revert locally if violations are introduced'
           ]
-        }
+        },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'External References', level: 2 },
+
+        { type: 'heading', content: 'Stage 1 — JavaScript Visualization', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/main',
+            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7403726788021116928/'
+          ]
+        },
+        { type: 'heading', content: 'Demonstration', level: 4 },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid4.mp4`, caption: 'LCP Stage 1 demo' },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid1.mp4`, caption: 'LCP Stage 1 demo' },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid2.mp4`, caption: 'LCP Stage 1 demo' },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid3.mp4`, caption: 'LCP Stage 1 demo' },
+
+        { type: 'heading', content: 'Stage 2 — Nav2 Global Planner Plugin (ROS 2 Humble)', level: 3 },
+        {
+          type: 'list',
+          items: [
+            'GitHub: https://github.com/KD-27/Lazy-Coulomb-Planner/tree/humble',
+            'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7442531996205109250/'
+          ]
+        },
+        { type: 'heading', content: 'Demonstration', level: 4 },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid5.mp4`, caption: 'LCP Stage 2 — Nav2 global planner plugin demo' },
       ]
     },
 

@@ -9,7 +9,7 @@ interface HeaderProps {
   onHome: () => void;
   onSection: (sectionId: string) => void;
   onWriting: () => void;
-  /** Highlights "Writing" while the Thought Lab pages are open */
+  /** Highlights "Side projects" while the Thought Lab pages are open */
   writingActive?: boolean;
 }
 
@@ -80,7 +80,7 @@ const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingAc
   const mobileItems = [
     { label: 'Research', onClick: () => onSection('research') },
     { label: 'Projects', onClick: () => onSection('projects') },
-    { label: 'Writing', onClick: onWriting },
+    { label: 'Side projects', onClick: onWriting },
     { label: 'Experience', onClick: () => onSection('experience') },
     { label: 'Contact', onClick: () => onSection('contact') },
   ];
@@ -121,7 +121,7 @@ const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingAc
               onClick={go(onWriting)}
               className={writingActive ? 'text-sm text-ink underline decoration-accent decoration-2 underline-offset-[6px]' : linkClass}
             >
-              Writing
+              Side projects
             </button>
             <button onClick={go(() => onSection('experience'))} className={linkClass}>Experience</button>
             <button onClick={go(() => onSection('contact'))} className={linkClass}>Contact</button>
@@ -176,7 +176,7 @@ const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingAc
 
         <ul className="flex-1 overflow-y-auto px-5 py-4">
           {mobileItems.map((item, i) => {
-            const active = item.label === 'Writing' && writingActive;
+            const active = item.label === 'Side projects' && writingActive;
             return (
               <li
                 key={item.label}

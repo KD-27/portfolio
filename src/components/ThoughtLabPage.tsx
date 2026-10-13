@@ -3,10 +3,12 @@ import { ArrowRight } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
 import type { ThoughtLabArticle } from '../types';
 import { CONTAINER } from '../utils/layout';
+import BackLink from './BackLink';
 import Contact from './Contact';
 
 interface ThoughtLabPageProps {
   onSelectArticle: (articleId: string) => void;
+  onBack: () => void;
 }
 
 const ArticleCard: React.FC<{ article: ThoughtLabArticle; onClick: () => void }> = ({ article, onClick }) => {
@@ -42,7 +44,7 @@ const ArticleCard: React.FC<{ article: ThoughtLabArticle; onClick: () => void }>
   );
 };
 
-const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onSelectArticle }) => {
+const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onSelectArticle, onBack }) => {
   const visible = THOUGHT_LAB_DATA.articles.filter((a) => a.status !== 'draft');
   const groups = [
     {
@@ -68,9 +70,10 @@ const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onSelectArticle }) => {
   return (
     <>
       <main>
-        <section className={`${CONTAINER} pt-12 pb-12 md:pt-20 md:pb-16`}>
+        <section className={`${CONTAINER} pt-10 pb-12 md:pt-14 md:pb-16`}>
+          <BackLink onClick={onBack}>Home</BackLink>
           <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
-            Writing · {visible.length} entries
+            Side projects · {visible.length} entries
           </p>
           <h1 className="font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-7xl">
             Thought Lab

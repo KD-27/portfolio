@@ -11,18 +11,20 @@ import Contact from './components/Contact';
 
 const ThoughtLabPage = lazy(() => import('./components/ThoughtLabPage'));
 const ThoughtLabArticlePage = lazy(() => import('./components/ThoughtLabArticlePage'));
+const HonoursPage = lazy(() => import('./components/HonoursPage'));
 
 const PageLoading: React.FC = () => <div className="min-h-[60vh]" />;
 
-type PageView = 'home' | 'thought-lab' | 'thought-lab-article';
+type PageView = 'home' | 'thought-lab' | 'thought-lab-article' | 'honours';
 
-// Parses '#thought-lab' / '#thought-lab/<articleId>' out of the current URL so a
+// Parses '#thought-lab' / '#thought-lab/<articleId>' / '#honours' out of the current URL so a
 // direct link (or a page refresh) lands back on the view it was copied from.
 const parseHash = (): { page: PageView; articleId: string | null } => {
   const hash = window.location.hash.replace(/^#\/?/, '');
   if (!hash) return { page: 'home', articleId: null };
 
   const [section, rawArticleId] = hash.split('/');
+  if (section === 'honours') return { page: 'honours', articleId: null };
   if (section === 'thought-lab') {
     return rawArticleId
       ? { page: 'thought-lab-article', articleId: decodeURIComponent(rawArticleId) }
@@ -41,6 +43,13 @@ const App: React.FC = () => {
     setCurrentPage('thought-lab');
     setSelectedArticleId(null);
     window.history.pushState(null, '', '#thought-lab');
+    window.scrollTo(0, 0);
+  };
+
+  const navigateToHonours = () => {
+    setCurrentPage('honours');
+    setSelectedArticleId(null);
+    window.history.pushState(null, '', '#honours');
     window.scrollTo(0, 0);
   };
 
@@ -90,7 +99,9 @@ const App: React.FC = () => {
   const renderPage = () => {
     switch (currentPage) {
       case 'thought-lab':
-        return <ThoughtLabPage onSelectArticle={navigateToArticle} />;
+        return <ThoughtLabPage onSelectArticle={navigateToArticle} onBack={() => navigateToSection('writing')} />;
+      case 'honours':
+        return <HonoursPage onBack={() => navigateToSection('honours')} />;
       case 'thought-lab-article':
         return selectedArticleId ? (
           <ThoughtLabArticlePage
@@ -109,7 +120,7 @@ const App: React.FC = () => {
               <Projects />
               <Writing onOpenLab={navigateToThoughtLab} onOpenArticle={navigateToArticle} />
               <Experience />
-              <Honours />
+              <Honours onOpenAll={navigateToHonours} />
               <Skills />
             </main>
             <Contact />
@@ -124,7 +135,7 @@ const App: React.FC = () => {
         onHome={navigateToHome}
         onSection={navigateToSection}
         onWriting={() => navigateToSection('writing')}
-        writingActive={currentPage !== 'home'}
+        writingActive={currentPage === 'thought-lab' || currentPage === 'thought-lab-article'}
       />
       <Suspense fallback={<PageLoading />}>{renderPage()}</Suspense>
     </div>
