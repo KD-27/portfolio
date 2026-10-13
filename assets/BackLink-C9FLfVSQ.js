@@ -1,0 +1,1 @@
+import{j as t}from"./index-DtigDrWe.js";import{A as r}from"./arrow-left-Bkgt7hfZ.js";const a=({onClick:s,children:e})=>t.jsxs("button",{type:"button",onClick:s,className:"group mb-10 inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink transition-colors",children:[t.jsx(r,{size:15,className:"transition-transform group-hover:-translate-x-0.5"}),e]});export{a as B};
