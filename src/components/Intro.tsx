@@ -9,8 +9,11 @@ const LINKS = [
   { label: 'LinkedIn', href: SOCIAL_LINKS.linkedin },
 ];
 
+// Under-review papers count towards the total, so the label says how many are out
+const published = RESEARCH_PAPERS.filter((p) => p.date.toLowerCase() !== 'under review').length;
+
 const STATS = [
-  { value: String(RESEARCH_PAPERS.length), label: 'Research papers' },
+  { value: String(RESEARCH_PAPERS.length), label: `Papers · ${published} published` },
   { value: '3.91', label: 'CGPA, First Class' },
 ];
 
@@ -124,10 +127,6 @@ const Intro: React.FC = () => {
               </div>
             ))}
           </dl>
-
-          <p className="mt-4 text-xs leading-relaxed text-faint">
-            {HERO_DATA.title}. {HERO_DATA.intro}
-          </p>
         </div>
       </div>
     </section>
