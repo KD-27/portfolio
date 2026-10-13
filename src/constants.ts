@@ -55,7 +55,6 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'a2',
-    featured: true,
     title: 'Publication at KDU IRC 2024',
     image: `${import.meta.env.BASE_URL}achievements/KDUIRC24.webp`,
   },
@@ -87,13 +86,15 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'a7',
+    featured: true,
     title: 'Ignite Exhibition',
     image: `${import.meta.env.BASE_URL}achievements/Ignite Exhibition.webp`,
+    description: 'Exhibited the quadruped inspection robot in the final-year project category, Feb 2025.',
   },
   {
     id: 'a8',
     featured: true,
-    title: 'MSD Competition | Champions',
+    title: 'Mechatronic System Design Competition | Champions',
     image: `${import.meta.env.BASE_URL}achievements/box_p_robot.webp`,
   },
   {
@@ -282,13 +283,13 @@ export const SKILLS: SkillCategory[] = [
   },
   {
     title: 'Robotics',
-    usedIn: ['Elissa 1.0 quadruped', 'Mars rover'],
+    usedIn: ['Lazy Coulomb Planner (C++, Nav2)', 'Elissa 1.0 quadruped', 'Mars rover'],
     icon: 'Bot',
     skills: ['ROS2', 'Gazebo Simulation', 'Kinematic Modeling', 'SLAM/Navigation']
   },
   {
     title: 'Programming & AI',
-    usedIn: ['CAD prediction ANN', 'Mars rover'],
+    usedIn: ['Lazy Coulomb Planner (C++, Nav2)', 'CAD prediction ANN', 'Mars rover'],
     icon: 'Code',
     skills: ['Python', 'C++', 'Machine Learning', 'CNN/Computer Vision']
   },
@@ -435,7 +436,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
 export const THOUGHT_LAB_DATA: ThoughtLabData = {
   pageTitle: 'THOUGHT LAB',
   pageSubtitle: '// PERSPECTIVES & PROJECTS ON ROBOTICS, AI & INTELLIGENT SYSTEMS',
-  introduction: `This is my personal space for thinking out loud and building things at the intersection of robotics and AI. It's split into two halves: written perspectives on emerging technologies, practical challenges, and the questions that come up while building intelligent systems, and hands-on projects where I use AI as a collaborator to build real, working tools. None of this is formal — it's candid reflections and working software from someone in the trenches.`,
+  introduction: `This is my personal space for thinking out loud and building things at the intersection of robotics and AI. It covers software I've designed and released, hardware I've built by hand, and tools I've built with AI as a collaborator, each written up with what worked and what didn't.`,
   ctaTitle: 'THOUGHT LAB',
   ctaSubtitle: 'Explore my perspectives and AI-built projects',
   articles: [
@@ -447,7 +448,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       title: 'Lazy Coulomb Planner',
       subtitle: 'Core ideology and mathematical foundation of a physics-inspired path planner',
       icon: 'Cpu',
-      category: 'perspective',
+      category: 'software',
       coverImage: `${import.meta.env.BASE_URL}thought_lab/lcp/Coverpage.webp`,
       introduction: "The Lazy Coulomb Planner (LCP) treats navigation as a correction problem, not a search problem: start with a straight line from start to goal, and apply localized, physics-inspired corrections only where the path actually collides with an obstacle. Borrowing the inverse-square repulsion of Coulomb's Law from electrostatics, LCP aims for fast, interpretable path planning in open environments — implemented both as a JavaScript visualization and as a full ROS 2 Nav2 global planner plugin.",
       tags: ['Path Planning', 'Physics-Inspired Robotics', 'ROS2 Nav2', 'Autonomous Navigation'],
@@ -455,6 +456,8 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       publishedDate: 'August 2026',
       readTime: '15 min read',
       contentBlocks: [
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid5.mp4`, caption: 'LCP running as a Nav2 global planner in ROS 2 Humble' },
+
         { type: 'heading', content: 'The Core Idea', level: 2 },
         { type: 'quote', content: 'Assume the simplest path is valid — and only react when reality proves otherwise.' },
         { type: 'text', content: "Most planners approach navigation as a search problem. They explore the environment, weigh costs across a grid or graph, and produce an optimal path before the robot moves a single meter. The Lazy Coulomb Planner (LCP) rejects this premise entirely." },
@@ -669,8 +672,6 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
             'LinkedIn Post: https://www.linkedin.com/feed/update/urn:li:activity:7442531996205109250/'
           ]
         },
-        { type: 'heading', content: 'Demonstration', level: 4 },
-        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid5.mp4`, caption: 'LCP Stage 2 — Nav2 global planner plugin demo' },
       ]
     },
 

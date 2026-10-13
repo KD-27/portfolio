@@ -48,10 +48,16 @@ const ThoughtLabPage: React.FC<ThoughtLabPageProps> = ({ onSelectArticle, onBack
   const visible = THOUGHT_LAB_DATA.articles.filter((a) => a.status !== 'draft');
   const groups = [
     {
+      id: 'software',
+      title: 'Open source',
+      blurb: "Software I've designed and released",
+      articles: visible.filter((a) => a.category === 'software'),
+    },
+    {
       id: 'essays',
       title: 'Perspectives',
       blurb: 'Essays and technical deep dives',
-      articles: visible.filter((a) => a.category !== 'project' && a.category !== 'hardware'),
+      articles: visible.filter((a) => !a.category || a.category === 'perspective'),
     },
     {
       id: 'hardware',

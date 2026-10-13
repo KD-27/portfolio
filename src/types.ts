@@ -153,7 +153,7 @@ export interface ThoughtLabArticle {
   publishedDate?: string;
   readTime?: string;
   /** 'perspective' = written essays/analysis (default). 'hardware' = physical builds. 'project' = built AI projects/apps. */
-  category?: 'perspective' | 'hardware' | 'project';
+  category?: 'perspective' | 'software' | 'hardware' | 'project';
 }
 
 export interface ThoughtLabData {
