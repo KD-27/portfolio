@@ -110,7 +110,7 @@ const Research: React.FC = () => {
   return (
     <Section id="research" label="Research" title="Publications">
       <p className="-mt-6 mb-8 md:mb-10 text-sm text-muted">
-        {RESEARCH_PAPERS.length} papers · {RESEARCH_PAPERS.length - underReview} published · {underReview} under review
+        {RESEARCH_PAPERS.length - underReview} published · {underReview} under review
       </p>
       <ol className="divide-y divide-rule">
         {RESEARCH_PAPERS.map((paper) => (

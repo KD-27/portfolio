@@ -35,15 +35,15 @@ export const HERO_DATA = {
   role: "Senior Robotics Engineer",
   affiliation: "Hype Insight (Pty) Ltd",
   interests: ['Robotic grasping', 'Legged locomotion', 'SLAM & navigation', 'Embedded control', 'Applied machine learning'],
-  tagline: "I build intelligent machines from the ground up.",
+  tagline: "I build robots that walk, map and grasp.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };
 
 export const ABOUT_DATA = {
   photo: `${import.meta.env.BASE_URL}my_pic.webp`,
-  bio: `I am a multidisciplinary engineer obsessed with making things move. With a background in Mechatronics Engineering, I thrive in the "messy middle" where hardware meets software.
+  bio: `I've built a quadruped with five-bar parallel legs and a ROS2/MicroROS control stack, a six-wheeled rover that maps and navigates with LiDAR SLAM, and co-developed FusionGrasp, a framework that combines 6D grasp planners for cluttered waste sorting, tested on a UR10 arm.
 
-My goal is to build robust, intelligent robotic systems that solve real-world problems. Whether it's designing a custom PCB, machining a chassis, or writing ROS nodes, I love every step of the process.`
+I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now build AI-driven robots at Hype Insight. I work across the whole stack, from mechanism design and PCBs to firmware and ROS nodes.`
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
@@ -101,7 +101,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 export const PROJECTS: Project[] = [
   {
     id: '1',
-    title: 'Elissa 1.0 - Quadruped Inspection Robot',
+    title: 'Elissa 1.0: Quadruped Inspection Robot',
     description: 'A quadruped robot with five-bar parallel leg mechanism for inspection in human-inaccessible and hazardous environments.',
     longDescription: `Elissa 1.0 addresses the challenge of inspecting environments too dangerous or confined for humans—industrial facilities, tunnels, disaster zones, and hazardous infrastructure. Traditional inspection methods risk human safety or rely on wheeled robots that struggle with obstacles and uneven surfaces.
     This quadruped platform offers a practical, cost-effective alternative to complex systems like BigDog or ANYmal. It prioritizes stable, deliberate movement over speed, making it ideal for careful inspection tasks where reliability matters more than agility. The robot can carry sensor payloads while maintaining consistent locomotion, enabling remote visual inspection, environmental monitoring, and structural assessment in areas humans cannot safely access.
@@ -125,7 +125,7 @@ export const PROJECTS: Project[] = [
       'ESP-NOW wireless communication with 120-130m range',
       'Trajectory optimization using weighted stability metric',
       'Active body leveling using MPU6050 IMU with complementary filtering',
-      '20 cm/s locomotion speed, 30°/s rotation, stability score: 987.9',
+      '20 cm/s locomotion speed, 30°/s rotation',
       'Custom Tkinter GUI for trajectory design and deployment'
     ]
   },
@@ -151,16 +151,16 @@ export const PROJECTS: Project[] = [
     ],
     details: [
       'Six-wheeled rocker-bogie suspension for terrain adaptability',
-      'Hector SLAM for real-time 2D mapping without odometry',
+      'Hector SLAM builds the 2D map from LiDAR scans alone, with no odometry input',
       'A* global path planning with DWA local obstacle avoidance',
-      'Extended Kalman Filter fusing IMU and wheel odometry',
+      'Extended Kalman Filter fuses IMU and wheel odometry into the smooth pose the planners use between scans',
       'ROS-based distributed architecture with Arduino interface',
-      '10 cm position accuracy, 15° orientation accuracy'
+      'Goal tolerance of 10 cm in position and 15° in heading'
     ]
   },
   {
     id: '3',
-    title: 'Rick and Roll - Sweep the Table Robot',
+    title: 'Rick and Roll: Sweep the Table Robot',
     description: 'Award-winning autonomous wheeled robot that clears objects from an arena using a rotating hammer mechanism.',
     longDescription: `Rick and Roll was built for the KDU Faculty of Engineering "Sweep the Table Robot Contest"—a competition where robots autonomously push objects off a rectangular arena, scored on both speed and clearance rate.
 
@@ -184,12 +184,12 @@ export const PROJECTS: Project[] = [
   {
     id: '4',
     title: 'Coronary Artery Disease Prediction Using ANN',
-    description: 'A neural network model achieving ~90% accuracy in predicting coronary artery disease from clinical data.',
+    description: 'A neural network that predicts coronary artery disease from clinical data, with 89.7% accuracy on 87 held-out patients.',
     longDescription: `Coronary Artery Disease (CAD) remains a leading cause of death worldwide, often developing silently until a critical event occurs. Early detection significantly improves outcomes, but traditional diagnostic methods can be invasive, expensive, or require specialized equipment not available in all clinical settings.
 
-    This project develops an Artificial Neural Network that analyzes clinical data—demographics, medical history, and diagnostic test results—to predict CAD with approximately 90% accuracy. By identifying at-risk individuals earlier, healthcare providers can intervene sooner with lifestyle changes or treatment, potentially reducing mortality rates.
+    This project develops an Artificial Neural Network that analyzes clinical data—demographics, medical history, and diagnostic test results—to predict CAD. On 87 held-out patients it classified 78 correctly (89.66% accuracy). A screening aid like this could help flag at-risk individuals for earlier follow-up.
 
-    The model was built with direct input from cardiologists, ensuring the features it analyzes are clinically meaningful rather than just statistically convenient. This collaboration between data science and medical expertise resulted in a tool that's both accurate and practical for real-world clinical settings.`,
+    The model was built with direct input from cardiologists, ensuring the features it analyzes are clinically meaningful rather than just statistically convenient. It is a conference-scale study on a small dataset: the results are promising, but the model would need validation on larger, external cohorts before any clinical use.`,
     tags: ['Python', 'TensorFlow', 'Machine Learning', 'ANN', 'Healthcare', 'SMOTE'],
     gallery: [
       `${import.meta.env.BASE_URL}projects/ID4/CAD_cover.webp`,
@@ -207,7 +207,7 @@ export const PROJECTS: Project[] = [
       'SMOTE for handling imbalanced medical datasets',
       'Clinician-guided feature selection for clinical relevance',
       'Stratified k-fold cross-validation for robust evaluation',
-      '89.66% validation accuracy, 87.32% F1 score',
+      '89.66% validation accuracy (78 of 87 patients), 87.32% F1 score',
       'Adam optimizer with early stopping to prevent overfitting'
     ]
   }

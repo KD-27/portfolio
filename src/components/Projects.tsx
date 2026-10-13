@@ -306,7 +306,7 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <Section id="projects" label="Projects" title="Selected projects">
+    <Section id="projects" label="Projects" title="University projects">
       <div
         ref={railRef}
         onScroll={onRailScroll}
