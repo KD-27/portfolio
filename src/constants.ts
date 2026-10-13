@@ -33,7 +33,7 @@ export const HERO_DATA = {
   name: "Kaveesha Dhananjaya",
   title: "Mechatronics Engineer",
   role: "Senior Robotics Engineer",
-  affiliation: "Hype Insight (Pty) Ltd",
+  affiliation: "Hype Insight Global",
   interests: ['Robotic grasping', 'Legged locomotion', 'SLAM & navigation', 'Embedded control', 'Applied machine learning'],
   tagline: "I build robots that walk, map and navigate.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
@@ -43,7 +43,7 @@ export const ABOUT_DATA = {
   photo: `${import.meta.env.BASE_URL}my_pic.webp`,
   bio: `I've built a quadruped with five-bar parallel legs and a ROS2/MicroROS control stack, a six-wheeled rover that maps and navigates with LiDAR SLAM, and designed the Lazy Coulomb Planner, a physics-inspired path planner I released as a ROS 2 Nav2 plugin.
 
-I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now build AI-driven robots at Hype Insight. I work across the whole stack, from mechanism design and electronics to firmware and ROS nodes.`
+I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now build AI-driven robots at Hype Insight Global. I work across the whole stack, from mechanism design and electronics to firmware and ROS nodes.`
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
@@ -315,7 +315,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
   {
     title: 'Autonomation Engineer | Intern',
     year: 'Oct 2023 – Mar 2024',
-    description: 'Developed self-driven sewing machines and designed autonomous pipeline systems at Autonomation Lab, MAS Capital (Pvt) Ltd, Ratmalana.',
+    description: 'Developed self-driven sewing machines and designed autonomous pipeline systems at Autonomation Lab, MAS Intimates, Ratmalana.',
     image: ''
   },
   {
@@ -333,13 +333,13 @@ export const PROCESS_STEPS: ProcessStep[] = [
   {
     title: 'Product Development Engineer',
     year: 'Apr 2025 – Aug 2025',
-    description: 'Fabricated and developed mechanical systems to improve process efficiency, and researched new technologies for product development at Innovation, MAS Capital (Pvt) Ltd, Biyagama.',
+    description: 'Fabricated and developed mechanical systems to improve process efficiency, and researched new technologies for product development at Innovation, MAS Intimates, Biyagama.',
     image: ''
   },
   {
     title: 'Senior Robotics Engineer',
     year: 'Sep 2025 –',
-    description: 'Developed a four-wheel AI-driven robot, explored rover and drone concepts, and built a microphone array with an audio-processing pipeline at Hype Insight (Pty) Ltd.',
+    description: 'Developed a four-wheel AI-driven robot, explored rover and drone concepts, and built a microphone array with an audio-processing pipeline at Hype Insight Global.',
     image: ''
   }
 ];
