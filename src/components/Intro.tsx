@@ -13,7 +13,17 @@ const LINKS = [
 const published = RESEARCH_PAPERS.filter((p) => p.date.toLowerCase() !== 'under review').length;
 
 const STATS = [
-  { value: String(RESEARCH_PAPERS.length), label: `Papers · ${published} published` },
+  {
+    value: String(RESEARCH_PAPERS.length),
+    // Two clean lines on phones ("Papers" / "2 published"), one line from md up
+    label: (
+      <>
+        Papers<span className="hidden md:inline"> · </span>
+        <br className="md:hidden" />
+        {published}&nbsp;published
+      </>
+    ),
+  },
   { value: '3.91', label: 'CGPA, First Class' },
 ];
 
@@ -62,9 +72,9 @@ const Intro: React.FC = () => {
           </p>
 
           <div className="mt-6 flex items-center gap-5 border-y border-rule py-3.5 md:hidden">
-            <dl className="flex gap-5">
+            <dl className="flex items-start gap-5">
               {STATS.map((stat) => (
-                <div key={stat.label} className="flex flex-col-reverse items-center text-center">
+                <div key={stat.value} className="flex flex-col-reverse items-center text-center">
                   <dt className="mt-1 text-[11px] leading-tight text-muted">{stat.label}</dt>
                   <dd className="font-serif text-[1.7rem] leading-none tracking-tight text-ink">{stat.value}</dd>
                 </div>
@@ -121,7 +131,7 @@ const Intro: React.FC = () => {
           {/* Headline figures sit right under the photo so they're visible without scrolling */}
           <dl className="mt-5 grid grid-cols-2 border-y border-rule">
             {STATS.map((stat, i) => (
-              <div key={stat.label} className={`flex flex-col-reverse items-center py-4 text-center ${i > 0 ? 'border-l border-rule' : ''}`}>
+              <div key={stat.value} className={`flex flex-col-reverse items-center py-4 text-center ${i > 0 ? 'border-l border-rule' : ''}`}>
                 <dt className="mt-2 text-xs leading-snug text-muted">{stat.label}</dt>
                 <dd className="font-serif text-4xl leading-none tracking-tight text-ink">{stat.value}</dd>
               </div>
