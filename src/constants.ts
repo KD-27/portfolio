@@ -43,7 +43,7 @@ export const ABOUT_DATA = {
   photo: `${import.meta.env.BASE_URL}my_pic.webp`,
   bio: `I've built a quadruped with five-bar parallel legs and a ROS2/MicroROS control stack, a six-wheeled rover that maps and navigates with LiDAR SLAM, and designed the Lazy Coulomb Planner, a physics-inspired path planner I released as a ROS 2 Nav2 plugin.
 
-I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now build AI-driven robots at Hype Insight Global. I work across the whole stack, from mechanism design and electronics to firmware and ROS nodes.`
+I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now work on embodied AI for ground robots and drones at Hype Insight Global. My work spans the whole stack, from mechanism design and electronics to firmware and ROS nodes.`
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
@@ -340,7 +340,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
   {
     title: 'Senior Robotics Engineer',
     year: 'Sep 2025 –',
-    description: 'Developed a four-wheel AI-driven robot, explored rover and drone concepts, and built a microphone array with an audio-processing pipeline at Hype Insight Global.',
+    description: 'Part of a cross-functional team building embodied AI at Hype Insight Global. Our stack runs on a four-wheel ground robot, already built and deployed at events in Sri Lanka, and on a drone now in fabrication. I also built a microphone array with an audio-processing pipeline.',
     image: ''
   }
 ];
