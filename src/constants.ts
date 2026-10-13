@@ -340,7 +340,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
   {
     title: 'Senior Robotics Engineer',
     year: 'Sep 2025 –',
-    description: 'Part of a cross-functional team building embodied AI at Hype Insight Global. Our stack runs on a four-wheel ground robot, already built and deployed at events in Sri Lanka, and on a drone now in fabrication. I also built a microphone array with an audio-processing pipeline.',
+    description: "Part of a cross-functional team building embodied AI at Hype Insight Global. Our stack runs on a four-wheel ground robot, already built and deployed at events in Sri Lanka, and on a drone now in fabrication. I've also built several IoT products.",
     image: ''
   }
 ];
