@@ -192,7 +192,7 @@ export const PROJECTS: Project[] = [
     The model was built with direct input from cardiologists, ensuring the features it analyzes are clinically meaningful rather than just statistically convenient. This collaboration between data science and medical expertise resulted in a tool that's both accurate and practical for real-world clinical settings.`,
     tags: ['Python', 'TensorFlow', 'Machine Learning', 'ANN', 'Healthcare', 'SMOTE'],
     gallery: [
-      `${import.meta.env.BASE_URL}projects/ID4/CAD_collage.webp`,
+      `${import.meta.env.BASE_URL}projects/ID4/CAD_cover.webp`,
       `${import.meta.env.BASE_URL}projects/ID4/CAD.webp`,
       `${import.meta.env.BASE_URL}projects/ID4/ArchitectureCAD.webp`,
       `${import.meta.env.BASE_URL}projects/ID4/SMOTE.webp`,
