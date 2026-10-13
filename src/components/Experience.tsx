@@ -28,7 +28,7 @@ const Experience: React.FC = () => {
                   current ? 'bg-accent ring-4 ring-accent-soft' : 'border border-faint bg-paper'
                 }`}
               />
-              <div className="grid gap-1 md:grid-cols-[120px_1fr] md:gap-8">
+              <div className="grid gap-1 md:grid-cols-[150px_1fr] md:gap-6">
                 <p className="font-mono text-xs leading-7 text-faint">
                   {step.year}
                   {current && <span className="ml-2 text-accent">Now</span>}

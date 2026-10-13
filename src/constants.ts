@@ -308,37 +308,37 @@ export const SKILLS: SkillCategory[] = [
 export const PROCESS_STEPS: ProcessStep[] = [
   {
     title: 'BSc (Hons) Mechatronics Engineering',
-    year: '2021 - 2025',
+    year: 'Aug 2021 – Jul 2025',
     description: 'Graduated from General Sir John Kotelawala Defence University with First Class Honours (CGPA 3.91), and received the award for Best Academic Performance in Mechatronics Engineering.',
     image: ''
   },
   {
-    title: 'Intern | Autonomation Engineer',
-    year: '2023 - 2024',
+    title: 'Autonomation Engineer | Intern',
+    year: 'Oct 2023 – Mar 2024',
     description: 'Developed self-driven sewing machines and designed autonomous pipeline systems at Autonomation Lab, MAS Capital (Pvt) Ltd, Ratmalana.',
     image: ''
   },
   {
-    title: 'STEM Tutor | Engineer',
-    year: '2023 - 2024',
-    description: 'Delivered robotics courses in schools, designed STEM kits and led workshops for students aged 5–20 at 360Labs, Boralesgamuwa.',
+    title: 'Tutor, then Head of Operations | 360Labs',
+    year: 'Dec 2023 – Dec 2024',
+    description: 'Delivered robotics courses in schools and designed STEM learning kits. Promoted to Head of Operations in Sep 2024, running automation projects for agriculture and workshops in Colombo for students aged 5–20.',
     image: ''
   },
   {
     title: '3D Modeling & Printing | Freelancer',
-    year: '2024 - 2025',
+    year: 'Jan 2024 – Apr 2025',
     description: 'Designed mechanical models and brought them to life on my Ender 3 Pro FDM printer.',
     image: ''
   },
   {
     title: 'Product Development Engineer',
-    year: '2025',
+    year: 'Apr 2025 – Aug 2025',
     description: 'Fabricated and developed mechanical systems to improve process efficiency, and researched new technologies for product development at Innovation, MAS Capital (Pvt) Ltd, Biyagama.',
     image: ''
   },
   {
     title: 'Senior Robotics Engineer',
-    year: '2025',
+    year: 'Sep 2025 –',
     description: 'Developed a four-wheel AI-driven robot, explored rover and drone concepts, and built a microphone array with an audio-processing pipeline at Hype Insight (Pty) Ltd.',
     image: ''
   }
