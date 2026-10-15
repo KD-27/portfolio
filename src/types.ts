@@ -35,9 +35,19 @@ export interface ResearchPaper {
   publisher: string;
   /** Short venue name shown on the badge, e.g. 'ACRA' */
   venue: string;
-  /** What the author did on the paper, shown under the venue, e.g. 'Co-author: wrote the paper' */
-  role?: string;
+  /** Author list in citation order; the entry equal to OWN_NAME is bolded */
+  authors: string[];
+  /** Author position and exactly what I did, e.g. 'Second author: wrote the paper' */
+  contribution: string;
+  /** Publication year, or 'Under Review' */
   date: string;
+  /** Skimmable summary; result and limitation are left out where the paper gives none */
+  summary: {
+    problem: string;
+    built: string;
+    result?: string;
+    limitation?: string;
+  };
   tags: string[];
 }
 

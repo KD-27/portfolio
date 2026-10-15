@@ -1,10 +1,28 @@
 import React, { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { RESEARCH_PAPERS } from '../constants';
+import { OWN_NAME, RESEARCH_PAPERS } from '../constants';
 import type { ResearchPaper } from '../types';
 import Section from './Section';
 
 const isUnderReview = (date: string) => date.toLowerCase() === 'under review';
+
+const SUMMARY_ROWS = [
+  ['problem', 'Problem'],
+  ['built', 'Built'],
+  ['result', 'Result'],
+  ['limitation', 'Limitation'],
+] as const;
+
+const Authors: React.FC<{ authors: string[] }> = ({ authors }) => (
+  <p className="mt-2 text-sm text-muted">
+    {authors.map((name, i) => (
+      <React.Fragment key={name}>
+        {i > 0 && (name === 'et al.' ? ' ' : ', ')}
+        {name === OWN_NAME ? <strong className="font-semibold text-ink">{name}</strong> : name}
+      </React.Fragment>
+    ))}
+  </p>
+);
 
 const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
   const [showAbstract, setShowAbstract] = useState(false);
@@ -49,8 +67,9 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
             </div>
 
             <h3 className="font-serif text-xl leading-snug text-ink md:text-[1.4rem]">{paper.title}</h3>
-            <p className="mt-2 text-sm italic text-muted">{paper.publisher}</p>
-            {paper.role && <p className="mt-1 text-sm text-ink">{paper.role}</p>}
+            <Authors authors={paper.authors} />
+            <p className="mt-1 text-sm italic text-muted">{paper.publisher}</p>
+            <p className="mt-2 text-sm text-ink">{paper.contribution}</p>
           </div>
 
           {/* Phones: small first-page preview beside the title (the big one is hidden below sm) */}
@@ -62,6 +81,17 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
             <div className="flex-shrink-0 sm:hidden">{thumb}</div>
           )}
         </div>
+
+        <dl className="mt-4 grid max-w-2xl grid-cols-[5.5rem_1fr] gap-x-3 gap-y-1.5 text-sm">
+          {SUMMARY_ROWS.map(([key, label]) =>
+            paper.summary[key] ? (
+              <React.Fragment key={key}>
+                <dt className="font-mono text-[11px] uppercase leading-5 tracking-wider text-faint">{label}</dt>
+                <dd className="leading-5 text-muted">{paper.summary[key]}</dd>
+              </React.Fragment>
+            ) : null
+          )}
+        </dl>
 
         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
           <button

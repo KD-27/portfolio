@@ -34,7 +34,7 @@ export const HERO_DATA = {
   title: "Mechatronics Engineer",
   role: "Senior Robotics Engineer",
   affiliation: "Hype Insight Global",
-  interests: ['Robotic grasping', 'Legged locomotion', 'SLAM & navigation', 'Embedded control', 'Applied machine learning'],
+  interests: ['Motion planning', 'Model predictive control', 'Perception-aware navigation', 'State estimation & SLAM', 'Multi-robot coordination'],
   tagline: "I build robots that walk, map and navigate.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };
@@ -220,6 +220,9 @@ export const PROJECTS: Project[] = [
   }
 ];
 
+/** How my name appears in author lists, so the paper cards can bold it */
+export const OWN_NAME = 'G. K. Dhananjaya';
+
 export const RESEARCH_PAPERS: ResearchPaper[] = [
   {
     id: 'p4',
@@ -229,8 +232,14 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     link: '#',
     publisher: 'Australasian Conference on Robotics and Automation (ACRA)',
     venue: 'ACRA',
-    role: 'Co-author: wrote the paper',
+    authors: ['M. Thilakarathna', 'G. K. Dhananjaya', 'A. Wijesinghe', 'M. Vaszilijevics', 'E. Hood', 'D. Herath'],
+    contribution: 'Second author: wrote the paper.',
     date: 'Under Review',
+    summary: {
+      problem: 'Grasp planners trained on different sensing modalities output scores that cannot be compared, so they cannot be combined for cluttered multimodal sorting without retraining.',
+      built: 'A modular framework that fuses independently trained 6D grasp planners through a quantile-based confidence harmonisation layer, with no retraining or labelled grasp outcomes.',
+      result: '74.53% grasp success on a real UR10, higher than either single-modality baseline.'
+    },
     tags: ['Multimodal Grasping', '6D Grasp Planning', 'Waste Sorting']
   },
   {
@@ -241,7 +250,15 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     link: '#',
     publisher: 'International Journal of Control, Automation, and Systems (ICROS KIEE)',
     venue: 'IJCAS',
+    authors: ['G. K. Dhananjaya', 'L. Wickramaarachchi', 'W. Silva', 'I. Naotunna', 'M. Dabare', 'S. Gaspe'],
+    contribution: 'First author: led the project, derived the inverse kinematics, wrote all the firmware and wrote the paper.',
     date: 'Under Review',
+    summary: {
+      problem: 'Inspecting structured areas that people cannot safely reach.',
+      built: 'A quadruped with five-bar parallel legs, closed-form inverse kinematics (Variable Circle Method), ROS 2 / micro-ROS control and an ESP-NOW radio link.',
+      result: 'Walks at 20 cm/s, turns at 30°/s, and holds a wireless link out to 120–130 m.',
+      limitation: 'Tested on flat terrain only.'
+    },
     tags: ['Quadruped robot', 'Five-bar parallel mechanism', 'Trajectory optimization']
   },
   {
@@ -249,10 +266,17 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     title: 'Prediction of Coronary Artery Disease Using Artificial Neural Network',
     abstract: 'An ANN for early CAD diagnosis achieved ~90% accuracy using SMOTE, expert-guided feature selection, optimized hyperparameters, and stratified k-fold validation. The model showed strong reliability and clinical relevance, outperforming conventional machine-learning methods',
     image: `${import.meta.env.BASE_URL}research_papers/CAD_Diagnosis.webp`,
-    link: 'https://ir.kdu.ac.lk/handle/345/8770',
-    publisher: 'International Research Conference (KDU IRC)',
+    link: 'https://doi.org/10.64701/irc2024/345/8770',
+    publisher: 'KDU 17th International Research Conference, oral presentation',
     venue: 'KDU IRC',
+    authors: ['G. K. Dhananjaya', 'J. A. C. A. Perera', 'G. R. A. Senarathne', 'J. A. D. I. Priyashan', 'B. Hettige'],
+    contribution: 'First author: built the neural network and wrote the whole paper.',
     date: '2024',
+    summary: {
+      problem: 'Diagnosing coronary artery disease early from clinical records, where positive cases are scarce.',
+      built: 'A neural network trained with SMOTE oversampling, features chosen with cardiologists, and stratified k-fold validation.',
+      result: 'About 90% accuracy, ahead of the conventional machine-learning methods it was compared with.'
+    },
     tags: ['Neural Networks', 'Coronary Artery Disease', 'SMOTE']
   },
   {
@@ -261,9 +285,15 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     abstract: 'An automated clothes-drying system integrates sensors and actuators to detect rain and darkness, automatically sheltering garments while offering manual and remote control. It reduces household inconvenience, protects clothes from weather, and demonstrates how smart technology streamlines everyday domestic tasks.',
     image: `${import.meta.env.BASE_URL}research_papers/Automated_Clothesline.webp`,
     link: 'https://ir.kdu.ac.lk/handle/345/7491',
-    publisher: 'International Research Conference (KDU IRC)',
+    publisher: 'KDU 16th International Research Conference, poster presentation',
     venue: 'KDU IRC',
+    authors: ['M. L. Saputantri', 'G. K. Dhananjaya', 'J. A. C. A. Perera', 'U. A. N. D. Ubeysiriwardana'],
+    contribution: 'Second author: built the sensor and control setup and wrote some sections of the paper. Fabrication was done by a co-author.',
     date: '2023',
+    summary: {
+      problem: 'Clothes left out to dry get caught by rain or left out after dark.',
+      built: 'A clothesline that senses rain and darkness and pulls the clothes under cover on its own, with manual and remote override.'
+    },
     tags: ['Automation', 'Clothesline', 'Smart']
   }
 ];
@@ -457,6 +487,17 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       readTime: '15 min read',
       contentBlocks: [
         { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/lcp/LCP_Vid5.mp4`, caption: 'LCP running as a Nav2 global planner in ROS 2 Humble' },
+
+        { type: 'heading', content: 'At a Glance', level: 2 },
+        {
+          type: 'list',
+          items: [
+            'Problem: grid planners such as A* expand the whole map even when the straight-line path is almost clear.',
+            'Built: a planner that starts from the straight line and pushes waypoints sideways only where the path hits an obstacle, released as an open-source ROS 2 Nav2 global planner in C++.',
+            'Result: runs as a Nav2 global planner in ROS 2 Humble and has been tested on a 1.8 m-tall mobile robot. Compared qualitatively with A*/Dijkstra and potential fields below; no quantitative benchmark yet.',
+            'Limitation: can fail in narrow corridors and around concave obstacles, paths are not globally optimal, and smoothing can clip obstacle edges.'
+          ]
+        },
 
         { type: 'heading', content: 'The Core Idea', level: 2 },
         { type: 'quote', content: 'Assume the simplest path is valid — and only react when reality proves otherwise.' },
