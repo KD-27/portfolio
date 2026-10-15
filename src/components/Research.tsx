@@ -112,7 +112,8 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
               View paper <ArrowUpRight size={14} />
             </a>
           )}
-          <span className="text-faint">{paper.tags.join(' · ')}</span>
+          {/* Phones only: from sm up the keywords sit under the cover */}
+          <span className="text-faint sm:hidden">{paper.tags.join(' · ')}</span>
         </div>
 
         {showAbstract && (
@@ -130,6 +131,14 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
         ) : (
           cover
         )}
+        <p className="mt-5 font-mono text-[11px] uppercase tracking-wider text-faint">Keywords</p>
+        <ul className="mt-2 flex flex-col items-start gap-1.5">
+          {paper.tags.map((tag) => (
+            <li key={tag} className="rounded-full border border-rule bg-card px-3 py-0.5 text-sm text-muted">
+              {tag}
+            </li>
+          ))}
+        </ul>
       </div>
     </li>
   );
