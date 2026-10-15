@@ -227,7 +227,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
   {
     id: 'p4',
     title: 'FusionGrasp: A Modular Framework for Integrating Heterogeneous 6D Grasp Planners for Multimodal Cluttered Sorting',
-    abstract: 'FusionGrasp integrates independently trained 6D grasp planners for multimodal cluttered waste sorting without retraining or labelled grasp outcomes. A quantile-based confidence harmonisation layer makes their scores comparable, and real-world UR10 experiments achieved a 74.53% grasp success rate, exceeding both single-modality baselines.',
+    abstract: 'Cluttered waste sorting involves an open-ended mix of heterogeneous contaminants with diverse physical properties, requiring complementary grasping capabilities. Multimodal grasping addresses this diversity by integrating complementary grasping modalities; however, independently trained grasp planners produce confidence scores with different numerical scales and grasp-quality representations, making direct cross-modal comparison unreliable. This paper presents FusionGrasp, a modular framework for integrating independently trained 6D grasp planners for multimodal cluttered sorting without retraining or labelled grasp outcomes. A post-training quantile-based confidence harmonisation layer is introduced to compare grasp candidates according to their relative standing within planner-specific confidence distributions while preserving their original rankings. Real-world 6D grasping experiments achieved an overall grasp success rate of 74.53%, exceeding both constituent single-modality baselines and demonstrating the effectiveness of FusionGrasp for integrating complementary grasping modalities in cluttered waste sorting.',
     image: `${import.meta.env.BASE_URL}research_papers/FusionGrasp_paper.webp`,
     link: '#',
     publisher: 'Australasian Conference on Robotics and Automation (ACRA)',
@@ -236,8 +236,8 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     contribution: 'Second author: wrote the paper.',
     date: 'Under Review',
     summary: {
-      problem: 'Grasp planners trained on different sensing modalities output scores that cannot be compared, so they cannot be combined for cluttered multimodal sorting without retraining.',
-      built: 'A modular framework that fuses independently trained 6D grasp planners through a quantile-based confidence harmonisation layer, with no retraining or labelled grasp outcomes.',
+      problem: 'Grasp planners trained on different sensing modalities score grasps on scales that cannot be compared.',
+      built: 'A quantile-based harmonisation layer that fuses 6D grasp planners without retraining or labelled data.',
       result: '74.53% grasp success on a real UR10, higher than either single-modality baseline.'
     },
     tags: ['Multimodal Grasping', '6D Grasp Planning', 'Waste Sorting']
@@ -245,7 +245,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
   {
     id: 'p1',
     title: 'Design & Development of a Quadruped Robot for Inspection in Human-Inaccessible Structured Areas',
-    abstract: 'A quadruped robot using a five-bar leg mechanism was developed for inspection in structured, inaccessible areas. Its optimized kinematics, stable locomotion, long-range ESP-NOW communication, and ROS2/MicroROS control architecture enable accurate, reliable, and modular operation on flat terrains.',
+    abstract: 'Quadruped robot platforms are attractive for inspection in human-inaccessible environments, but many focus on complex and dynamic locomotion with control rather than simple and reliable operation in structured environments. The aim of this study is to understand whether such a quadruped robot can be used as a practical inspection platform that can offer computationally efficient control and stable locomotion on flat terrains. To accomplish this goal, the robot was designed and developed using a five-bar parallel leg structure, and a geometric inverse kinematics method, adapted from a standard circle-circle intersection approach, was optimized for implementation on the embedded platform. Ten foot-trajectories were also compared for stability in this locomotion pattern. Experimental testing demonstrated that the robot could reach a linear velocity of 20 cm/s and rotational velocity of 30°/s, and that the optimized geometric inverse kinematics approach was able to work in real time. The results demonstrate the possibility of using the proposed parallel-leg quadruped for inspection tasks in structured, human-inaccessible spaces.',
     image: `${import.meta.env.BASE_URL}research_papers/Quadruped_Robot.webp`,
     link: '#',
     publisher: 'International Journal of Control, Automation, and Systems (ICROS KIEE)',
@@ -254,12 +254,12 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     contribution: 'First author: led the project, derived the inverse kinematics, wrote all the firmware and wrote the paper.',
     date: 'Under Review',
     summary: {
-      problem: 'Inspecting structured areas that people cannot safely reach.',
-      built: 'A quadruped with five-bar parallel legs, closed-form inverse kinematics (Variable Circle Method), ROS 2 / micro-ROS control and an ESP-NOW radio link.',
-      result: 'Walks at 20 cm/s, turns at 30°/s, and holds a wireless link out to 120–130 m.',
+      problem: 'Most quadrupeds target dynamic locomotion, not simple, reliable inspection in structured spaces.',
+      built: 'Five-bar parallel legs and a circle-intersection IK optimised to run on the embedded controller.',
+      result: 'Walks at 20 cm/s, turns at 30°/s, and solves its IK in real time on board.',
       limitation: 'Tested on flat terrain only.'
     },
-    tags: ['Quadruped robot', 'Five-bar parallel mechanism', 'Trajectory optimization']
+    tags: ['Five-bar parallel mechanism', 'Inverse kinematics', 'Quadruped robot', 'ROS2', 'Trajectory optimization']
   },
   {
     id: 'p2',
@@ -273,9 +273,9 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     contribution: 'First author: built the neural network and wrote the whole paper.',
     date: '2024',
     summary: {
-      problem: 'Diagnosing coronary artery disease early from clinical records, where positive cases are scarce.',
-      built: 'A neural network trained with SMOTE oversampling, features chosen with cardiologists, and stratified k-fold validation.',
-      result: 'About 90% accuracy, ahead of the conventional machine-learning methods it was compared with.'
+      problem: 'Diagnosing coronary artery disease early from clinical records with few positive cases.',
+      built: 'A neural network using SMOTE, cardiologist-chosen features and stratified k-fold validation.',
+      result: 'About 90% accuracy, ahead of the conventional ML methods it was compared with.'
     },
     tags: ['Neural Networks', 'Coronary Artery Disease', 'SMOTE']
   },
@@ -292,7 +292,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     date: '2023',
     summary: {
       problem: 'Clothes left out to dry get caught by rain or left out after dark.',
-      built: 'A clothesline that senses rain and darkness and pulls the clothes under cover on its own, with manual and remote override.'
+      built: 'A clothesline that senses rain or darkness and moves clothes under cover, with manual and remote override.'
     },
     tags: ['Automation', 'Clothesline', 'Smart']
   }

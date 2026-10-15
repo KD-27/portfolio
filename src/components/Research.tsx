@@ -51,7 +51,7 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
   );
 
   return (
-    <li className="grid gap-5 py-8 first:pt-0 sm:grid-cols-[1fr_220px] sm:gap-10 sm:py-10 lg:grid-cols-[1fr_300px]">
+    <li className="grid gap-5 py-8 first:pt-0 sm:grid-cols-[1fr_220px] sm:gap-x-10 sm:gap-y-6 sm:py-10 lg:grid-cols-[1fr_300px]">
       <div className="min-w-0">
         <div className="flex items-start gap-4">
           <div className="min-w-0 flex-1">
@@ -112,14 +112,9 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
               View paper <ArrowUpRight size={14} />
             </a>
           )}
-          <span className="text-faint">{paper.tags.join(' · ')}</span>
+          {/* Phones only: from sm up the keywords sit under the cover */}
+          <span className="text-faint sm:hidden">{paper.tags.join(' · ')}</span>
         </div>
-
-        {showAbstract && (
-          <p id={abstractId} className="mt-4 max-w-2xl border-l-2 border-accent/40 pl-4 text-[15px] leading-relaxed text-muted">
-            {paper.abstract}
-          </p>
-        )}
       </div>
 
       <div className="hidden sm:block">
@@ -130,7 +125,22 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
         ) : (
           cover
         )}
+        <p className="mt-5 font-mono text-[11px] uppercase tracking-wider text-faint">Keywords</p>
+        <ul className="mt-2 flex flex-col items-start gap-1.5">
+          {paper.tags.map((tag) => (
+            <li key={tag} className="rounded-full border border-rule bg-card px-3 py-0.5 text-sm text-muted">
+              {tag}
+            </li>
+          ))}
+        </ul>
       </div>
+
+      {/* Full width under both the text and the cover */}
+      {showAbstract && (
+        <p id={abstractId} className="border-l-2 border-accent/40 pl-4 text-justify hyphens-auto text-[15px] leading-relaxed text-muted sm:col-span-2">
+          {paper.abstract}
+        </p>
+      )}
     </li>
   );
 };
