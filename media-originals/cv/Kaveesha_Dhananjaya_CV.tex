@@ -1,0 +1,314 @@
+% =====================================================================
+%  Gombaragodage Kaveesha Dhananjaya — Curriculum Vitae
+%  Source for public/resume.pdf on the portfolio site. Keep in sync with
+%  RESEARCH_PAPERS and HERO_DATA.interests in src/constants.ts.
+%  Compile with:  pdflatex Kaveesha_Dhananjaya_CV.tex   (run twice)
+%  Only standard TeX Live packages are used.
+% =====================================================================
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+% Carlito is metric-compatible with Calibri. If it is not installed, the
+% document falls back to a sans-serif Latin Modern automatically.
+\IfFileExists{carlito.sty}
+  {\usepackage[sfdefault,lf]{carlito}}
+  {\renewcommand{\familydefault}{\sfdefault}}
+\usepackage[margin=0.65in,top=0.58in,bottom=0.58in]{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{needspace}
+\usepackage[hidelinks]{hyperref}
+
+\pagestyle{empty}
+\frenchspacing
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{1em}
+\linespread{1.0}
+
+% ---------- section headings: uppercase, ruled underneath ------------
+\renewcommand{\section}[1]{%
+  \Needspace{6\baselineskip}%
+  \vspace{7pt}%
+  {\normalsize\bfseries\MakeUppercase{#1}}\par
+  \vspace{1pt}\hrule height 0.6pt
+  \vspace{3.5pt}%
+}
+
+% ---------- entry with right-aligned date ----------------------------
+% \cventry{left-hand text}{right-hand date}
+\newcommand{\cventry}[2]{%
+  \vspace{3pt}%
+  \noindent\begin{tabularx}{\textwidth}{@{}X r@{}}
+    #1 & #2
+  \end{tabularx}\par\vspace{-0.5pt}%
+}
+
+% ---------- italic sub-line (affiliation / supervisor) ---------------
+\newcommand{\cvsub}[1]{{\itshape #1}\par\vspace{1pt}}
+
+% ---------- bold-italic sub-project heading inside a role ------------
+\newcommand{\cvblock}[1]{\vspace{4pt}{\bfseries\itshape #1}\par\vspace{1pt}}
+
+% ---------- tight bullet list ----------------------------------------
+\newenvironment{cvlist}
+  {\begin{itemize}[leftmargin=1.1em,itemsep=1pt,parsep=0pt,topsep=1.5pt,
+                   label=\textendash]}
+  {\end{itemize}}
+
+% ---------- skills row -----------------------------------------------
+\newcommand{\skill}[2]{\textbf{#1}\hspace{0.4em}#2\par\vspace{1pt}}
+
+% =====================================================================
+\begin{document}
+
+% ------------------------------- HEADER ------------------------------
+\begin{center}
+  {\LARGE\bfseries GOMBARAGODAGE KAVEESHA DHANANJAYA}\\[4pt]
+  Colombo, Sri Lanka $\cdot$ +94 74 017 9243 $\cdot$
+  \href{mailto:kaveeshadhananjaya2002@gmail.com}{kaveeshadhananjaya2002@gmail.com}\\[2pt]
+  \href{https://kd-27.github.io/portfolio/}{kd-27.github.io/portfolio} $\cdot$
+  \href{https://github.com/KD-27}{github.com/KD-27}
+\end{center}
+
+% -------------------------- RESEARCH INTERESTS -----------------------
+\section{Research Interests}
+
+Motion planning and model predictive control (MPC) for autonomous robots in
+unstructured environments shared with people. Perception-aware navigation, state
+estimation, and SLAM for aerial, ground, and hybrid platforms. Multi-robot
+coordination.
+
+% ------------------------------ EDUCATION ----------------------------
+\section{Education}
+
+\cventry{\textbf{BSc Engineering (Hons) in Mechatronic Engineering}}{2021 -- 2025}
+\cvsub{General Sir John Kotelawala Defence University (KDU), Sri Lanka}
+\begin{cvlist}
+  \item First Class Honours with a cumulative GPA of 3.91 / 4.00, ranked first in
+        the cohort. Fourth-year GPA 4.00.
+  \item The medium of instruction was English. The program lasted four years.
+  \item Selected coursework included Signals and Systems (A+), Digital Signal Processing
+        (A+), Advanced Control Systems (A+), Non-Linear Control Systems (A+),
+        Intelligent Systems Control (A+), Applied Statistics (A+), Advanced
+        Calculus (A+), Microprocessors and Embedded Systems, Machine Learning,
+        Power Electronics, Electrical Machines and Drives, Analog and Digital
+        Electronics.
+\end{cvlist}
+
+% ----------------------------- PUBLICATIONS --------------------------
+\section{Publications}
+
+\textit{Under review}
+\begin{cvlist}
+  \item \textbf{G. K. Dhananjaya}, L. Wickramaarachchi, W. Silva, I. Naotunna,
+        M. Dabare, and S. Gaspe, ``Design and Development of a Quadruped
+        Robot for Inspection in Human-Inaccessible Structured Areas,''
+        \textit{International Journal of Control, Automation, and Systems}
+        (ICROS / KIEE). Under review.\\
+        \textit{First author: led the project, derived the inverse kinematics,
+        wrote all the firmware and wrote the paper.}
+  \item M. Thilakarathna, \textbf{G. K. Dhananjaya}, A. Wijesinghe, M. Vaszilijevics,
+        E. Hood, and D. Herath, ``FusionGrasp: A
+        Modular Framework for Integrating Heterogeneous 6D Grasp Planners for
+        Multimodal Cluttered Sorting,'' \textit{Australasian Conference on
+        Robotics and Automation (ACRA)}. Under review.\\
+        \textit{Second author: wrote the paper.}
+\end{cvlist}
+
+\vspace{2pt}\textit{Published}
+\begin{cvlist}
+  \item \textbf{G. K. Dhananjaya}, J. A. C. A. Perera, G. R. A. Senarathne,
+        J. A. D. I. Priyashan, and B. Hettige, ``Prediction of Coronary Artery
+        Disease Using Artificial Neural Network,'' \textit{KDU 17th
+        International Research Conference}, 2024. (Oral presentation.)
+        \href{https://doi.org/10.64701/irc2024/345/8770}{DOI 10.64701/irc2024/345/8770}.\\
+        \textit{First author: built the neural network and wrote the whole paper.}
+  \item M. L. Saputantri, \textbf{G. K. Dhananjaya}, J. A. C. A. Perera, and
+        U. A. N. D. Ubeysiriwardana, ``Development of an Automated Clothesline
+        System,'' \textit{KDU 16th International Research Conference}, 2023.
+        (Poster presentation.)\\
+        \textit{Second author: built the sensor and control setup and wrote some
+        sections of the paper. Fabrication was done by a co-author.}
+\end{cvlist}
+
+% -------------------------- RESEARCH EXPERIENCE ----------------------
+\section{Research Experience}
+
+\cventry{\textbf{Quadruped Robot for Inspection in Human-Inaccessible Environments}}{2024 -- 2025}
+\cvsub{Final Year Group Research Project \quad|\quad Project lead \quad|\quad Supervised by Mr.\ Isira Naotunna}
+\begin{cvlist}
+  \item Designed five-bar parallel legs to reduce reflected inertia and
+        simplify actuation.
+  \item Derived closed-form inverse kinematics using the Variable Circle Method,
+        eliminating the need for iterative solving.
+  \item Optimised gait trajectories in MATLAB and validated them in simulation.
+  \item Implemented distributed ROS~2 / micro-ROS control across the onboard
+        computer and microcontroller.
+\end{cvlist}
+
+\Needspace{8\baselineskip}
+\cventry{\textbf{LiDAR-Based SLAM for Autonomous Mapping and Navigation}}{2023}
+\cvsub{Third Year Research Project \quad|\quad Supervised by Mr.\ Isira Naotunna}
+\begin{cvlist}
+  \item Designed and fabricated a rocker-bogie-inspired wheeled platform with
+        2D LiDAR for autonomous indoor navigation.
+  \item Implemented a ROS SLAM and navigation pipeline that maintained position
+        and heading errors within 10\,cm and 15$^\circ$, respectively.
+  \item Modelled the platform kinematics and validated the SLAM and navigation
+        stack in Gazebo before hardware deployment.
+\end{cvlist}
+
+\Needspace{8\baselineskip}
+\cventry{\textbf{Lazy Coulomb Planner, a reactive path planner based on electrostatic repulsion}}{2026}
+\cvsub{Independent project \quad|\quad \href{https://github.com/KD-27/Lazy-Coulomb-Planner/tree/humble}{github.com/KD-27/Lazy-Coulomb-Planner (humble branch)}}
+\begin{cvlist}
+  \item Developed a planner that starts with a straight-line path and adds
+        repulsive waypoints only at obstacle intersections instead of
+        evaluating a continuous potential field.
+  \item Implemented perpendicular escape motion and waypoint locking to reduce
+        oscillation and local-minimum trapping.
+  \item Built the planner as a ROS~2 Nav2 plugin and tested it on a 1.8\,m-tall
+        mobile robot. Documented a qualitative comparison with APF, RRT, A*, VFH
+        and Bug algorithms, with limitations in narrow passages, concave
+        obstacles and path optimality.
+\end{cvlist}
+
+% ------------------------ PROFESSIONAL EXPERIENCE --------------------
+\section{Professional Experience}
+
+\Needspace{9\baselineskip}
+\cventry{\textbf{Senior Robotics Engineer}}{Sep 2025 -- Present}
+\cvsub{Hype Insight (Pvt) Ltd, Crows Nest, NSW, Australia. Based at Hype Invention, Colombo 02, Sri Lanka}
+
+\cvblock{Autonomous ground platform for perception, planning and hardware}
+\begin{cvlist}
+  \item Lead engineer for a four-wheel autonomous robot on an NVIDIA Jetson AGX
+        Orin 64\,GB, integrating ZED~X, OAK-D Pro Wide and RPLIDAR S2/A2 with BLDC
+        drives, servos and a motion-compensated DSLR and gimbal payload over a
+        shared CAN bus.
+  \item Implemented autonomous navigation in crowded, human-shared environments
+        using Voronoi zoning, ground-plane rejection and removal of pedestrian
+        artefacts from SLAM maps.
+  \item Designed sheet-metal chassis, large-format FDM structures and composite
+        lay-ups for improved finish and stiffness.
+\end{cvlist}
+
+\cvblock{Aerial autonomy stack for predictive control, planning and dynamic environments}
+\begin{cvlist}
+  \item Integrated global mapping and planning with MPC and PX4, then validated
+        the stack in multi-level PX4/Gazebo environments.
+  \item Implemented moving-obstacle filtering with vehicle yielding, replanning
+        and 3D routing over simulated crowd regions in PX4/Gazebo.
+  \item Developed frontier-based exploration for autonomous mapping of unknown
+        indoor spaces.
+\end{cvlist}
+
+\cvblock{Embedded wireless audio system development}
+\begin{cvlist}
+  \item Developed nRF52840 firmware in Zephyr RTOS for continuous encrypted
+        audio capture to onboard flash and completed an 85-minute, 256{,}156-frame
+        recording with no dropped or corrupted frames.
+  \item Implemented sustained BLE transfers at 113\,KB/s with resumable
+        downloads and built a Kotlin Android client for retrieval, decryption
+        and playback.
+\end{cvlist}
+
+\Needspace{9\baselineskip}
+\cventry{\textbf{Product Development Engineer}}{Apr 2025 -- Aug 2025}
+\cvsub{MAS Capital (Pvt) Ltd, Intimates, Ratmalana, Sri Lanka}
+\begin{cvlist}
+  \item Designed and tested pneumatically powered moulds to form pallets from
+        styrene-ethylene-butylene-styrene (SEBS), a thermoplastic elastomer,
+        evaluating 8--10 formulations for performance and recovery.
+  \item Researched and tested polyurethane reactive (PUR) adhesives for two
+        heated-gel deposition machines (FLOD and DOD) to assess bonding
+        feasibility for production.
+  \item Built prototypes using knife-cutting, punching, laser-cutting and
+        heat-press machines.
+  \item Developed products for external clients through bulk manufacturing
+        processes, combining novel materials and evaluating mechanical and
+        functional properties against client specifications.
+  \item Ran feasibility studies on design and process viability before
+        prototyping, and prepared material-consumption estimates, standard
+        minute values (SMVs), and costings across product styles.
+\end{cvlist}
+
+\Needspace{9\baselineskip}
+\cventry{\textbf{Automation Engineering Intern}}{Oct 2023 -- Apr 2024}
+\cvsub{MAS Capital (Pvt) Ltd, Intimates, Ratmalana, Sri Lanka}
+\begin{cvlist}
+  \item Designed the mechanical and electrical systems for a ``Spaghetti Iron''
+        machine, then validated and deployed it at the Unichela (Panadura)
+        plant, where it remains in production.
+  \item Automated a spaghetti cutting unit by integrating a universal tension
+        detector, and improved an automatic sewing machine using a Megatron
+        controller with strap-presence detection.
+  \item Developed a convolutional neural network achieving 85\,\% accuracy for
+        bra-cup orientation detection as an extension of an automatic
+        stabiliser-attach machine.
+  \item Programmed a UR5 robot arm for pick-and-place handling of components on
+        the stabiliser-attach line.
+  \item Designed base-plate and guide mechanisms for pullout and buttonhole
+        machines, and ran a research project on electroplating of 3D-printed
+        parts.
+\end{cvlist}
+
+% --------------------------- TEACHING EXPERIENCE ---------------------
+\section{Teaching Experience}
+
+\cventry{\textbf{STEM Educator}}{2023 -- 2024}
+\cvsub{360 Labs, an early-stage STEM education venture}
+\begin{cvlist}
+  \item Designed a hands-on robotics curriculum and ran workshops introducing
+        students to mechatronics and embedded programming.
+\end{cvlist}
+
+% --------------------------- TECHNICAL SKILLS ------------------------
+\section{Technical Skills}
+
+\skill{Robotics \& Autonomy}{ROS~2, micro-ROS, Nav2, SLAM Toolbox, PX4, MAVROS,
+  Gazebo, RViz, Cyclone DDS}
+\skill{Planning \& Control}{MPC (OSQP), trajectory optimisation, inverse
+  kinematics, state estimation}
+\skill{Perception \& ML}{PyTorch, TensorFlow, scikit-learn, OpenCV, YOLO}
+\skill{Programming}{C++, Python, Kotlin, MATLAB}
+\skill{Embedded Systems}{Zephyr RTOS, nRF52840, BLE, CAN bus, Jetson AGX Orin,
+  ESP32, PLC (Siemens, Delta)}
+\skill{Sensors \& Actuation}{ZED~X, OAK-D Pro Wide, RPLIDAR S2/A2, Livox
+  Mid-360, IMU, BLDC drives, gimbal systems}
+\skill{CAD \& Electronics}{SolidWorks, Fusion 360, ANSYS, PCB design (KiCad,
+  EasyEDA), LTspice}
+\skill{Fabrication}{Sheet metal, FDM, composite lay-up, laser cutting, turning
+  and milling}
+
+% --------------------------- HONORS & AWARDS -------------------------
+\section{Honors \& Awards}
+
+\cventry{Gold Medal for Best Academic Performance, Mechatronic Engineering, KDU}{2025}
+\cventry{1st Place \& Best Design, KDU Mechatronics Systems Design Competition}{2023}
+
+% ------------------- VOLUNTEER & COMMUNITY ENGAGEMENT -----------------
+\section{Volunteer \& Community Engagement}
+
+\cventry{\textbf{Community Service Project for the President's Scout Award}}{2020}
+\begin{cvlist}
+  \item Organised and led a New Year celebration for residents of an elderly
+        care home as the community service component of the President's Scout
+        Award. Cleaned and repaired the facility, arranged traditional food, and
+        spent the day sharing music and dance with residents.
+\end{cvlist}
+
+% ------------------------- LEADERSHIP & SERVICE ----------------------
+\section{Leadership \& Service}
+
+\cventry{\textbf{Research In-Charge}, Electronic Robotics and Innovation Club, KDU}{2022 -- 2023}
+\cventry{\textbf{Senior Prefect}, Royal College, Colombo}{2021}
+
+% ------------------------------ REFERENCES ---------------------------
+\section{References}
+
+Available upon request.
+
+\end{document}
