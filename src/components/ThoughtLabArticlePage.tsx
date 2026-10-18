@@ -297,17 +297,29 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
 // GALLERY BLOCK
 // =========================================
 
-const GalleryBlock: React.FC<{ images: { src: string; caption?: string }[]; caption?: string }> = ({ images, caption }) => (
+// `contain` letterboxes each image instead of cropping it and links it full size, for diagrams and drawings
+const GalleryBlock: React.FC<{ images: { src: string; caption?: string }[]; caption?: string; contain?: boolean }> = ({ images, caption, contain }) => (
   <figure className="my-10">
     <div className={`grid grid-cols-2 gap-3 ${images.length % 3 === 0 ? 'md:grid-cols-3' : ''}`}>
       {images.map(img => (
         <div key={img.src}>
-          <img
-            src={img.src}
-            alt={img.caption || caption || 'Gallery image'}
-            loading="lazy"
-            className="aspect-[4/3] w-full rounded-sm border border-rule bg-white object-cover"
-          />
+          {contain ? (
+            <a href={img.src} target="_blank" rel="noopener noreferrer" title="Open full size">
+              <img
+                src={img.src}
+                alt={img.caption || caption || 'Gallery image'}
+                loading="lazy"
+                className="aspect-[4/3] w-full cursor-zoom-in rounded-sm border border-rule bg-white object-contain p-1"
+              />
+            </a>
+          ) : (
+            <img
+              src={img.src}
+              alt={img.caption || caption || 'Gallery image'}
+              loading="lazy"
+              className="aspect-[4/3] w-full rounded-sm border border-rule bg-white object-cover"
+            />
+          )}
           {img.caption && <p className="mt-2 text-xs leading-snug text-faint">{img.caption}</p>}
         </div>
       ))}
@@ -367,7 +379,19 @@ const TimelineBlock: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => (
               <div className="mt-2 flex flex-wrap justify-center gap-6">
                 {tall.map(m => (
                   <div key={m.src} className="w-44 sm:w-52">
-                    <VideoBlock src={m.src} caption={m.caption} vertical fit />
+                    {m.type === 'video' ? (
+                      <VideoBlock src={m.src} caption={m.caption} vertical fit />
+                    ) : (
+                      <figure className="my-4 w-full">
+                        <img
+                          src={m.src}
+                          alt={m.caption || 'Timeline image'}
+                          loading="lazy"
+                          className="aspect-[9/16] w-full rounded-sm border border-rule object-cover"
+                        />
+                        {m.caption && <Caption>{m.caption}</Caption>}
+                      </figure>
+                    )}
                   </div>
                 ))}
               </div>
@@ -405,7 +429,7 @@ const ContentBlockRenderer: React.FC<{ block: ContentBlock }> = ({ block }) => {
     case 'timeline':
       return <TimelineBlock entries={block.entries} />;
     case 'gallery':
-      return <GalleryBlock images={block.images} caption={block.caption} />;
+      return <GalleryBlock images={block.images} caption={block.caption} contain={block.contain} />;
     default:
       return null;
   }
