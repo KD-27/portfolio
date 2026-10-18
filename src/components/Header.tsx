@@ -30,9 +30,9 @@ const useTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
     try {
-      localStorage.setItem('theme', next);
+      sessionStorage.setItem('theme', next);
     } catch {
-      // Storage blocked (private mode): the choice just won't persist
+      // Storage blocked (private mode): the choice just won't survive a reload
     }
   };
 
