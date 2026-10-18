@@ -1142,7 +1142,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       icon: 'Bot',
       category: 'hardware',
       coverImage: `${import.meta.env.BASE_URL}thought_lab/relief_robot/cover.webp`,
-      introduction: "A fully autonomous robot for a 4 m × 4 m disaster-relief arena. It starts in one corner, steers around two obstacles, finds a 3.8 cm cube in a blue pickup zone and grips it, crosses onto a black line, and follows about 12.8 m of it through curves, 45° bends, 90° corners, a diamond, branches and seven 10 cm gaps to a green EXIT zone, where it puts the cube down. I designed the chassis and gripper in SolidWorks, 3D printed them, wired everything by hand on veroboard around an Arduino Mega, and wrote the firmware. The final version completed the whole run.",
+      introduction: "A fully autonomous robot for a 4 m × 4 m disaster-relief arena. It starts in one corner, steers around two obstacles, finds a 3.8 cm cube in a blue pickup zone and grips it, crosses onto a black line, and follows about 12.8 m of it through curves, 45° bends, 90° corners, a diamond, branches and seven 10 cm gaps to a green EXIT zone, where it puts the cube down. I designed the chassis and gripper in SolidWorks, 3D printed them, wired everything by hand on veroboard around an Arduino Mega, and wrote the firmware. The final version completed the full run on the real 4 m × 4 m arena.",
       tags: ['Mobile Robotics', 'Arduino Mega', 'Line Following', 'PID Control', 'Sensor Fusion', 'SolidWorks', '3D Printing'],
       status: 'published',
       publishedDate: 'October 2026',
@@ -1292,7 +1292,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
           'Running on USB power alone froze the robot at the gyro check with the I²C bus stuck. I added a bus clear and a rule: battery on first, and pull the 5 V link whenever USB is plugged in.',
           'The robot "found" the separator block while still in the blue zone and started the line too early. The block now only counts near its mapped position.',
           'A known 90° corner hint kept firing and spun the robot round. Each hint is now used once, and only while heading east.',
-          'The home mock arena was a 4 m × 1 m strip of shiny tiles, so the full track could never be driven end to end at home, and the shine changed the sensor readings.'
+          'The home mock arena was a 4 m × 1 m strip of shiny tiles, so the full track could never be driven end to end at home, and the shine changed the sensor readings. The first complete run of the whole course happened on the real arena.'
         ] },
 
         { type: 'heading', content: 'Results', level: 2 },
@@ -1300,7 +1300,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
           'Phase 1 (obstacles): 5/5, end positions within about 1 cm',
           'line_follow_final: 5/5 perfect in the normal direction, 5/5 completed in reverse',
           'Picks across the mission_full batches: 3/3, then 1/3, then 2/3',
-          'Final version (mission_full v11): completed the whole arena. It cleared both obstacles, picked the cube, followed the line through every gap and corner to the EXIT and placed the cube'
+          'Final version (mission_full v11): completed the full 4 m × 4 m arena. It cleared both obstacles, picked the cube, followed the line through every gap and corner to the EXIT and placed the cube'
         ] },
 
         { type: 'divider' },
@@ -1335,8 +1335,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         { type: 'list', items: [
           'Arduino Mega 2560 (C++), Pololu QTRSensors and VL53L0X libraries, Wire, EEPROM and Servo',
           'SolidWorks for the chassis and gripper, FDM 3D printing, draw.io for the wiring pages',
-          'PuTTY for reading the run logs over USB',
-          'Claude as a support tool when I got stuck on problems. The design, build, wiring, firmware strategy and all the testing were mine'
+          'PuTTY for reading the run logs over USB'
         ] }
       ]
     },
