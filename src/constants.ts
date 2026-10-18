@@ -1199,10 +1199,9 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
             { src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/wiring_sensors.webp`, caption: 'QTR-8RC, VL53L0X and MPU6050' },
             { src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/wiring_servos.webp`, caption: 'Gripper servos on the isolated 6 V rail' }
           ],
-          caption: 'The other wiring pages. Click any one to open it full size.',
+          caption: 'The other wiring pages. Click one to view it full size.',
           contain: true
         },
-        { type: 'callout', content: "My first wiring diagram had an auto-generated \"full wiring\" page that looked fine and was wrong: several pins shared an ID, so wires attached to the wrong pins. Generated drawings need checking like anything else.", variant: 'warning' },
 
         { type: 'divider' },
 

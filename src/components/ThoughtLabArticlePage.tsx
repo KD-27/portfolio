@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
-  ArrowLeft, ArrowRight, Check, Link2,
+  ArrowLeft, ArrowRight, Check, Link2, X,
   Construction, Info, AlertCircle, Lightbulb,
   Download, BarChart3, Crosshair, BookOpen, PenLine, Mic, Clapperboard, Package,
   Monitor, Smartphone, Image as ImageIcon, FileText, CornerDownRight, Workflow,
@@ -108,6 +109,12 @@ const VideoBlock: React.FC<{ src: string; caption?: string; vertical?: boolean; 
     };
     video.addEventListener('play', pauseOthers);
 
+    // Videos on this site are always silent, even if the controls are used to unmute
+    const keepMuted = () => {
+      if (!video.muted) video.muted = true;
+    };
+    video.addEventListener('volumechange', keepMuted);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) video.pause();
@@ -119,6 +126,7 @@ const VideoBlock: React.FC<{ src: string; caption?: string; vertical?: boolean; 
     return () => {
       observer.disconnect();
       video.removeEventListener('play', pauseOthers);
+      video.removeEventListener('volumechange', keepMuted);
     };
   }, []);
 
@@ -297,36 +305,78 @@ const FlowBlock: React.FC<{ steps: FlowStep[]; outputs?: FlowOutput[]; caption?:
 // GALLERY BLOCK
 // =========================================
 
-// `contain` letterboxes each image instead of cropping it and links it full size, for diagrams and drawings
-const GalleryBlock: React.FC<{ images: { src: string; caption?: string }[]; caption?: string; contain?: boolean }> = ({ images, caption, contain }) => (
-  <figure className="my-10">
-    <div className={`grid grid-cols-2 gap-3 ${images.length % 3 === 0 ? 'md:grid-cols-3' : ''}`}>
-      {images.map(img => (
-        <div key={img.src}>
-          {contain ? (
-            <a href={img.src} target="_blank" rel="noopener noreferrer" title="Open full size">
+// Full-size image over the page. Closes on the X, a click anywhere, or Escape.
+const Lightbox: React.FC<{ src: string; caption?: string; onClose: () => void }> = ({ src, caption, onClose }) => {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={caption || 'Full-size image'}
+      onClick={onClose}
+      className="fixed inset-0 z-[100] flex cursor-zoom-out flex-col items-center justify-center bg-black/95 p-4 sm:p-8"
+    >
+      <button
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+      >
+        <X size={22} />
+      </button>
+      <img src={src} alt={caption || 'Full-size image'} className="max-h-[85vh] max-w-full rounded-sm bg-white object-contain" />
+      {caption && <p className="mt-3 max-w-2xl text-center text-sm text-white/80">{caption}</p>}
+    </div>,
+    document.body
+  );
+};
+
+// `contain` letterboxes each image instead of cropping it and opens it full size on click, for diagrams and drawings
+const GalleryBlock: React.FC<{ images: { src: string; caption?: string }[]; caption?: string; contain?: boolean }> = ({ images, caption, contain }) => {
+  const [open, setOpen] = useState<{ src: string; caption?: string } | null>(null);
+
+  return (
+    <figure className="my-10">
+      <div className={`grid grid-cols-2 gap-3 ${images.length % 3 === 0 ? 'md:grid-cols-3' : ''}`}>
+        {images.map(img => (
+          <div key={img.src}>
+            {contain ? (
+              <button onClick={() => setOpen(img)} title="View full size" className="block w-full">
+                <img
+                  src={img.src}
+                  alt={img.caption || caption || 'Gallery image'}
+                  loading="lazy"
+                  className="aspect-[4/3] w-full cursor-zoom-in rounded-sm border border-rule bg-white object-contain p-1"
+                />
+              </button>
+            ) : (
               <img
                 src={img.src}
                 alt={img.caption || caption || 'Gallery image'}
                 loading="lazy"
-                className="aspect-[4/3] w-full cursor-zoom-in rounded-sm border border-rule bg-white object-contain p-1"
+                className="aspect-[4/3] w-full rounded-sm border border-rule bg-white object-cover"
               />
-            </a>
-          ) : (
-            <img
-              src={img.src}
-              alt={img.caption || caption || 'Gallery image'}
-              loading="lazy"
-              className="aspect-[4/3] w-full rounded-sm border border-rule bg-white object-cover"
-            />
-          )}
-          {img.caption && <p className="mt-2 text-xs leading-snug text-faint">{img.caption}</p>}
-        </div>
-      ))}
-    </div>
-    {caption && <Caption>{caption}</Caption>}
-  </figure>
-);
+            )}
+            {img.caption && <p className="mt-2 text-xs leading-snug text-faint">{img.caption}</p>}
+          </div>
+        ))}
+      </div>
+      {caption && <Caption>{caption}</Caption>}
+      {open && <Lightbox src={open.src} caption={open.caption} onClose={() => setOpen(null)} />}
+    </figure>
+  );
+};
 
 // =========================================
 // TIMELINE BLOCK
