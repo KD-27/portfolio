@@ -15,7 +15,8 @@ const SPANS = [
   'md:col-span-1',
   'md:col-span-1',
   'md:col-span-2',
-  'md:col-span-2',
+  'md:col-span-1',
+  'md:col-span-1',
 ];
 
 const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {

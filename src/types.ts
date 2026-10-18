@@ -104,6 +104,7 @@ export interface Achievement {
  *
  * 11. GALLERY BLOCK - Grid of images, e.g. test results or CAD views
  *    { type: 'gallery', images: [{ src: '/path/a.jpg', caption: 'Red' }, { src: '/path/b.jpg' }], caption: '...' }
+ *    { type: 'gallery', images: [...], contain: true }  // letterbox diagrams instead of cropping them
  */
 
 export interface FlowStep {
@@ -148,7 +149,7 @@ export type ContentBlock =
   | { type: 'equation'; content: string }
   | { type: 'flow'; steps: FlowStep[]; outputs?: FlowOutput[]; caption?: string }
   | { type: 'timeline'; entries: TimelineEntry[] }
-  | { type: 'gallery'; images: { src: string; caption?: string }[]; caption?: string };
+  | { type: 'gallery'; images: { src: string; caption?: string }[]; caption?: string; contain?: boolean };
 
 export interface ThoughtLabArticle {
   id: string;

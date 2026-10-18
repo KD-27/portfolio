@@ -1133,6 +1133,213 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
     },
 
     // =====================================================================
+    // Smart Relief Robot - autonomous line-follow, obstacle and pick-and-place robot
+    // =====================================================================
+    {
+      id: 'smart-relief-robot',
+      title: 'Smart Relief Robot',
+      subtitle: 'An autonomous robot that dodges obstacles, picks up a cube and follows 12.8 m of broken line to deliver it',
+      icon: 'Bot',
+      category: 'hardware',
+      coverImage: `${import.meta.env.BASE_URL}thought_lab/relief_robot/cover.webp`,
+      introduction: "A fully autonomous robot for a 4 m × 4 m disaster-relief arena. It starts in one corner, steers around two obstacles, finds a 3.8 cm cube in a blue pickup zone and grips it, crosses onto a black line, and follows about 12.8 m of it through curves, 45° bends, 90° corners, a diamond, branches and seven 10 cm gaps to a green EXIT zone, where it puts the cube down. I designed the chassis and gripper in SolidWorks, 3D printed them, wired everything by hand on veroboard around an Arduino Mega, and wrote the firmware. The final version completed the full run on the real 4 m × 4 m arena.",
+      tags: ['Mobile Robotics', 'Arduino Mega', 'Line Following', 'PID Control', 'Sensor Fusion', 'SolidWorks', '3D Printing'],
+      status: 'published',
+      publishedDate: 'October 2026',
+      readTime: '10 min read',
+      contentBlocks: [
+        { type: 'heading', content: 'The Brief', level: 2 },
+        { type: 'list', items: [
+          'At most 20 × 25 × 15 cm, fully autonomous, own chassis (no kits)',
+          'A 4 m × 4 m white arena with a 5 cm black line: straights, 90° and 45° turns, S-curves, hairpins, intersections and alternate paths',
+          'Seven 10 cm gaps in the line. The robot has to notice the gap, predict where the line continues and pick it up again',
+          'Two obstacles near the start, a 35–50 g cube in a blue zone, and a green EXIT zone to place it in',
+          'Everything within 10 minutes'
+        ] },
+        { type: 'callout', content: "The rule I built to: reliability over speed. Every trade-off went toward \"boringly repeatable\": slow speeds, retries and map-based fallbacks.", variant: 'info' },
+        {
+          type: 'gallery',
+          images: [
+            { src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/arena_map.webp`, caption: 'The arena: blue pickup zone top left, obstacles in red, EXIT in green' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/arena_plan.webp`, caption: 'The same arena as the code sees it, in cm. Blue is the encoder-and-gyro path to the line' }
+          ],
+          contain: true
+        },
+        { type: 'text', content: "Any line that reaches the exit is allowed. I chose the outer path and gave the robot map \"hints\" at the junctions so it stays on it: go straight at the dead-end branch and the T, take the diagonal at the top peak, and turn east before the dashed loop." },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'The Hardware', level: 2 },
+        {
+          type: 'gallery',
+          images: [
+            { src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/cover.webp`, caption: 'Full assembly (SolidWorks)' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/cad_side.webp`, caption: 'Side view: gripper on the top deck, QTR array under the front tongue' }
+          ],
+          contain: true
+        },
+        { type: 'list', items: [
+          'Arduino Mega 2560, chosen for pins rather than speed: two interrupt encoders, an 8-channel array, I²C sensors and two servos',
+          '2 × N20 6 V encoder motors on a TB6612FNG driver, 45 mm wheels, 132 mm track, ball casters',
+          'QTR-8RC reflectance array for the line, VL53L0X time-of-flight sensor for obstacles and the cube, MPU6050 gyro for heading',
+          'Two MG90S servos (lift and clamp) and a micro limit switch on the gripper',
+          '2S 1500 mAh LiPo with two LM2596 buck converters, hand-wired on veroboard with screw terminals',
+          'Two flat 3D-printed plates on brass standoffs, about Rs 20,500 of parts in total'
+        ] },
+        { type: 'heading', content: 'A Gripper Designed for Short Lifts', level: 3 },
+        { type: 'text', content: "I rejected a long four-bar gripper and a 180° overhead swing and designed my own. A lift servo at the front of the top deck swings the arm 165° down to the cube. A fixed L-shaped rear jaw acts as the backstop and the front jaw is a gate on the clamp servo. The limit switch sits on the fixed jaw. While carrying, the arm folds back over the deck. Every servo move is cosine-eased in 20 ms steps, which stopped the chassis rocking when the arm moves." },
+
+        { type: 'heading', content: 'Power and Wiring', level: 3 },
+        { type: 'text', content: "The motors run straight from the 2S pack, with firmware capping the PWM so the 6 V motors aren't over-driven. One buck gives 6 V to the servos only and the other gives 5 V to all the logic, so the spiky motor current never passes through a buck. All grounds meet at one star point. I drew every subsystem as its own wiring page and only ever wired from those, checked wire by wire." },
+        { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/wiring_power.webp`, caption: 'Power: motors on the raw 2S pack, separate 6 V servo and 5 V logic rails, one ground star', alt: 'Power distribution wiring diagram' },
+        {
+          type: 'gallery',
+          images: [
+            { src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/wiring_motors.webp`, caption: 'Motor driver and encoders' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/wiring_sensors.webp`, caption: 'QTR-8RC, VL53L0X and MPU6050' },
+            { src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/wiring_servos.webp`, caption: 'Gripper servos on the isolated 6 V rail' }
+          ],
+          caption: 'The other wiring pages. Click one to view it full size.',
+          contain: true
+        },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'The Mission, Step by Step', level: 2 },
+        {
+          type: 'flow',
+          steps: [
+            { title: 'Boot', detail: 'Print saved logs, 5 s key window, I²C bus clear, gyro and ToF checks, gyro calibration.', icon: 'Cpu', phase: 'START', tools: ['EEPROM', 'MPU6050'] },
+            { title: 'Avoid obstacles', detail: 'Drive north on encoders and gyro. The ToF spots each obstacle and the robot side-steps right around it.', icon: 'ShieldAlert', phase: 'REACH', tools: ['VL53L0X', 'Encoders'], note: 'ToF only trusted near the mapped position, with a map fallback' },
+            { title: 'Scan for the cube', detail: 'Two slow ToF sweeps, the median direction of each, averaged and clamped to within 6 cm of the map.', icon: 'Crosshair', phase: 'PICK', tools: ['VL53L0X'] },
+            { title: 'Pick', detail: 'Line the gripper up (2.5 cm right of the ToF), open, lower, creep, clamp. The limit switch confirms the grip.', icon: 'Package', phase: 'PICK', tools: ['MG90S × 2', 'Limit switch'], note: 'Up to 4 clamps 2 cm further, then 1.5 cm right / left rounds' },
+            { title: 'Find the line', detail: 'Drive east onto the black separator block, then creep along the line until it is centred under the array.', icon: 'Compass', phase: 'FOLLOW', tools: ['QTR-8RC'] },
+            { title: 'Follow the line', detail: 'PID with angle damping through curves, corners and gaps, with dead reckoning and map hints at the junctions.', icon: 'Activity', phase: 'FOLLOW', tools: ['QTR-8RC', 'Gyro', 'Encoders'] },
+            { title: 'Place', detail: 'Where the line ends near the EXIT, drive in 10 cm, lower, open, back off 8 cm and stow.', icon: 'Footprints', phase: 'DELIVER' }
+          ],
+          outputs: [
+            { label: 'Cube delivered', detail: 'line ends at EXIT', icon: 'Package' },
+            { label: 'Stop and hold', detail: 'line lost anywhere else', icon: 'ShieldAlert' }
+          ],
+          caption: 'mission_full: about 1,100 lines, built from separately proven parts'
+        },
+        { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/obstacles_pick.mp4`, caption: 'Phase 1 on the mock arena: past both obstacles, scan, pick, and onto the line', vertical: true },
+
+        { type: 'heading', content: 'Motion Control', level: 3 },
+        { type: 'text', content: "Fixed low PWM values stalled on the floor, so each wheel tracks a position instead. A target ramps along a trapezoid speed profile and the PWM is a feed-forward term plus speed and position-error terms, capped at 190 of 255. Heading comes from the gyro, with its bias measured at boot and a ×1.020 scale measured by hand (a 360° turn read 352.9°)." },
+        { type: 'equation', content: 'PWM = 40 + 0.06 · (counts/s) + 1.0 · position error   (max 190)' },
+        { type: 'text', content: "A 50 cm straight came out at 51 cm with about 1 cm of drift, and a 30 cm square finished at a heading of −360.3°." },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'Line Following: v1 to v14', level: 2 },
+        { type: 'text', content: "The steering is a PID on the line's position under the array, plus a damping term from the robot's angle to the line. That angle term is what removed the zig-zag. Speed drops from 140 mm/s on a centred line to 80 in curves. The hard parts were corners and gaps, and the cause of most of the difficulty was one geometric fact: the array is only 3 cm ahead of the axle." },
+        { type: 'list', items: [
+          'Corners: a 5 cm line already covers 6–7 of the 8 sensors, so a corner is all 8 black and then the line lost. The turn side comes from which outer sensor went black last. My first rule had this backwards in every log, and reversing it gave 5/5.',
+          'Pivoting: because the array sits so close to the axle, the corner patch is still visible at 35–60° into the spin. The robot only accepts the new line between 70° and 87°.',
+          'Gaps: the robot drives along the averaged line direction, not its heading at that instant. In the first 6 cm only a centred line ends the gap. After that any line does.',
+          'Off-centre corners look like gaps. With no line within 16 cm the robot reverses to where it lost the line and pivots toward the side it was last on.',
+          'A search never accepts the line it just came in on.'
+        ] },
+        {
+          type: 'timeline',
+          entries: [
+            {
+              label: 'v4–v8',
+              title: 'Getting corners right',
+              detail: "Corner = all 8 black. Accept the line only after 70° of turning. The outer-sensor rule was backwards in all three logs, so I reversed it and made it the primary rule.",
+              stat: { value: '5 / 5', label: 'corner sides correct after reversing the rule' },
+              added: ['All-black corner test', '70° accept window', 'Reversed outer-sensor rule']
+            },
+            {
+              label: 'v9–v11',
+              title: 'Wobble and gaps',
+              detail: "Reverse-and-pivot for corners met off-centre, the angle-to-line damping term, and gaps crossed along the averaged line direction. Any line counts after 6 cm into a gap, since the robot often exits 2 cm to one side. The first full mock-arena run passed on v11.",
+              stat: { value: '4 / 5', label: 'double-L + gap track on v10' },
+              added: ['Angle damping (KTH)', 'Gap heading', 'Backup + pivot']
+            },
+            {
+              label: 'v12–v14',
+              title: 'Locked',
+              detail: "The first corner try was narrowed to 70–87° after a false incoming line appeared at 92–101°. Then 10 runs: 5/5 perfect in the normal direction and 5/5 completed in reverse. From then on this version was frozen as line_follow_final and never touched again.",
+              stat: { value: '10 / 10', label: 'test runs, 5 each direction' },
+              added: ['line_follow_final'],
+              media: [
+                { type: 'video', src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/line_following.mp4`, caption: 'line_follow_final on the home test track: curves, 45° bends, 90° corners and a gap', vertical: true },
+                { type: 'image', src: `${import.meta.env.BASE_URL}thought_lab/relief_robot/test_track.webp`, caption: 'The test track, in black electrical tape', vertical: true }
+              ]
+            }
+          ]
+        },
+
+        { type: 'heading', content: 'Logging Made It Possible', level: 2 },
+        { type: 'text', content: "Every event (corner, gap, pivot, scan result, pick attempt, position) is written to EEPROM during the run through a small queue, so switching off mid-run loses nothing. The last few runs are kept in slots and printed at the next boot, which I captured with PuTTY session logging. A 5 s key window at boot lets me calibrate, view the sensors live, erase the logs or cancel. Most fixes in this project came straight from a log line." },
+        { type: 'quote', content: "Writing events to EEPROM during the run and reading them back turned guessing into evidence." },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'The Hardest Part: Picking Up the Cube', level: 2 },
+        { type: 'text', content: "Phase 1 was repeatable early: 5/5 runs, with end positions within about 1 cm. The pick was not. The first scan aimed at 12.4, 16.2, 20.4 and 26 cm for a cube sitting at 20 cm. I tried an arc average, then map-only aiming (the ±2 cm start error was enough to miss), then the arc midpoint (3/3 picks, then 1/3 in the next batch), and finally a two-way sweep using the median direction of each pass." },
+        { type: 'callout', content: "The root cause was the sensor, not the code. The VL53L0X sees a cone of about 25°, which at 25 cm is about 11 cm wide, three times the width of the cube. It can't place a 3.8 cm cube sideways better than a few centimetres. The fix had to be mechanical patience: creep in, clamp, check the switch, try 2 cm further, then shift 1.5 cm right or left and repeat.", variant: 'tip' },
+        { type: 'text', content: "Two other lessons from the pick. The limit switch only clicks when the cube is actually clamped, not when the jaw touches it, which is why each attempt is clamp-then-check. And the creep toward the cube once ran away past 4 m, because a \"no reading\" value of 9999 was being treated as a distance." },
+
+        { type: 'heading', content: 'Other Things That Went Wrong', level: 2 },
+        { type: 'list', items: [
+          'Both the right motor and the right encoder were reversed. I first concluded "direction 1 = forward on both motors", which was wrong, and fixed it in code.',
+          'At 4 mm off the floor the clone QTR array read whole groups of sensors as black on white. Its range is very short, and at 2 mm the readings were clean.',
+          'My first test track was black A4 paper, which is transparent to infrared and reads as white. Black electrical tape fixed it.',
+          'Running on USB power alone froze the robot at the gyro check with the I²C bus stuck. I added a bus clear and a rule: battery on first, and pull the 5 V link whenever USB is plugged in.',
+          'The robot "found" the separator block while still in the blue zone and started the line too early. The block now only counts near its mapped position.',
+          'A known 90° corner hint kept firing and spun the robot round. Each hint is now used once, and only while heading east.',
+          'The home mock arena was a 4 m × 1 m strip of shiny tiles, so the full track could never be driven end to end at home, and the shine changed the sensor readings. The first complete run of the whole course happened on the real arena.'
+        ] },
+
+        { type: 'heading', content: 'Results', level: 2 },
+        { type: 'list', items: [
+          'Phase 1 (obstacles): 5/5, end positions within about 1 cm',
+          'line_follow_final: 5/5 perfect in the normal direction, 5/5 completed in reverse',
+          'Picks across the mission_full batches: 3/3, then 1/3, then 2/3',
+          'Final version (mission_full v11): completed the full 4 m × 4 m arena. It cleared both obstacles, picked the cube, followed the line through every gap and corner to the EXIT and placed the cube'
+        ] },
+
+        { type: 'divider' },
+
+        { type: 'heading', content: 'What I Learned', level: 2 },
+        { type: 'list', items: [
+          'Log everything, on the robot. The EEPROM log was the single most useful tool in the project.',
+          'Test each subsystem alone before combining them. Bring-up found the reversed motor, the QTR height and the IR-transparent paper early.',
+          "Measure, don't trust the label. The wheels were 45 mm, not 43. The gyro needed a 1.020 scale. The ToF read 3–11 cm long.",
+          'Sensor physics sets the limit. The 3 cm look-ahead shaped all of the corner logic, and the ToF cone limits cube aiming. Software can work around a sensor but not past it.',
+          'One change per test batch, and lock a version once it works. Changing several things at once left me with "it worked 2/2 earlier, now it doesn\'t" and no idea why.',
+          'Use the known map. Trigger windows and fallbacks based on the arena map stopped false triggers and made phase 1 repeatable.'
+        ] },
+
+        { type: 'heading', content: 'Honest Limitations', level: 2 },
+        { type: 'list', items: [
+          'Cube aiming is the weak point. Pick success per batch ranged from 1/3 to 3/3, and the sideways retries that rescue it cost time.',
+          'The QTR array only looks 3 cm ahead and only works at about 2 mm off the floor, so it can scrape on board joins.',
+          'Position is dead reckoning over 12.8 m with a single position fix, and the EXIT is found by position rather than colour.',
+          'No battery-voltage compensation on the motor PWM, and the Mega is mounted upside down, so its reset button is out of reach.'
+        ] },
+
+        { type: 'heading', content: "What I'd Change", level: 2 },
+        { type: 'list', items: [
+          'A narrower distance sensor, two ToFs or a small camera for aiming, plus wider funnel-shaped jaws',
+          'Move the line array further forward and add a skid to protect it',
+          'A colour check at the EXIT on top of the position estimate',
+          'Drop the colour sensor I tested but never used. It adds weight and pins for no function'
+        ] },
+
+        { type: 'heading', content: 'Tech Stack', level: 3 },
+        { type: 'list', items: [
+          'Arduino Mega 2560 (C++), Pololu QTRSensors and VL53L0X libraries, Wire, EEPROM and Servo',
+          'SolidWorks for the chassis and gripper, FDM 3D printing, draw.io for the wiring pages',
+          'PuTTY for reading the run logs over USB'
+        ] }
+      ]
+    },
+
+    // =====================================================================
     // Seven-IMU Gait Monitor - wearable gait deviation detector
     // =====================================================================
     {
