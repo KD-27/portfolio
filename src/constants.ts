@@ -108,6 +108,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 export const PROJECTS: Project[] = [
   {
     id: '1',
+    slug: 'elissa',
     title: 'Elissa 1.0: Quadruped Inspection Robot',
     description: 'A quadruped robot with five-bar parallel leg mechanism for inspection in human-inaccessible and hazardous environments.',
     longDescription: `Elissa 1.0 addresses the challenge of inspecting environments too dangerous or confined for humans—industrial facilities, tunnels, disaster zones, and hazardous infrastructure. Traditional inspection methods risk human safety or rely on wheeled robots that struggle with obstacles and uneven surfaces.
@@ -138,6 +139,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '2',
+    slug: 'mars-rover',
     title: 'Mars Rover-Inspired Six-Wheeled Robot for Mapping & Navigation',
     description: 'A six-wheeled robot with LiDAR-based SLAM for autonomous mapping and navigation in complex environments.',
     longDescription: `Modern industrial facilities, warehouses, and complex indoor spaces present significant challenges for autonomous robots—dynamic obstacles, changing layouts, and intricate pathways demand systems that can accurately map and navigate without human intervention.
@@ -167,6 +169,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '3',
+    slug: 'rick-and-roll',
     title: 'Rick and Roll: Sweep the Table Robot',
     description: 'Award-winning autonomous wheeled robot that clears objects from an arena using a rotating hammer mechanism.',
     longDescription: `Rick and Roll was built for the KDU Faculty of Engineering "Sweep the Table Robot Contest"—a competition where robots autonomously push objects off a rectangular arena, scored on both speed and clearance rate.
@@ -190,6 +193,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '4',
+    slug: 'cad-prediction',
     title: 'Coronary Artery Disease Prediction Using ANN',
     description: 'A neural network that predicts coronary artery disease from clinical data, with 89.7% accuracy on 87 held-out patients.',
     longDescription: `Coronary Artery Disease (CAD) remains a leading cause of death worldwide, often developing silently until a critical event occurs. Early detection significantly improves outcomes, but traditional diagnostic methods can be invasive, expensive, or require specialized equipment not available in all clinical settings.
@@ -220,6 +224,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '5',
+    slug: 'automated-clothesline',
     title: 'Automated Clothesline System',
     description: 'A clothesline that senses rain or nightfall and pulls the clothes under a shelter on its own, with a switch and a phone app as overrides.',
     longDescription: `Clothes hung outside to dry get caught by sudden rain or are left out after dark, and someone has to be home to bring them in. This four-person, third-year project at KDU built a clothesline that does it by itself.

@@ -13,12 +13,13 @@ import LayoutSwitcher from './components/LayoutSwitcher';
 const ThoughtLabPage = lazy(() => import('./components/ThoughtLabPage'));
 const ThoughtLabArticlePage = lazy(() => import('./components/ThoughtLabArticlePage'));
 const HonoursPage = lazy(() => import('./components/HonoursPage'));
+const ProjectPage = lazy(() => import('./components/ProjectPage'));
 
 const PageLoading: React.FC = () => <div className="min-h-[60vh]" />;
 
-type PageView = 'home' | 'thought-lab' | 'thought-lab-article' | 'honours';
+type PageView = 'home' | 'thought-lab' | 'thought-lab-article' | 'honours' | 'project';
 
-// Parses '#thought-lab' / '#thought-lab/<articleId>' / '#honours' out of the current URL so a
+// Parses '#thought-lab' / '#thought-lab/<articleId>' / '#projects/<slug>' / '#honours' out of the current URL so a
 // direct link (or a page refresh) lands back on the view it was copied from.
 const parseHash = (): { page: PageView; articleId: string | null } => {
   const hash = window.location.hash.replace(/^#\/?/, '');
@@ -26,6 +27,8 @@ const parseHash = (): { page: PageView; articleId: string | null } => {
 
   const [section, rawArticleId] = hash.split('/');
   if (section === 'honours') return { page: 'honours', articleId: null };
+  // The project page reuses articleId to carry the project's slug
+  if (section === 'projects' && rawArticleId) return { page: 'project', articleId: decodeURIComponent(rawArticleId) };
   if (section === 'thought-lab') {
     return rawArticleId
       ? { page: 'thought-lab-article', articleId: decodeURIComponent(rawArticleId) }
@@ -58,6 +61,13 @@ const App: React.FC = () => {
     setSelectedArticleId(articleId);
     setCurrentPage('thought-lab-article');
     window.history.pushState(null, '', `#thought-lab/${encodeURIComponent(articleId)}`);
+    window.scrollTo(0, 0);
+  };
+
+  const navigateToProject = (slug: string) => {
+    setSelectedArticleId(slug);
+    setCurrentPage('project');
+    window.history.pushState(null, '', `#projects/${encodeURIComponent(slug)}`);
     window.scrollTo(0, 0);
   };
 
@@ -101,6 +111,10 @@ const App: React.FC = () => {
     switch (currentPage) {
       case 'thought-lab':
         return <ThoughtLabPage onSelectArticle={navigateToArticle} onBack={() => navigateToSection('writing')} />;
+      case 'project':
+        return selectedArticleId ? (
+          <ProjectPage slug={selectedArticleId} onBack={() => navigateToSection('projects')} onSelectProject={navigateToProject} />
+        ) : null;
       case 'honours':
         return <HonoursPage onBack={() => navigateToSection('honours')} />;
       case 'thought-lab-article':
@@ -118,7 +132,7 @@ const App: React.FC = () => {
             <main>
               <Intro />
               <Research />
-              <Projects />
+              <Projects onOpenProject={navigateToProject} />
               <Writing onOpenLab={navigateToThoughtLab} onOpenArticle={navigateToArticle} />
               <Experience />
               <Honours onOpenAll={navigateToHonours} />
