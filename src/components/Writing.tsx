@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
 import type { ThoughtLabArticle } from '../types';
@@ -28,6 +28,8 @@ const CATEGORY_LABEL: Record<NonNullable<ThoughtLabArticle['category']>, string>
   project: 'Built with AI',
 };
 const categoryOf = (a: ThoughtLabArticle) => CATEGORY_LABEL[a.category ?? 'perspective'];
+// 'October 2026' -> sortable timestamp; undated entries sort first
+const dateOf = (a: ThoughtLabArticle) => (a.publishedDate ? Date.parse(`1 ${a.publishedDate}`) : 0);
 
 // How many entries the bounded layouts show before handing over to the full Thought Lab page
 const HOME_LIMIT = 6;
@@ -64,7 +66,16 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
     .filter((group) => group.items.length);
   const variant = useVariant('lab', 'bento');
   const [filter, setFilter] = useState('All');
+  const [active, setActive] = useState(0);
+  // Oldest to newest; same-month entries keep their listed order
+  const chronological = [...published].sort((a, b) => dateOf(a) - dateOf(b));
   const railRef = useRef<HTMLDivElement>(null);
+
+  // The timeline opens scrolled to its newest end
+  useEffect(() => {
+    const rail = railRef.current;
+    if (variant === 'timeline' && rail) rail.scrollLeft = rail.scrollWidth;
+  }, [variant]);
 
   if (!published.length) return null;
 
@@ -94,7 +105,7 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
         </p>
       </div>
       <div className="flex items-center gap-4">
-        {variant === 'rail' && (
+        {(variant === 'rail' || variant === 'timeline') && (
           <div className="hidden gap-2 sm:flex">
             <button onClick={() => scrollRail(-1)} aria-label="Scroll back" className={railArrow}>
               <ChevronLeft size={16} />
@@ -320,6 +331,142 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
               </div>
             </button>
           ))}
+        </div>
+      );
+    }
+
+    // Option K: small versions of the project cards, image left and text right, four in two columns
+    if (variant === 'wide') {
+      return (
+        <div className="grid gap-4 md:grid-cols-2">
+          {published.slice(0, 4).map((a) => (
+            <button
+              key={a.id}
+              onClick={() => onOpenArticle(a.id)}
+              aria-label={`Read ${a.title}`}
+              className="group grid grid-cols-[38%_1fr] overflow-hidden rounded-lg border border-rule bg-bar text-left transition-all duration-300 hover:border-faint/50 hover:shadow-lg hover:shadow-black/5"
+            >
+              <div className="overflow-hidden bg-wash">
+                <img src={a.coverImage} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              </div>
+              <div className="flex min-h-[8.5rem] flex-col p-4 md:p-5">
+                <Kicker article={a} />
+                <h3 className="mt-1.5 font-serif text-lg leading-snug tracking-tight text-ink group-hover:text-accent transition-colors">{a.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-muted line-clamp-2">{a.subtitle}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    // Option L: titles on the left; the one under the pointer previews on the right
+    if (variant === 'preview') {
+      const list = published.slice(0, 5);
+      const current = list[Math.min(active, list.length - 1)];
+      return (
+        <div className="grid gap-6 md:grid-cols-[1fr_1.15fr] md:gap-10">
+          <ul className="divide-y divide-rule border-y border-rule">
+            {list.map((a, i) => (
+              <li key={a.id}>
+                <button
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  onClick={() => onOpenArticle(a.id)}
+                  aria-label={`Read ${a.title}`}
+                  className="group flex w-full items-center justify-between gap-4 py-4 text-left"
+                >
+                  <span className="min-w-0">
+                    <Kicker article={a} />
+                    <span className={`mt-1 block font-serif text-xl leading-snug tracking-tight transition-colors ${i === active ? 'text-accent' : 'text-ink'}`}>
+                      {a.title}
+                    </span>
+                  </span>
+                  <ArrowRight size={16} className={`flex-shrink-0 transition-all ${i === active ? 'translate-x-0 text-accent opacity-100' : '-translate-x-1 opacity-0'}`} />
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button onClick={() => onOpenArticle(current.id)} aria-label={`Read ${current.title}`} className="hidden text-left md:block">
+            <div className="overflow-hidden rounded-md bg-wash">
+              <img key={current.id} src={current.coverImage} alt="" className="aspect-[16/10] w-full object-cover animate-[fadeIn_.3s_ease]" />
+            </div>
+            <p className="mt-4 text-[15px] leading-relaxed text-muted">{current.subtitle}</p>
+          </button>
+        </div>
+      );
+    }
+
+    // Option M: one entry at a time, large, with arrows and dots; holds any number
+    if (variant === 'carousel') {
+      const current = published[active % published.length];
+      const go = (d: number) => setActive((i) => (i + d + published.length) % published.length);
+      return (
+        <div>
+          <button
+            onClick={() => onOpenArticle(current.id)}
+            aria-label={`Read ${current.title}`}
+            className="group grid w-full overflow-hidden rounded-lg border border-rule bg-bar text-left md:grid-cols-[1.4fr_1fr]"
+          >
+            <div className="overflow-hidden bg-wash">
+              <img key={current.id} src={current.coverImage} alt="" className="aspect-[16/10] w-full object-cover animate-[fadeIn_.3s_ease] md:aspect-auto md:h-full" />
+            </div>
+            <div className="flex flex-col p-6 md:min-h-[18rem] md:p-8">
+              <Kicker article={current} />
+              <h3 className="mt-2 font-serif text-2xl leading-tight tracking-tight text-ink group-hover:text-accent transition-colors md:text-3xl">{current.title}</h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-muted">{current.subtitle}</p>
+              <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-medium text-ink group-hover:text-accent transition-colors">
+                Read <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </div>
+          </button>
+          <div className="mt-5 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {published.map((a, i) => (
+                <button
+                  key={a.id}
+                  onClick={() => setActive(i)}
+                  aria-label={`Show ${a.title}`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${i === active % published.length ? 'w-6 bg-ink' : 'w-1.5 bg-faint/50'}`}
+                />
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => go(-1)} aria-label="Previous entry" className={railArrow}>
+                <ChevronLeft size={16} />
+              </button>
+              <button onClick={() => go(1)} aria-label="Next entry" className={railArrow}>
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Option N: a horizontal timeline, oldest to newest, opened at the newest end
+    if (variant === 'timeline') {
+      return (
+        <div ref={railRef} className="no-scrollbar -mx-5 overflow-x-auto px-5 md:mx-0 md:px-0">
+          <ol className="relative flex w-max min-w-full gap-5">
+            <span className="absolute inset-x-0 top-[5px] h-px bg-rule" aria-hidden />
+            {chronological.map((a, i) => {
+              const newMonth = i === 0 || chronological[i - 1].publishedDate !== a.publishedDate;
+              return (
+                <li key={a.id} className="relative w-[200px] flex-shrink-0">
+                  <span className={`relative block h-2.5 w-2.5 rounded-full ring-4 ring-paper ${newMonth ? 'bg-ink' : 'bg-faint'}`} />
+                  <p className={`mt-3 mb-3 font-mono text-[11px] uppercase tracking-[0.14em] ${newMonth ? 'text-ink' : 'text-faint'}`}>{a.publishedDate}</p>
+                  <button onClick={() => onOpenArticle(a.id)} aria-label={`Read ${a.title}`} className="group block text-left">
+                    <div className="overflow-hidden rounded-md bg-wash">
+                      <img src={a.coverImage} alt="" loading="lazy" className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                    </div>
+                    <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-faint">{categoryOf(a)}</p>
+                    <h3 className="mt-1 font-serif text-base leading-snug tracking-tight text-ink group-hover:text-accent transition-colors">{a.title}</h3>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       );
     }

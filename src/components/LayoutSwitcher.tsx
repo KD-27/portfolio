@@ -5,35 +5,16 @@ import { setVariant, useVariant } from '../utils/variant';
 // Preview-only panel for trying section layouts side by side; not meant for the live site.
 const GROUPS = [
   {
-    param: 'projects',
-    section: 'projects',
-    title: 'University projects',
-    fallback: 'features',
-    options: [
-      { id: 'features', label: 'F · All feature cards' },
-      { id: 'grid', label: 'A · Current grid' },
-      { id: 'feature', label: 'B · Feature + 2×2' },
-      { id: 'rows', label: 'C · Editorial rows' },
-      { id: 'index', label: 'D · Index list' },
-      { id: 'mosaic', label: 'E · 2 + 3 mosaic' },
-    ],
-  },
-  {
     param: 'lab',
     section: 'writing',
     title: 'Thought Lab',
     fallback: 'bento',
     options: [
-      { id: 'bento', label: 'A · Current bento' },
-      { id: 'feature', label: 'B · Feature + list' },
-      { id: 'rail', label: 'C · Scrolling rail' },
-      { id: 'grid', label: 'D · Latest 6 grid' },
-      { id: 'tabs', label: 'E · Category tabs' },
-      { id: 'magazine', label: 'F · Magazine' },
-      { id: 'index', label: 'G · Text index' },
-      { id: 'shelves', label: 'H · Category shelves' },
-      { id: 'columns', label: 'I · Category columns' },
-      { id: 'tiles', label: 'J · Dark tiles grid' },
+      { id: 'bento', label: 'Current bento' },
+      { id: 'wide', label: 'K · Small wide cards' },
+      { id: 'preview', label: 'L · List + preview' },
+      { id: 'carousel', label: 'M · Carousel' },
+      { id: 'timeline', label: 'N · Timeline' },
     ],
   },
 ];
