@@ -12,53 +12,53 @@ interface WritingProps {
 const SECONDS_PER_TILE = [100 / 15, 120 / 15];
 // On hover the rows keep moving at this fraction of their speed, under a wash of page colour
 const HOVER_SPEED = 0.3;
-// Tiles per row: enough that one copy of a row is wider than the screen, so nothing shows twice
-const TILES_PER_ROW = 8;
+// Rows alternate cover, word, cover, word. A row needs at least 3 covers (6 tiles) to be
+// wider than the visible strip, so 9 entries fill three rows without repeating any cover.
+const MIN_COVERS_PER_ROW = 3;
 const ROWS = 3;
+// Below that, the top and bottom rows share these many covers, half a row apart
+const SHARED_COVERS = 4;
 
 // Word tiles fill the rows until there are enough covers; each new entry replaces one
-const WORDS: [string, string][] = [
-  ['Ideas', 'worth testing'],
-  ['Builds', 'from the bench'],
-  ['Experiments', 'some fail, all teach'],
-  ['Write-ups', 'how it actually went'],
-  ['Open source', 'released and documented'],
-  ['Built by hand', 'soldered and debugged'],
-  ['Built with AI', 'AI as a collaborator'],
-  ['Prototypes', 'rough, then refined'],
-  ['Passion projects', 'after hours'],
-  ['Lessons learned', 'kept, not hidden'],
-  ['Robotics', 'walk, map, navigate'],
-  ['Curiosity', 'where it starts'],
-  ['Field notes', 'what the data said'],
-  ['Side quests', 'small detours'],
-  ['Tinkering', 'weekends well spent'],
-  ['Iteration', 'v1 to v5'],
-  ['Embedded', 'small chips, big jobs'],
-  ['Questions', 'more than answers'],
+// One word each, all six letters, so the tiles read evenly
+const WORDS = [
+  'Builds', 'Robots', 'Design', 'Sketch', 'Solder', 'Motion', 'Sensor', 'Signal',
+  'Wonder', 'Tinker', 'Theory', 'Models', 'Puzzle', 'Sparks', 'Trials',
 ];
 // Three quiet tones so neighbouring word tiles differ
 const WORD_TONES = ['border border-rule bg-bar text-ink', 'bg-ink text-paper', 'bg-accent-soft text-accent'];
 
-type Tile = { kind: 'cover'; src: string } | { kind: 'word'; word: string; note: string; tone: string };
+type Tile = { kind: 'cover'; src: string } | { kind: 'word'; word: string; tone: string };
 
-// Deal the covers round the rows so each appears once, then spread word tiles between them
-const buildRows = (coverImages: string[]): Tile[][] => {
+// Repeat the list until it has at least n items
+const atLeast = <T,>(items: T[], n: number) =>
+  Array.from({ length: Math.max(n, items.length) }, (_, i) => items[i % items.length]);
+
+// Which covers go in each row. From 9 entries every cover appears once. Before that, the top
+// and bottom rows (same direction, same speed) share covers half a row apart, so a cover
+// leaving one row is coming into the other; the middle row holds the rest.
+const coverRows = (covers: string[]): string[][] => {
+  if (covers.length >= ROWS * MIN_COVERS_PER_ROW) {
+    return Array.from({ length: ROWS }, (_, r) => covers.filter((_, i) => i % ROWS === r));
+  }
+  const shared = atLeast(covers.slice(0, SHARED_COVERS), SHARED_COVERS);
+  const rest = covers.slice(SHARED_COVERS);
+  const middle = atLeast(rest.length ? rest : covers, MIN_COVERS_PER_ROW);
+  const half = shared.length / 2;
+  return [shared, middle, [...shared.slice(half), ...shared.slice(0, half)]];
+};
+
+// Turn each row of covers into tiles: cover, word, cover, word, so like never sits next to like
+const buildRows = (covers: string[]): Tile[][] => {
   let wordIndex = 0;
-  return Array.from({ length: ROWS }, (_, r) => {
-    const covers = coverImages.filter((_, i) => i % ROWS === r);
-    const length = Math.max(TILES_PER_ROW, covers.length);
-    // Cover k sits at an evenly spaced slot, shifted per row so covers don't line up in columns
-    const coverAt = new Map(covers.map((src, k) => [Math.floor(((k + r * 0.4) * length) / covers.length), src]));
-    return Array.from({ length }, (_, i): Tile => {
-      const src = coverAt.get(i);
-      if (src) return { kind: 'cover', src };
-      const [word, note] = WORDS[wordIndex % WORDS.length];
+  return coverRows(covers).map((row, r) =>
+    row.flatMap((src): Tile[] => {
+      const word = WORDS[wordIndex % WORDS.length];
       const tone = WORD_TONES[(wordIndex + r) % WORD_TONES.length];
       wordIndex += 1;
-      return { kind: 'word', word, note, tone };
-    });
-  });
+      return [{ kind: 'cover', src }, { kind: 'word', word, tone }];
+    }),
+  );
 };
 
 // The home page's Thought Lab section: three rows of every entry's cover sliding past in
@@ -107,15 +107,14 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab }) => {
                 {/* Two copies back to back, so sliding by half loops seamlessly */}
                 {[...row, ...row].map((tile, i) =>
                   tile.kind === 'cover' ? (
-                    <img key={i} src={tile.src} alt="" loading="lazy" className="aspect-[16/10] w-40 flex-shrink-0 rounded-md object-cover md:w-56" />
+                    <img key={i} src={tile.src} alt="" loading="lazy" className="aspect-[16/10] w-32 flex-shrink-0 rounded-md object-cover md:w-56" />
                   ) : (
                     <div
                       key={i}
                       aria-hidden
-                      className={`flex aspect-[16/10] w-40 flex-shrink-0 flex-col justify-end rounded-md p-4 md:w-56 md:p-5 ${tile.tone}`}
+                      className={`flex aspect-[16/10] w-32 flex-shrink-0 items-center justify-center rounded-md md:w-56 ${tile.tone}`}
                     >
-                      <span className="font-serif text-xl leading-tight tracking-tight md:text-2xl">{tile.word}</span>
-                      <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] opacity-60">{tile.note}</span>
+                      <span className="font-serif text-xl tracking-tight md:text-3xl">{tile.word}</span>
                     </div>
                   ),
                 )}
