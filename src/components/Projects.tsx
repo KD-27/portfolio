@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Play, X } from 'lu
 import { PROJECTS } from '../constants';
 import type { Project } from '../types';
 import { getYoutubeEmbedUrl, isVideo, isYoutube } from '../utils/media';
+import { useVariant } from '../utils/variant';
 import Section from './Section';
 
 // Shows a still for any gallery item. Local videos show their first frame.
@@ -304,6 +305,141 @@ const Projects: React.FC = () => {
     // The rail is `relative`, so offsetLeft is measured from its own edge
     if (rail && card) rail.scrollTo({ left: card.offsetLeft - parseFloat(getComputedStyle(rail).paddingLeft), behavior: 'smooth' });
   };
+
+  const variant = useVariant('projects', 'grid');
+  const kicker = (project: Project, index: number, count = 3) =>
+    `${String(index + 1).padStart(2, '0')} · ${project.tags.slice(0, count).join(' · ')}`;
+  const readMore = (
+    <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-medium text-ink group-hover:text-accent transition-colors">
+      Read case study
+      <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+    </span>
+  );
+  const cover = (project: Project, className: string) =>
+    coverFor(project) ? (
+      <MediaThumb src={coverFor(project)!} alt={project.title} className={`w-full transition-transform duration-500 group-hover:scale-[1.02] ${className}`} />
+    ) : (
+      <div className={`w-full ${className}`} />
+    );
+  const card = (project: Project, index: number, compact = false) => (
+    <button
+      key={project.id}
+      onClick={() => setSelected(index)}
+      className="group flex w-full flex-col rounded-lg border border-rule bg-bar p-3 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-faint/50 hover:shadow-lg hover:shadow-black/5 sm:p-4"
+      aria-label={`Open project: ${project.title}`}
+    >
+      <div className="overflow-hidden rounded-md bg-wash">{cover(project, 'aspect-[16/10]')}</div>
+      <div className={`flex flex-1 flex-col pt-5 pb-3 ${compact ? 'px-1' : 'px-2 sm:px-3'}`}>
+        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{kicker(project, index, compact ? 2 : 3)}</p>
+        <h3 className={`mt-2 font-serif leading-snug tracking-tight text-ink group-hover:text-accent transition-colors ${compact ? 'text-xl' : 'text-2xl'}`}>
+          {project.title}
+        </h3>
+        <p className={`mt-2 leading-relaxed text-muted ${compact ? 'text-sm line-clamp-3' : 'text-[15px]'}`}>{project.description}</p>
+        {readMore}
+      </div>
+    </button>
+  );
+  const dialog = selected !== null && (
+    <ProjectDialog project={PROJECTS[selected]} index={selected} total={PROJECTS.length} onNavigate={navigate} onClose={close} />
+  );
+
+  // Option B: the lead project as a wide feature, the other four in a 2 × 2 grid
+  if (variant === 'feature') {
+    const [lead, ...rest] = PROJECTS;
+    return (
+      <Section id="projects" label="Projects" title="University projects">
+        <button
+          onClick={() => setSelected(0)}
+          className="group grid w-full overflow-hidden rounded-lg border border-rule bg-bar text-left transition-all duration-300 hover:border-faint/50 hover:shadow-lg hover:shadow-black/5 md:grid-cols-[1.25fr_1fr]"
+          aria-label={`Open project: ${lead.title}`}
+        >
+          <div className="overflow-hidden bg-wash">{cover(lead, 'aspect-[16/10] md:aspect-auto md:h-full')}</div>
+          <div className="flex flex-col p-6 md:p-8">
+            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{kicker(lead, 0)}</p>
+            <h3 className="mt-2 font-serif text-3xl leading-tight tracking-tight text-ink group-hover:text-accent transition-colors">{lead.title}</h3>
+            <p className="mt-3 text-[15px] leading-relaxed text-muted">{lead.description}</p>
+            {readMore}
+          </div>
+        </button>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:mt-8 lg:gap-8">{rest.map((p, i) => card(p, i + 1))}</div>
+        {dialog}
+      </Section>
+    );
+  }
+
+  // Option C: editorial rows, image and text alternating sides, no card boxes
+  if (variant === 'rows') {
+    return (
+      <Section id="projects" label="Projects" title="University projects">
+        <div className="divide-y divide-rule border-y border-rule">
+          {PROJECTS.map((project, index) => (
+            <button
+              key={project.id}
+              onClick={() => setSelected(index)}
+              className="group grid w-full items-center gap-6 py-8 text-left md:grid-cols-2 md:gap-10 md:py-10"
+              aria-label={`Open project: ${project.title}`}
+            >
+              <div className={`overflow-hidden rounded-md bg-wash ${index % 2 ? 'md:order-2' : ''}`}>{cover(project, 'aspect-[16/10]')}</div>
+              <div className="flex flex-col">
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{kicker(project, index)}</p>
+                <h3 className="mt-2 font-serif text-2xl leading-snug tracking-tight text-ink group-hover:text-accent transition-colors md:text-[1.75rem]">
+                  {project.title}
+                </h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-muted">{project.description}</p>
+                {readMore}
+              </div>
+            </button>
+          ))}
+        </div>
+        {dialog}
+      </Section>
+    );
+  }
+
+  // Option D: a numbered index, one line per project with a small thumbnail
+  if (variant === 'index') {
+    return (
+      <Section id="projects" label="Projects" title="University projects">
+        <div className="divide-y divide-rule border-y border-rule">
+          {PROJECTS.map((project, index) => (
+            <button
+              key={project.id}
+              onClick={() => setSelected(index)}
+              className="group grid w-full grid-cols-[1fr_auto] items-center gap-4 py-5 text-left transition-colors hover:bg-wash/60 sm:grid-cols-[2.5rem_1fr_9rem] sm:gap-6 sm:px-3"
+              aria-label={`Open project: ${project.title}`}
+            >
+              <span className="hidden font-mono text-sm text-faint sm:block">{String(index + 1).padStart(2, '0')}</span>
+              <div className="min-w-0">
+                <h3 className="font-serif text-xl leading-snug tracking-tight text-ink group-hover:text-accent transition-colors md:text-2xl">
+                  {project.title}
+                </h3>
+                <p className="mt-1 text-sm leading-relaxed text-muted line-clamp-2">{project.description}</p>
+                <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{project.tags.slice(0, 3).join(' · ')}</p>
+              </div>
+              <div className="w-24 overflow-hidden rounded-md bg-wash sm:w-36">{cover(project, 'aspect-[4/3]')}</div>
+            </button>
+          ))}
+        </div>
+        {dialog}
+      </Section>
+    );
+  }
+
+  // Option E: two wide cards on top, three narrower ones below
+  if (variant === 'mosaic') {
+    return (
+      <Section id="projects" label="Projects" title="University projects">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
+          {PROJECTS.map((project, index) => (
+            <div key={project.id} className={`flex ${index < 2 ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
+              {card(project, index, index >= 2)}
+            </div>
+          ))}
+        </div>
+        {dialog}
+      </Section>
+    );
+  }
 
   return (
     <Section id="projects" label="Projects" title="University projects">

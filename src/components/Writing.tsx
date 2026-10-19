@@ -1,7 +1,9 @@
-import React from 'react';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { THOUGHT_LAB_DATA } from '../constants';
+import type { ThoughtLabArticle } from '../types';
 import { CONTAINER } from '../utils/layout';
+import { useVariant } from '../utils/variant';
 
 interface WritingProps {
   onOpenLab: () => void;
@@ -19,73 +21,237 @@ const SPANS = [
   'md:col-span-1',
 ];
 
+const CATEGORY_LABEL: Record<NonNullable<ThoughtLabArticle['category']>, string> = {
+  software: 'Open source',
+  perspective: 'Perspectives',
+  hardware: 'Built by hand',
+  project: 'Built with AI',
+};
+const categoryOf = (a: ThoughtLabArticle) => CATEGORY_LABEL[a.category ?? 'perspective'];
+
+// How many entries the bounded layouts show before handing over to the full Thought Lab page
+const HOME_LIMIT = 6;
+
+const Kicker: React.FC<{ article: ThoughtLabArticle; className?: string }> = ({ article, className = '' }) => (
+  <p className={`font-mono text-[11px] uppercase tracking-[0.14em] text-faint ${className}`}>
+    {[categoryOf(article), article.readTime].filter(Boolean).join(' · ')}
+  </p>
+);
+
+// Image on top, text below: the card used by the grid, tabs and rail layouts
+const LabCard: React.FC<{ article: ThoughtLabArticle; onClick: () => void; className?: string }> = ({ article, onClick, className = '' }) => (
+  <button onClick={onClick} className={`group text-left ${className}`} aria-label={`Read ${article.title}`}>
+    <div className="overflow-hidden rounded-md bg-wash">
+      <img
+        src={article.coverImage}
+        alt=""
+        loading="lazy"
+        className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+      />
+    </div>
+    <Kicker article={article} className="mt-4" />
+    <h3 className="mt-1.5 font-serif text-xl leading-snug tracking-tight text-ink group-hover:text-accent transition-colors">
+      {article.title}
+    </h3>
+    <p className="mt-1.5 text-sm leading-relaxed text-muted line-clamp-2">{article.subtitle}</p>
+  </button>
+);
+
 const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
   const published = THOUGHT_LAB_DATA.articles.filter((a) => a.status === 'published');
+  const variant = useVariant('lab', 'bento');
+  const [filter, setFilter] = useState('All');
+  const railRef = useRef<HTMLDivElement>(null);
 
   if (!published.length) return null;
+
+  const allLink = (
+    <button
+      onClick={onOpenLab}
+      className="group inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-accent transition-colors"
+    >
+      All {published.length} entries
+      <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+    </button>
+  );
+
+  const scrollRail = (dir: number) => {
+    const rail = railRef.current;
+    if (rail) rail.scrollBy({ left: dir * rail.clientWidth * 0.8, behavior: 'smooth' });
+  };
+  const railArrow = 'rounded-full border border-rule p-2 text-ink transition-colors hover:border-ink';
+
+  const header = (
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
+      <div>
+        <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">Side projects</p>
+        <h2 className="font-serif text-3xl leading-tight tracking-tight text-ink md:text-[2.5rem]">Thought Lab</h2>
+        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
+          Ideas, builds and experiments, written up as I go.
+        </p>
+      </div>
+      <div className="flex items-center gap-4">
+        {variant === 'rail' && (
+          <div className="hidden gap-2 sm:flex">
+            <button onClick={() => scrollRail(-1)} aria-label="Scroll back" className={railArrow}>
+              <ChevronLeft size={16} />
+            </button>
+            <button onClick={() => scrollRail(1)} aria-label="Scroll forward" className={railArrow}>
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        )}
+        {allLink}
+      </div>
+    </div>
+  );
+
+  const body = () => {
+    // Option B: the newest entry large on the left, the next four as a list on the right
+    if (variant === 'feature') {
+      const [lead, ...rest] = published;
+      return (
+        <div className="grid gap-8 lg:grid-cols-[1.35fr_1fr] lg:gap-10">
+          <button onClick={() => onOpenArticle(lead.id)} className="group text-left" aria-label={`Read ${lead.title}`}>
+            <div className="overflow-hidden rounded-md bg-wash">
+              <img src={lead.coverImage} alt="" loading="lazy" className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+            </div>
+            <Kicker article={lead} className="mt-5" />
+            <h3 className="mt-2 font-serif text-3xl leading-tight tracking-tight text-ink group-hover:text-accent transition-colors">{lead.title}</h3>
+            <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-muted">{lead.subtitle}</p>
+          </button>
+          <div className="flex flex-col">
+            <ul className="divide-y divide-rule border-y border-rule">
+              {rest.slice(0, 4).map((a) => (
+                <li key={a.id}>
+                  <button onClick={() => onOpenArticle(a.id)} className="group grid w-full grid-cols-[1fr_6rem] items-center gap-4 py-4 text-left" aria-label={`Read ${a.title}`}>
+                    <div className="min-w-0">
+                      <Kicker article={a} />
+                      <h3 className="mt-1 font-serif text-lg leading-snug tracking-tight text-ink group-hover:text-accent transition-colors">{a.title}</h3>
+                    </div>
+                    <div className="overflow-hidden rounded bg-wash">
+                      <img src={a.coverImage} alt="" loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+            {rest.length > 4 && (
+              <button onClick={onOpenLab} className="group mt-4 inline-flex items-center gap-1.5 self-start text-sm text-muted hover:text-accent transition-colors">
+                {rest.length - 4} more in the Thought Lab
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Option C: one swipeable row of every entry; grows sideways instead of down
+    if (variant === 'rail') {
+      return (
+        <div ref={railRef} className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-px-5 px-5 pb-2 md:mx-0 md:px-0 md:scroll-px-0">
+          {published.map((a) => (
+            <LabCard key={a.id} article={a} onClick={() => onOpenArticle(a.id)} className="w-[78%] flex-shrink-0 snap-start sm:w-[44%] lg:w-[calc((100%-3rem)/3.3)]" />
+          ))}
+        </div>
+      );
+    }
+
+    // Option D: a plain three-column grid of the latest six, the rest on the Thought Lab page
+    if (variant === 'grid') {
+      return (
+        <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {published.slice(0, HOME_LIMIT).map((a) => (
+            <LabCard key={a.id} article={a} onClick={() => onOpenArticle(a.id)} />
+          ))}
+        </div>
+      );
+    }
+
+    // Option E: the same grid with category tabs, so each strand stays findable as it grows
+    if (variant === 'tabs') {
+      const categories = ['All', ...Object.values(CATEGORY_LABEL).filter((c) => published.some((a) => categoryOf(a) === c))];
+      const shown = published.filter((a) => filter === 'All' || categoryOf(a) === filter);
+      return (
+        <>
+          <div className="no-scrollbar -mx-5 mb-8 flex gap-2 overflow-x-auto px-5 md:mx-0 md:px-0">
+            {categories.map((c) => {
+              const count = c === 'All' ? published.length : published.filter((a) => categoryOf(a) === c).length;
+              return (
+                <button
+                  key={c}
+                  onClick={() => setFilter(c)}
+                  className={`flex-shrink-0 rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
+                    filter === c ? 'border-ink bg-ink text-paper' : 'border-rule text-muted hover:border-ink hover:text-ink'
+                  }`}
+                >
+                  {c} <span className={filter === c ? 'text-paper/60' : 'text-faint'}>{count}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {shown.slice(0, HOME_LIMIT).map((a) => (
+              <LabCard key={a.id} article={a} onClick={() => onOpenArticle(a.id)} />
+            ))}
+          </div>
+        </>
+      );
+    }
+
+    // Option A (current): bento grid
+    return (
+      <div className="grid auto-rows-[260px] gap-3 md:grid-cols-4 md:auto-rows-[230px]">
+        {published.map((article, i) => {
+          const hero = i === 0;
+          const span = SPANS[i] ?? 'md:col-span-2';
+          return (
+            <button
+              key={article.id}
+              onClick={() => onOpenArticle(article.id)}
+              aria-label={`Read ${article.title}`}
+              className={`group relative overflow-hidden rounded-md bg-wash text-left ${span}`}
+            >
+              <img
+                src={article.coverImage}
+                alt=""
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 from-15% via-black/65 via-45% to-black/0 to-80%" />
+              <ArrowUpRight
+                size={20}
+                className="absolute right-4 top-4 text-white opacity-0 transition-opacity group-hover:opacity-100"
+              />
+              <div className="absolute inset-x-0 bottom-0 p-5 [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">
+                <h3 className={`font-serif leading-tight tracking-tight text-white ${hero ? 'text-3xl md:text-[2.2rem]' : 'text-xl'}`}>
+                  {article.title}
+                </h3>
+                {/* Square tiles are too narrow for a subtitle; the hero and wide tiles get one */}
+                {(hero || span.includes('col-span-2')) && (
+                  <p className={`mt-2 text-sm leading-relaxed text-white/75 ${hero ? 'max-w-md' : 'line-clamp-1'}`}>
+                    {article.subtitle}
+                  </p>
+                )}
+                {hero && (
+                  <p className="mt-3 text-xs text-white/60">
+                    {[article.publishedDate, article.readTime].filter(Boolean).join(' · ')}
+                  </p>
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <section id="writing" className="border-t border-rule">
       <div className={`${CONTAINER} py-12 md:py-24`}>
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
-          <div>
-            <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">Side projects</p>
-            <h2 className="font-serif text-3xl leading-tight tracking-tight text-ink md:text-[2.5rem]">Thought Lab</h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
-              Ideas, builds and experiments, written up as I go.
-            </p>
-          </div>
-          <button
-            onClick={onOpenLab}
-            className="group inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-accent transition-colors"
-          >
-            All {published.length} entries
-            <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
-          </button>
-        </div>
-
-        <div className="grid auto-rows-[260px] gap-3 md:grid-cols-4 md:auto-rows-[230px]">
-          {published.map((article, i) => {
-            const hero = i === 0;
-            const span = SPANS[i] ?? 'md:col-span-2';
-            return (
-              <button
-                key={article.id}
-                onClick={() => onOpenArticle(article.id)}
-                aria-label={`Read ${article.title}`}
-                className={`group relative overflow-hidden rounded-md bg-wash text-left ${span}`}
-              >
-                <img
-                  src={article.coverImage}
-                  alt=""
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 from-15% via-black/65 via-45% to-black/0 to-80%" />
-                <ArrowUpRight
-                  size={20}
-                  className="absolute right-4 top-4 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                />
-                <div className="absolute inset-x-0 bottom-0 p-5 [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">
-                  <h3 className={`font-serif leading-tight tracking-tight text-white ${hero ? 'text-3xl md:text-[2.2rem]' : 'text-xl'}`}>
-                    {article.title}
-                  </h3>
-                  {/* Square tiles are too narrow for a subtitle; the hero and wide tiles get one */}
-                  {(hero || span.includes('col-span-2')) && (
-                    <p className={`mt-2 text-sm leading-relaxed text-white/75 ${hero ? 'max-w-md' : 'line-clamp-1'}`}>
-                      {article.subtitle}
-                    </p>
-                  )}
-                  {hero && (
-                    <p className="mt-3 text-xs text-white/60">
-                      {[article.publishedDate, article.readTime].filter(Boolean).join(' · ')}
-                    </p>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        {header}
+        {body()}
       </div>
     </section>
   );
