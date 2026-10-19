@@ -39,7 +39,7 @@ const Kicker: React.FC<{ article: ThoughtLabArticle; className?: string }> = ({ 
 );
 
 // Image on top, text below: the card used by the grid, tabs and rail layouts
-const LabCard: React.FC<{ article: ThoughtLabArticle; onClick: () => void; className?: string }> = ({ article, onClick, className = '' }) => (
+const LabCard: React.FC<{ article: ThoughtLabArticle; onClick: () => void; className?: string; large?: boolean }> = ({ article, onClick, className = '', large = false }) => (
   <button onClick={onClick} className={`group text-left ${className}`} aria-label={`Read ${article.title}`}>
     <div className="overflow-hidden rounded-md bg-wash">
       <img
@@ -50,15 +50,18 @@ const LabCard: React.FC<{ article: ThoughtLabArticle; onClick: () => void; class
       />
     </div>
     <Kicker article={article} className="mt-4" />
-    <h3 className="mt-1.5 font-serif text-xl leading-snug tracking-tight text-ink group-hover:text-accent transition-colors">
+    <h3 className={`mt-1.5 font-serif leading-snug tracking-tight text-ink group-hover:text-accent transition-colors ${large ? 'text-3xl' : 'text-xl'}`}>
       {article.title}
     </h3>
-    <p className="mt-1.5 text-sm leading-relaxed text-muted line-clamp-2">{article.subtitle}</p>
+    <p className={`mt-1.5 leading-relaxed text-muted ${large ? 'max-w-xl text-[15px]' : 'text-sm line-clamp-2'}`}>{article.subtitle}</p>
   </button>
 );
 
 const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
   const published = THOUGHT_LAB_DATA.articles.filter((a) => a.status === 'published');
+  const byCategory = Object.values(CATEGORY_LABEL)
+    .map((title) => ({ title, items: published.filter((a) => categoryOf(a) === title) }))
+    .filter((group) => group.items.length);
   const variant = useVariant('lab', 'bento');
   const [filter, setFilter] = useState('All');
   const railRef = useRef<HTMLDivElement>(null);
@@ -197,6 +200,127 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
             ))}
           </div>
         </>
+      );
+    }
+
+    // Option F: magazine front page, one big story with two beside it and three below
+    if (variant === 'magazine') {
+      const [lead, ...rest] = published;
+      return (
+        <>
+          <div className="grid gap-x-6 gap-y-10 lg:grid-cols-3">
+            <LabCard article={lead} onClick={() => onOpenArticle(lead.id)} large className="self-start lg:col-span-2 lg:row-span-2" />
+            {rest.slice(0, 2).map((a) => (
+              <LabCard key={a.id} article={a} onClick={() => onOpenArticle(a.id)} />
+            ))}
+          </div>
+          {rest.length > 2 && (
+            <div className="mt-10 grid gap-x-6 gap-y-10 border-t border-rule pt-10 sm:grid-cols-2 lg:grid-cols-3">
+              {rest.slice(2, 5).map((a) => (
+                <LabCard key={a.id} article={a} onClick={() => onOpenArticle(a.id)} />
+              ))}
+            </div>
+          )}
+        </>
+      );
+    }
+
+    // Option G: a text index, one line per entry; holds many entries in little space
+    if (variant === 'index') {
+      return (
+        <ul className="divide-y divide-rule border-y border-rule">
+          {published.slice(0, 8).map((a) => (
+            <li key={a.id}>
+              <button
+                onClick={() => onOpenArticle(a.id)}
+                className="group grid w-full items-baseline gap-1 py-5 text-left transition-colors hover:bg-wash/60 md:grid-cols-[11rem_1fr_auto] md:gap-6 md:px-3"
+                aria-label={`Read ${a.title}`}
+              >
+                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{categoryOf(a)}</span>
+                <span className="min-w-0">
+                  <span className="block font-serif text-xl leading-snug tracking-tight text-ink group-hover:text-accent transition-colors">{a.title}</span>
+                  <span className="mt-1 block text-sm leading-relaxed text-muted">{a.subtitle}</span>
+                </span>
+                <span className="hidden items-center gap-1.5 text-sm text-faint md:inline-flex">
+                  {a.readTime}
+                  <ArrowUpRight size={15} className="opacity-0 transition-opacity group-hover:opacity-100" />
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    // Option H: shelves, one row per category with its three newest entries
+    if (variant === 'shelves') {
+      return (
+        <div className="space-y-12">
+          {byCategory.map((shelf) => (
+            <div key={shelf.title}>
+              <div className="mb-5 flex items-baseline justify-between border-b border-rule pb-3">
+                <h3 className="font-serif text-2xl tracking-tight text-ink">{shelf.title}</h3>
+                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{shelf.items.length} {shelf.items.length === 1 ? 'entry' : 'entries'}</span>
+              </div>
+              <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+                {shelf.items.slice(0, 3).map((a) => (
+                  <LabCard key={a.id} article={a} onClick={() => onOpenArticle(a.id)} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // Option I: one column per category, newest entry as a card and the rest as titles
+    if (variant === 'columns') {
+      return (
+        <div className="grid gap-10 md:grid-cols-3 md:gap-8">
+          {byCategory.map((col) => (
+            <div key={col.title}>
+              <p className="mb-4 border-b border-rule pb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
+                {col.title} · {col.items.length}
+              </p>
+              <LabCard article={col.items[0]} onClick={() => onOpenArticle(col.items[0].id)} />
+              {col.items.length > 1 && (
+                <ul className="mt-5 divide-y divide-rule border-t border-rule">
+                  {col.items.slice(1, 5).map((a) => (
+                    <li key={a.id}>
+                      <button onClick={() => onOpenArticle(a.id)} className="group w-full py-3 text-left" aria-label={`Read ${a.title}`}>
+                        <span className="font-serif text-lg leading-snug tracking-tight text-ink group-hover:text-accent transition-colors">{a.title}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // Option J: the bento's dark image tiles, but in an even grid of the latest six
+    if (variant === 'tiles') {
+      return (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {published.slice(0, HOME_LIMIT).map((a) => (
+            <button
+              key={a.id}
+              onClick={() => onOpenArticle(a.id)}
+              aria-label={`Read ${a.title}`}
+              className="group relative aspect-[4/3] overflow-hidden rounded-md bg-wash text-left"
+            >
+              <img src={a.coverImage} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 from-15% via-black/60 via-45% to-black/0 to-80%" />
+              <div className="absolute inset-x-0 bottom-0 p-5 [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/60">{categoryOf(a)}</p>
+                <h3 className="mt-1.5 font-serif text-xl leading-tight tracking-tight text-white">{a.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-white/75 line-clamp-2">{a.subtitle}</p>
+              </div>
+            </button>
+          ))}
+        </div>
       );
     }
 

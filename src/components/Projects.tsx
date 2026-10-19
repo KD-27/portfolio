@@ -306,7 +306,7 @@ const Projects: React.FC = () => {
     if (rail && card) rail.scrollTo({ left: card.offsetLeft - parseFloat(getComputedStyle(rail).paddingLeft), behavior: 'smooth' });
   };
 
-  const variant = useVariant('projects', 'grid');
+  const variant = useVariant('projects', 'features');
   const kicker = (project: Project, index: number, count = 3) =>
     `${String(index + 1).padStart(2, '0')} · ${project.tags.slice(0, count).join(' · ')}`;
   const readMore = (
@@ -343,24 +343,40 @@ const Projects: React.FC = () => {
     <ProjectDialog project={PROJECTS[selected]} index={selected} total={PROJECTS.length} onNavigate={navigate} onClose={close} />
   );
 
+  // Wide card: image on the left, text on the right
+  const wide = (project: Project, index: number) => (
+    <button
+      key={project.id}
+      onClick={() => setSelected(index)}
+      className="group grid w-full overflow-hidden rounded-lg border border-rule bg-bar text-left transition-all duration-300 hover:border-faint/50 hover:shadow-lg hover:shadow-black/5 md:grid-cols-[1.25fr_1fr]"
+      aria-label={`Open project: ${project.title}`}
+    >
+      <div className="overflow-hidden bg-wash">{cover(project, 'aspect-[16/10] md:aspect-auto md:h-full')}</div>
+      <div className="flex flex-col p-6 md:p-8">
+        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{kicker(project, index)}</p>
+        <h3 className="mt-2 font-serif text-3xl leading-tight tracking-tight text-ink group-hover:text-accent transition-colors">{project.title}</h3>
+        <p className="mt-3 text-[15px] leading-relaxed text-muted">{project.description}</p>
+        {readMore}
+      </div>
+    </button>
+  );
+
+  // Option F: every project as a wide feature card, stacked
+  if (variant === 'features') {
+    return (
+      <Section id="projects" label="Projects" title="University projects">
+        <div className="grid gap-6 lg:gap-8">{PROJECTS.map((p, i) => wide(p, i))}</div>
+        {dialog}
+      </Section>
+    );
+  }
+
   // Option B: the lead project as a wide feature, the other four in a 2 × 2 grid
   if (variant === 'feature') {
     const [lead, ...rest] = PROJECTS;
     return (
       <Section id="projects" label="Projects" title="University projects">
-        <button
-          onClick={() => setSelected(0)}
-          className="group grid w-full overflow-hidden rounded-lg border border-rule bg-bar text-left transition-all duration-300 hover:border-faint/50 hover:shadow-lg hover:shadow-black/5 md:grid-cols-[1.25fr_1fr]"
-          aria-label={`Open project: ${lead.title}`}
-        >
-          <div className="overflow-hidden bg-wash">{cover(lead, 'aspect-[16/10] md:aspect-auto md:h-full')}</div>
-          <div className="flex flex-col p-6 md:p-8">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{kicker(lead, 0)}</p>
-            <h3 className="mt-2 font-serif text-3xl leading-tight tracking-tight text-ink group-hover:text-accent transition-colors">{lead.title}</h3>
-            <p className="mt-3 text-[15px] leading-relaxed text-muted">{lead.description}</p>
-            {readMore}
-          </div>
-        </button>
+        {wide(lead, 0)}
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:mt-8 lg:gap-8">{rest.map((p, i) => card(p, i + 1))}</div>
         {dialog}
       </Section>

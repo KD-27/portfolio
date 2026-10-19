@@ -8,8 +8,9 @@ const GROUPS = [
     param: 'projects',
     section: 'projects',
     title: 'University projects',
-    fallback: 'grid',
+    fallback: 'features',
     options: [
+      { id: 'features', label: 'F · All feature cards' },
       { id: 'grid', label: 'A · Current grid' },
       { id: 'feature', label: 'B · Feature + 2×2' },
       { id: 'rows', label: 'C · Editorial rows' },
@@ -28,6 +29,11 @@ const GROUPS = [
       { id: 'rail', label: 'C · Scrolling rail' },
       { id: 'grid', label: 'D · Latest 6 grid' },
       { id: 'tabs', label: 'E · Category tabs' },
+      { id: 'magazine', label: 'F · Magazine' },
+      { id: 'index', label: 'G · Text index' },
+      { id: 'shelves', label: 'H · Category shelves' },
+      { id: 'columns', label: 'I · Category columns' },
+      { id: 'tiles', label: 'J · Dark tiles grid' },
     ],
   },
 ];
