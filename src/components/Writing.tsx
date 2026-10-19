@@ -60,7 +60,12 @@ const LabCard: React.FC<{ article: ThoughtLabArticle; onClick: () => void; class
 );
 
 const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
-  const published = THOUGHT_LAB_DATA.articles.filter((a) => a.status === 'published');
+  const real = THOUGHT_LAB_DATA.articles.filter((a) => a.status === 'published');
+  // Preview only: ?count=25 pads the list with repeats to see how a layout copes with growth
+  const count = Number(useVariant('count', String(real.length)));
+  const published = Array.from({ length: Math.max(count, real.length) }, (_, i) =>
+    i < real.length ? real[i] : { ...real[i % real.length], id: `${real[i % real.length].id}--${i}` },
+  );
   const byCategory = Object.values(CATEGORY_LABEL)
     .map((title) => ({ title, items: published.filter((a) => categoryOf(a) === title) }))
     .filter((group) => group.items.length);
@@ -105,7 +110,7 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
         </p>
       </div>
       <div className="flex items-center gap-4">
-        {(variant === 'rail' || variant === 'timeline') && (
+        {['rail', 'timeline', 'wide-scroll'].includes(variant) && (
           <div className="hidden gap-2 sm:flex">
             <button onClick={() => scrollRail(-1)} aria-label="Scroll back" className={railArrow}>
               <ChevronLeft size={16} />
@@ -421,16 +426,23 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
             </div>
           </button>
           <div className="mt-5 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {published.map((a, i) => (
-                <button
-                  key={a.id}
-                  onClick={() => setActive(i)}
-                  aria-label={`Show ${a.title}`}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${i === active % published.length ? 'w-6 bg-ink' : 'w-1.5 bg-faint/50'}`}
-                />
-              ))}
-            </div>
+            {/* Dots while they fit on one line; a plain counter once there are too many */}
+            {published.length <= 10 ? (
+              <div className="flex items-center gap-2">
+                {published.map((a, i) => (
+                  <button
+                    key={a.id}
+                    onClick={() => setActive(i)}
+                    aria-label={`Show ${a.title}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${i === active % published.length ? 'w-6 bg-ink' : 'w-1.5 bg-faint/50'}`}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="font-mono text-[11px] tracking-[0.14em] text-faint">
+                {String((active % published.length) + 1).padStart(2, '0')} / {published.length}
+              </p>
+            )}
             <div className="flex gap-2">
               <button onClick={() => go(-1)} aria-label="Previous entry" className={railArrow}>
                 <ChevronLeft size={16} />
@@ -467,6 +479,70 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
               );
             })}
           </ol>
+        </div>
+      );
+    }
+
+    // Option L2: every title in a fixed-height list that scrolls; the pointed-at one previews on the right
+    if (variant === 'preview-all') {
+      const current = published[Math.min(active, published.length - 1)];
+      return (
+        <div className="grid gap-6 md:grid-cols-[1fr_1.15fr] md:gap-10">
+          <ul className="thin-scrollbar max-h-[26rem] divide-y divide-rule overflow-y-auto border-y border-rule pr-3 md:max-h-[23rem]">
+            {published.map((a, i) => (
+              <li key={a.id}>
+                <button
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  onClick={() => onOpenArticle(a.id)}
+                  aria-label={`Read ${a.title}`}
+                  className="group flex w-full items-center justify-between gap-4 py-4 text-left"
+                >
+                  <span className="min-w-0">
+                    <Kicker article={a} />
+                    <span className={`mt-1 block font-serif text-xl leading-snug tracking-tight transition-colors ${i === active ? 'md:text-accent' : 'text-ink'}`}>
+                      {a.title}
+                    </span>
+                  </span>
+                  <ArrowRight size={16} className={`flex-shrink-0 transition-all ${i === active ? 'md:translate-x-0 md:text-accent md:opacity-100' : 'md:-translate-x-1 md:opacity-0'}`} />
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button onClick={() => onOpenArticle(current.id)} aria-label={`Read ${current.title}`} className="hidden self-start text-left md:block">
+            <div className="overflow-hidden rounded-md bg-wash">
+              <img key={current.id} src={current.coverImage} alt="" className="aspect-[16/10] w-full object-cover animate-[fadeIn_.3s_ease]" />
+            </div>
+            <p className="mt-4 text-[15px] leading-relaxed text-muted">{current.subtitle}</p>
+          </button>
+        </div>
+      );
+    }
+
+    // Option K2: the small wide cards in two fixed rows that scroll sideways; new entries add columns
+    if (variant === 'wide-scroll') {
+      return (
+        <div
+          ref={railRef}
+          className="no-scrollbar -mx-5 grid snap-x snap-mandatory auto-cols-[85%] grid-flow-col grid-rows-2 gap-4 overflow-x-auto scroll-px-5 px-5 md:mx-0 md:auto-cols-[calc((100%-1rem)/2)] md:scroll-px-0 md:px-0"
+        >
+          {published.map((a) => (
+            <button
+              key={a.id}
+              onClick={() => onOpenArticle(a.id)}
+              aria-label={`Read ${a.title}`}
+              className="group grid snap-start grid-cols-[38%_1fr] overflow-hidden rounded-lg border border-rule bg-bar text-left transition-colors hover:border-faint/50"
+            >
+              <div className="overflow-hidden bg-wash">
+                <img src={a.coverImage} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              </div>
+              <div className="flex min-h-[8.5rem] flex-col p-4 md:p-5">
+                <Kicker article={a} />
+                <h3 className="mt-1.5 font-serif text-lg leading-snug tracking-tight text-ink group-hover:text-accent transition-colors">{a.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-muted line-clamp-2">{a.subtitle}</p>
+              </div>
+            </button>
+          ))}
         </div>
       );
     }

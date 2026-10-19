@@ -92,3 +92,9 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* A slim, quiet scrollbar for boxes that scroll inside the page */
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rule, #ccc) transparent;
+}

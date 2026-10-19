@@ -11,10 +11,21 @@ const GROUPS = [
     fallback: 'bento',
     options: [
       { id: 'bento', label: 'Current bento' },
-      { id: 'wide', label: 'K · Small wide cards' },
-      { id: 'preview', label: 'L · List + preview' },
+      { id: 'preview-all', label: 'L2 · Full list + preview' },
+      { id: 'wide-scroll', label: 'K2 · Two-row scroller' },
       { id: 'carousel', label: 'M · Carousel' },
       { id: 'timeline', label: 'N · Timeline' },
+    ],
+  },
+  {
+    param: 'count',
+    section: 'writing',
+    title: 'Pretend there are…',
+    fallback: '7',
+    options: [
+      { id: '7', label: '7 entries (today)' },
+      { id: '15', label: '15 entries' },
+      { id: '25', label: '25 entries' },
     ],
   },
 ];
