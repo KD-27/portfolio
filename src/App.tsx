@@ -8,7 +8,6 @@ import Experience from './components/Experience';
 import Honours from './components/Honours';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
-import LayoutSwitcher from './components/LayoutSwitcher';
 
 const ThoughtLabPage = lazy(() => import('./components/ThoughtLabPage'));
 const ThoughtLabArticlePage = lazy(() => import('./components/ThoughtLabArticlePage'));
@@ -133,13 +132,12 @@ const App: React.FC = () => {
               <Intro />
               <Research />
               <Projects onOpenProject={navigateToProject} />
-              <Writing onOpenLab={navigateToThoughtLab} onOpenArticle={navigateToArticle} />
+              <Writing onOpenLab={navigateToThoughtLab} />
               <Experience />
               <Honours onOpenAll={navigateToHonours} />
               <Skills />
             </main>
             <Contact />
-            <LayoutSwitcher />
           </>
         );
     }
