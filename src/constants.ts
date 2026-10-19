@@ -312,7 +312,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
   {
     id: 'p3',
     title: 'Development of an Automated Clothesline System',
-    abstract: 'An automated clothes-drying system integrates sensors and actuators to detect rain and darkness, automatically sheltering garments while offering manual and remote control. It reduces household inconvenience, protects clothes from weather, and demonstrates how smart technology streamlines everyday domestic tasks.',
+    abstract: 'This presents the design, fabrication, and integration of various sensors and actuators to solve the problem of drying clothes outside. This design mainly aimed to overcome challenges related to unexpected rain, getting clothes in when it’s dark, and remote controlling capabilities. Traditionally, the method of drying clothes outdoors requires manpower, to put the clothes and to get them in. This causes various inconveniences to people. The proposed system addresses many of those concerns and gives positive feedback. By detecting the change in weather and darkness, this system will automatically shelter the clothes in a sheltered area ensuring the clothes are dry and undamaged. In addition, this system possesses the ability to control remotely and manually making it user-friendly. Additionally, this will help positively with domestic chores and demonstrate the advantages of using technology to overcome day-to-day activities. Further, this paper explains the detailed methodology, conceptual designs, and results.',
     image: `${import.meta.env.BASE_URL}research_papers/Automated_Clothesline.webp`,
     link: 'https://ir.kdu.ac.lk/handle/345/7491',
     publisher: 'KDU 16th International Research Conference, poster presentation',
