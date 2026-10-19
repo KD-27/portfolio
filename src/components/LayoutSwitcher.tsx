@@ -28,6 +28,12 @@ const GROUPS = [
       { id: 'glass', label: '3 · Frosted panel' },
       { id: 'circle', label: '4 · Round badge' },
       { id: 'below', label: '5 · Line underneath' },
+      { id: 'split', label: '6 · Pill + blue arrow' },
+      { id: 'accent', label: '7 · Blue pill' },
+      { id: 'outline', label: '8 · Outline' },
+      { id: 'follow', label: '9 · Follows cursor' },
+      { id: 'corner', label: '10 · Corner tag' },
+      { id: 'serif', label: '11 · Big serif words' },
     ],
   },
   {
@@ -123,8 +129,8 @@ const LayoutSwitcher: React.FC = () => {
         {GROUPS.map((g) => (
           <Group key={g.param} {...g} />
         ))}
-        <Slider param="wash" label="Hover wash" fallback="20" min={0} max={70} step={5} />
-        <Slider param="hoverspeed" label="Hover speed (of normal)" fallback="35" min={0} max={100} step={5} />
+        <Slider param="wash" label="Hover wash" fallback="60" min={0} max={80} step={5} />
+        <Slider param="hoverspeed" label="Hover speed (of normal)" fallback="30" min={0} max={100} step={5} />
       </div>
     </div>
   );

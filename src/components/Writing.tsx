@@ -75,9 +75,11 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
   const variant = useVariant('lab', 'marquee');
   const ctaStyle = useVariant('cta', 'white');
   // Hover: how much the covers wash out (%) and how fast the rows keep moving (% of normal)
-  const hoverWash = Number(useVariant('wash', '20'));
-  const hoverSpeed = Number(useVariant('hoverspeed', '35'));
+  const hoverWash = Number(useVariant('wash', '60'));
+  const hoverSpeed = Number(useVariant('hoverspeed', '30'));
   const rowsRef = useRef<HTMLDivElement>(null);
+  // Button style 9 follows the pointer; null = resting in the centre
+  const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   // Changing playbackRate (not the duration) eases the speed without the rows jumping
   const setRowSpeed = (rate: number) =>
     rowsRef.current?.getAnimations({ subtree: true }).forEach((a) => a.updatePlaybackRate(rate));
@@ -191,7 +193,15 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
           onClick={onOpenLab}
           aria-label="Open the Thought Lab"
           onMouseEnter={() => setRowSpeed(hoverSpeed / 100)}
-          onMouseLeave={() => setRowSpeed(1)}
+          onMouseLeave={() => {
+            setRowSpeed(1);
+            setPointer(null);
+          }}
+          onMouseMove={(e) => {
+            if (ctaStyle !== 'follow') return;
+            const box = e.currentTarget.getBoundingClientRect();
+            setPointer({ x: e.clientX - box.left, y: e.clientY - box.top });
+          }}
           onFocus={() => setRowSpeed(hoverSpeed / 100)}
           onBlur={() => setRowSpeed(1)}
           className="group relative block w-full overflow-hidden py-2 text-left"
@@ -212,7 +222,7 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
             ))}
             <div
               style={{ '--wash': hoverWash / 100 } as React.CSSProperties}
-              className="pointer-events-none absolute inset-0 bg-paper opacity-0 transition-opacity duration-500 group-hover:opacity-[var(--wash)]"
+              className="pointer-events-none absolute inset-0 bg-paper opacity-0 transition-opacity duration-200 group-hover:opacity-[var(--wash)]"
             />
           </div>
           {ctaStyle === 'below' ? (
@@ -256,6 +266,56 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
                 </span>
               )}
               {ctaStyle === 'white' && cta}
+              {ctaStyle === 'split' && (
+                // Button style 6: ink pill with a separate accent arrow disc
+                <span className="inline-flex items-center gap-4 rounded-full bg-ink py-1.5 pl-6 pr-1.5 text-sm font-medium text-paper shadow-xl">
+                  Explore the Thought Lab
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white transition-transform duration-300 group-hover:rotate-[-45deg]">
+                    <ArrowRight size={16} />
+                  </span>
+                </span>
+              )}
+              {ctaStyle === 'accent' && (
+                // Button style 7: the site's blue, turning ink on hover
+                <span className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-white shadow-xl transition-colors group-hover:bg-ink">
+                  Explore the Thought Lab <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+                </span>
+              )}
+              {ctaStyle === 'outline' && (
+                // Button style 8: frosted outline that fills with ink on hover
+                <span className="inline-flex items-center gap-2 rounded-full border border-ink bg-paper/60 px-6 py-3 text-sm font-medium text-ink backdrop-blur-md transition-colors group-hover:bg-ink group-hover:text-paper">
+                  Explore the Thought Lab <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+                </span>
+              )}
+              {ctaStyle === 'follow' && (
+                // Button style 9: a round badge that follows the pointer, resting in the centre
+                <span
+                  style={pointer ? { left: pointer.x, top: pointer.y } : { left: '50%', top: '50%' }}
+                  className="absolute flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-full bg-ink text-center text-xs font-medium leading-tight text-paper shadow-xl transition-[left,top,transform] duration-150 ease-out group-hover:scale-110"
+                >
+                  <ArrowUpRight size={18} />
+                  Explore
+                  <br />
+                  the lab
+                </span>
+              )}
+              {ctaStyle === 'corner' && (
+                // Button style 10: small tag in the bottom-right corner, covers stay clear
+                <span className="absolute bottom-5 right-5 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-xs font-medium text-paper shadow-lg transition-colors group-hover:bg-accent">
+                  Explore the Thought Lab <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+                </span>
+              )}
+              {ctaStyle === 'serif' && (
+                // Button style 11: no box, large serif words on a soft glow of page colour
+                <span className="flex flex-col items-center px-16 py-10 text-center [background:radial-gradient(closest-side,var(--color-paper)_55%,transparent)]">
+                  <span className="font-serif text-3xl tracking-tight text-ink transition-colors group-hover:text-accent md:text-4xl">
+                    Explore the Thought Lab
+                  </span>
+                  <span className="mt-2 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+                    {published.length} entries <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                  </span>
+                </span>
+              )}
             </div>
           )}
         </button>
