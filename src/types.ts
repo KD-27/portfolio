@@ -1,5 +1,7 @@
 export interface Project {
   id: string;
+  /** Used in the page link: #projects/<slug> */
+  slug: string;
   title: string;
   description: string;
   longDescription?: string;

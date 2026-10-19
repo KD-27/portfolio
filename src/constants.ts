@@ -108,6 +108,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 export const PROJECTS: Project[] = [
   {
     id: '1',
+    slug: 'elissa',
     title: 'Elissa 1.0: Quadruped Inspection Robot',
     description: 'A quadruped robot with five-bar parallel leg mechanism for inspection in human-inaccessible and hazardous environments.',
     longDescription: `Elissa 1.0 addresses the challenge of inspecting environments too dangerous or confined for humans—industrial facilities, tunnels, disaster zones, and hazardous infrastructure. Traditional inspection methods risk human safety or rely on wheeled robots that struggle with obstacles and uneven surfaces.
@@ -138,6 +139,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '2',
+    slug: 'mars-rover',
     title: 'Mars Rover-Inspired Six-Wheeled Robot for Mapping & Navigation',
     description: 'A six-wheeled robot with LiDAR-based SLAM for autonomous mapping and navigation in complex environments.',
     longDescription: `Modern industrial facilities, warehouses, and complex indoor spaces present significant challenges for autonomous robots—dynamic obstacles, changing layouts, and intricate pathways demand systems that can accurately map and navigate without human intervention.
@@ -167,6 +169,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '3',
+    slug: 'rick-and-roll',
     title: 'Rick and Roll: Sweep the Table Robot',
     description: 'Award-winning autonomous wheeled robot that clears objects from an arena using a rotating hammer mechanism.',
     longDescription: `Rick and Roll was built for the KDU Faculty of Engineering "Sweep the Table Robot Contest"—a competition where robots autonomously push objects off a rectangular arena, scored on both speed and clearance rate.
@@ -190,6 +193,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '4',
+    slug: 'cad-prediction',
     title: 'Coronary Artery Disease Prediction Using ANN',
     description: 'A neural network that predicts coronary artery disease from clinical data, with 89.7% accuracy on 87 held-out patients.',
     longDescription: `Coronary Artery Disease (CAD) remains a leading cause of death worldwide, often developing silently until a critical event occurs. Early detection significantly improves outcomes, but traditional diagnostic methods can be invasive, expensive, or require specialized equipment not available in all clinical settings.
@@ -220,6 +224,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '5',
+    slug: 'automated-clothesline',
     title: 'Automated Clothesline System',
     description: 'A clothesline that senses rain or nightfall and pulls the clothes under a shelter on its own, with a switch and a phone app as overrides.',
     longDescription: `Clothes hung outside to dry get caught by sudden rain or are left out after dark, and someone has to be home to bring them in. This four-person, third-year project at KDU built a clothesline that does it by itself.
@@ -289,7 +294,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
   {
     id: 'p2',
     title: 'Prediction of Coronary Artery Disease Using Artificial Neural Network',
-    abstract: 'An ANN for early CAD diagnosis achieved ~90% accuracy using SMOTE, expert-guided feature selection, optimized hyperparameters, and stratified k-fold validation. The model showed strong reliability and clinical relevance, outperforming conventional machine-learning methods',
+    abstract: 'Machine learning techniques offer powerful tools for early prediction and diagnosis of Coronary Artery Disease (CAD), a major cause of global mortality, by analyzing complex medical data to recognize patterns that conventional methods might miss, potentially leading to timely interventions and reduced death rates. The objective of this study is to model an Artificial Neural Network for CAD diagnosis, achieving an accuracy of roughly 90%. The Synthetic Minority Over-sampling Technique was employed to address the problem of data imbalance. Leveraging the expertise of a cardiologist, we tuned the feature search to include key clinical characteristics only, such as basic demographics, clinical history, and diagnostic test results. This approach made the interpretations more feasible, and at the same time, improved the predictive efficiency of the model. Optimized tuning of the hyper parameters was done while designing the Artificial Neural Network and the use of dropout layers as an anti- over-fitting technique and batch normalization technique for stabilizing the training phase. To support the created model cross validation at a lower level named stratified k-fold cross validation was done. The model was accurate and reliable compared to conventional machine learning methods. Moreover, it was beneficial to combine clinical knowledge in qualitative feature reduction with the presented technical approach because it led to a more clinically pertinent and accurate model.',
     image: `${import.meta.env.BASE_URL}research_papers/CAD_Diagnosis.webp`,
     link: 'https://doi.org/10.64701/irc2024/345/8770',
     publisher: 'KDU 17th International Research Conference, oral presentation',
@@ -307,7 +312,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
   {
     id: 'p3',
     title: 'Development of an Automated Clothesline System',
-    abstract: 'An automated clothes-drying system integrates sensors and actuators to detect rain and darkness, automatically sheltering garments while offering manual and remote control. It reduces household inconvenience, protects clothes from weather, and demonstrates how smart technology streamlines everyday domestic tasks.',
+    abstract: 'This presents the design, fabrication, and integration of various sensors and actuators to solve the problem of drying clothes outside. This design mainly aimed to overcome challenges related to unexpected rain, getting clothes in when it’s dark, and remote controlling capabilities. Traditionally, the method of drying clothes outdoors requires manpower, to put the clothes and to get them in. This causes various inconveniences to people. The proposed system addresses many of those concerns and gives positive feedback. By detecting the change in weather and darkness, this system will automatically shelter the clothes in a sheltered area ensuring the clothes are dry and undamaged. In addition, this system possesses the ability to control remotely and manually making it user-friendly. Additionally, this will help positively with domestic chores and demonstrate the advantages of using technology to overcome day-to-day activities. Further, this paper explains the detailed methodology, conceptual designs, and results.',
     image: `${import.meta.env.BASE_URL}research_papers/Automated_Clothesline.webp`,
     link: 'https://ir.kdu.ac.lk/handle/345/7491',
     publisher: 'KDU 16th International Research Conference, poster presentation',

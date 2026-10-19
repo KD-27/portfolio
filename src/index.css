@@ -87,3 +87,8 @@ body {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
+/* Thought Lab rows on the home page: each row holds two copies, so sliding by half loops */
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
