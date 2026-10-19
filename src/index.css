@@ -98,3 +98,11 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--color-rule, #ccc) transparent;
 }
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes drift {
+  to { transform: translateY(-50%); }
+}

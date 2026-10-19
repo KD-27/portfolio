@@ -31,6 +31,9 @@ const categoryOf = (a: ThoughtLabArticle) => CATEGORY_LABEL[a.category ?? 'persp
 // 'October 2026' -> sortable timestamp; undated entries sort first
 const dateOf = (a: ThoughtLabArticle) => (a.publishedDate ? Date.parse(`1 ${a.publishedDate}`) : 0);
 
+// Layouts that are one big clickable picture; they carry their own link to the Thought Lab
+const PICTURE_VARIANTS = ['wall', 'marquee', 'collage'];
+
 // How many entries the bounded layouts show before handing over to the full Thought Lab page
 const HOME_LIMIT = 6;
 
@@ -120,12 +123,121 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
             </button>
           </div>
         )}
-        {allLink}
+        {!PICTURE_VARIANTS.includes(variant) && allLink}
       </div>
     </div>
   );
 
   const body = () => {
+    // Options P–R: one composed picture of every cover that opens the Thought Lab page.
+    // The frame has a fixed size; more entries just mean more tiles inside it.
+    const covers = published.map((a) => a.coverImage);
+    // Repeat the covers until there are at least n tiles, offset so neighbours differ
+    const fill = (n: number, offset = 0) =>
+      Array.from({ length: Math.max(n, covers.length) }, (_, i) => covers[(i + offset) % covers.length]);
+    const strands = byCategory.map((g) => g.title).join(' · ');
+    const cta = (
+      <span className="inline-flex items-center gap-2 rounded-full bg-paper px-5 py-2.5 text-sm font-medium text-ink shadow-lg transition-colors group-hover:bg-accent group-hover:text-paper">
+        Explore the Thought Lab <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+      </span>
+    );
+
+    // Option P: a dark, tilted wall of covers drifting slowly upward
+    if (variant === 'wall') {
+      const tiles = fill(24);
+      return (
+        <button
+          onClick={onOpenLab}
+          aria-label="Open the Thought Lab"
+          className="group relative block h-[380px] w-full overflow-hidden rounded-xl bg-[#0d0d10] text-left md:h-[460px]"
+        >
+          <div className="absolute inset-0 [perspective:1400px]">
+            <div className="absolute left-1/2 top-1/2 w-[150%] [transform:translate(-50%,-50%)_rotateX(32deg)_rotateZ(-16deg)] md:w-[120%]">
+              <div className="grid grid-cols-4 gap-3 motion-safe:animate-[drift_60s_linear_infinite] md:grid-cols-6 md:gap-4">
+                {[...tiles, ...tiles].map((src, i) => (
+                  <img key={i} src={src} alt="" loading="lazy" className="aspect-[16/10] w-full rounded-md object-cover opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
+          <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-5 p-6 md:p-10">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/60">{published.length} entries</p>
+              <p className="mt-2 max-w-md font-serif text-2xl leading-snug tracking-tight text-white md:text-3xl">{strands}</p>
+            </div>
+            {cta}
+          </div>
+        </button>
+      );
+    }
+
+    // Option Q: three light rows of covers sliding past in opposite directions
+    if (variant === 'marquee') {
+      const rows = [0, 2, 4].map((offset) => fill(8, offset));
+      return (
+        <button
+          onClick={onOpenLab}
+          aria-label="Open the Thought Lab"
+          className="group relative block w-full overflow-hidden rounded-xl border border-rule bg-bar py-5 text-left"
+        >
+          <div className="space-y-4 [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+            {rows.map((row, r) => (
+              <div
+                key={r}
+                className={`flex w-max gap-4 group-hover:[animation-play-state:paused] ${
+                  r % 2 ? 'motion-safe:animate-[marquee_70s_linear_infinite_reverse]' : 'motion-safe:animate-[marquee_60s_linear_infinite]'
+                }`}
+              >
+                {[...row, ...row].map((src, i) => (
+                  <img key={i} src={src} alt="" loading="lazy" className="aspect-[16/10] w-40 flex-shrink-0 rounded-md object-cover md:w-56" />
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-paper/0 transition-colors group-hover:bg-paper/20">
+            {cta}
+          </div>
+        </button>
+      );
+    }
+
+    // Option R: a still collage, columns nudged up and down, with the summary beside it
+    if (variant === 'collage') {
+      const cols = 5;
+      const tiles = fill(cols * 6);
+      return (
+        <button
+          onClick={onOpenLab}
+          aria-label="Open the Thought Lab"
+          className="group grid w-full overflow-hidden rounded-xl border border-rule bg-bar text-left md:grid-cols-[1fr_1.6fr]"
+        >
+          <div className="flex flex-col justify-center gap-4 p-6 md:p-10">
+            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{published.length} entries</p>
+            <p className="font-serif text-2xl leading-snug tracking-tight text-ink md:text-3xl">{strands}</p>
+            <p className="text-[15px] leading-relaxed text-muted">Every build, write-up and experiment, in one place.</p>
+            <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-ink group-hover:text-accent transition-colors">
+              Explore the Thought Lab <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </div>
+          <div className="relative h-[300px] overflow-hidden md:h-[400px] [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]">
+            <div className="absolute inset-x-4 -top-16 grid grid-cols-5 gap-3">
+              {Array.from({ length: cols }, (_, c) => (
+                <div
+                  key={c}
+                  className={`flex flex-col gap-3 transition-transform duration-700 ${c % 2 ? 'translate-y-10 group-hover:translate-y-4' : 'group-hover:translate-y-6'}`}
+                >
+                  {tiles.filter((_, i) => i % cols === c).map((src, i) => (
+                    <img key={i} src={src} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-md object-cover shadow-sm" />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </button>
+      );
+    }
+
     // Option B: the newest entry large on the left, the next four as a list on the right
     if (variant === 'feature') {
       const [lead, ...rest] = published;

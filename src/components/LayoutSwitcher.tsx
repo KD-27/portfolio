@@ -11,10 +11,10 @@ const GROUPS = [
     fallback: 'bento',
     options: [
       { id: 'bento', label: 'Current bento' },
+      { id: 'wall', label: 'P · Tilted wall' },
+      { id: 'marquee', label: 'Q · Sliding rows' },
+      { id: 'collage', label: 'R · Collage' },
       { id: 'preview-all', label: 'L2 · Full list + preview' },
-      { id: 'wide-scroll', label: 'K2 · Two-row scroller' },
-      { id: 'carousel', label: 'M · Carousel' },
-      { id: 'timeline', label: 'N · Timeline' },
     ],
   },
   {
