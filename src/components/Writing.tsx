@@ -172,21 +172,21 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
       );
     }
 
-    // Option Q: three light rows of covers sliding past in opposite directions
+    // Option Q: three rows of covers sliding slowly past in opposite directions, on the page background
     if (variant === 'marquee') {
       const rows = [0, 2, 4].map((offset) => fill(8, offset));
       return (
         <button
           onClick={onOpenLab}
           aria-label="Open the Thought Lab"
-          className="group relative block w-full overflow-hidden rounded-xl border border-rule bg-bar py-5 text-left"
+          className="group relative block w-full overflow-hidden py-2 text-left"
         >
           <div className="space-y-4 [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
             {rows.map((row, r) => (
               <div
                 key={r}
                 className={`flex w-max gap-4 group-hover:[animation-play-state:paused] ${
-                  r % 2 ? 'motion-safe:animate-[marquee_70s_linear_infinite_reverse]' : 'motion-safe:animate-[marquee_60s_linear_infinite]'
+                  r % 2 ? 'motion-safe:animate-[marquee_120s_linear_infinite_reverse]' : 'motion-safe:animate-[marquee_100s_linear_infinite]'
                 }`}
               >
                 {[...row, ...row].map((src, i) => (
