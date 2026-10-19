@@ -175,6 +175,9 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
     // Option Q: three rows of covers sliding slowly past in opposite directions, on the page background
     if (variant === 'marquee') {
       const rows = [0, 2, 4].map((offset) => fill(8, offset));
+      // Seconds per cover, so the rows keep the same pace however many entries there are
+      // (tuned by eye at 15 entries: 100 s and 120 s per loop)
+      const secondsPerTile = [100 / 15, 120 / 15];
       return (
         <button
           onClick={onOpenLab}
@@ -185,6 +188,7 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
             {rows.map((row, r) => (
               <div
                 key={r}
+                style={{ animationDuration: `${row.length * secondsPerTile[r % 2]}s` }}
                 className={`flex w-max gap-4 group-hover:[animation-play-state:paused] ${
                   r % 2 ? 'motion-safe:animate-[marquee_120s_linear_infinite_reverse]' : 'motion-safe:animate-[marquee_100s_linear_infinite]'
                 }`}
