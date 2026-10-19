@@ -72,7 +72,15 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
   const byCategory = Object.values(CATEGORY_LABEL)
     .map((title) => ({ title, items: published.filter((a) => categoryOf(a) === title) }))
     .filter((group) => group.items.length);
-  const variant = useVariant('lab', 'bento');
+  const variant = useVariant('lab', 'marquee');
+  const ctaStyle = useVariant('cta', 'white');
+  // Hover: how much the covers wash out (%) and how fast the rows keep moving (% of normal)
+  const hoverWash = Number(useVariant('wash', '20'));
+  const hoverSpeed = Number(useVariant('hoverspeed', '35'));
+  const rowsRef = useRef<HTMLDivElement>(null);
+  // Changing playbackRate (not the duration) eases the speed without the rows jumping
+  const setRowSpeed = (rate: number) =>
+    rowsRef.current?.getAnimations({ subtree: true }).forEach((a) => a.updatePlaybackRate(rate));
   const [filter, setFilter] = useState('All');
   const [active, setActive] = useState(0);
   // Oldest to newest; same-month entries keep their listed order
@@ -182,14 +190,18 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
         <button
           onClick={onOpenLab}
           aria-label="Open the Thought Lab"
+          onMouseEnter={() => setRowSpeed(hoverSpeed / 100)}
+          onMouseLeave={() => setRowSpeed(1)}
+          onFocus={() => setRowSpeed(hoverSpeed / 100)}
+          onBlur={() => setRowSpeed(1)}
           className="group relative block w-full overflow-hidden py-2 text-left"
         >
-          <div className="space-y-4 [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+          <div ref={rowsRef} className="relative space-y-4 [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
             {rows.map((row, r) => (
               <div
                 key={r}
                 style={{ animationDuration: `${row.length * secondsPerTile[r % 2]}s` }}
-                className={`flex w-max gap-4 group-hover:[animation-play-state:paused] ${
+                className={`flex w-max gap-4 ${
                   r % 2 ? 'motion-safe:animate-[marquee_120s_linear_infinite_reverse]' : 'motion-safe:animate-[marquee_100s_linear_infinite]'
                 }`}
               >
@@ -198,10 +210,54 @@ const Writing: React.FC<WritingProps> = ({ onOpenLab, onOpenArticle }) => {
                 ))}
               </div>
             ))}
+            <div
+              style={{ '--wash': hoverWash / 100 } as React.CSSProperties}
+              className="pointer-events-none absolute inset-0 bg-paper opacity-0 transition-opacity duration-500 group-hover:opacity-[var(--wash)]"
+            />
           </div>
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-paper/0 transition-colors group-hover:bg-paper/20">
-            {cta}
-          </div>
+          {ctaStyle === 'below' ? (
+            // Button style 5: nothing over the covers; a plain line underneath
+            <div className="mt-6 flex flex-col items-start gap-3 border-t border-rule pt-5 sm:flex-row sm:items-center sm:justify-between">
+              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">{published.length} entries · {strands}</span>
+              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink group-hover:text-accent transition-colors">
+                Explore the Thought Lab <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </div>
+          ) : (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              {ctaStyle === 'dark' && (
+                // Button style 2: solid ink pill with the entry count
+                <span className="inline-flex items-center gap-3 rounded-full bg-ink py-2 pl-6 pr-2 text-sm font-medium text-paper shadow-xl transition-colors group-hover:bg-accent">
+                  Explore the Thought Lab
+                  <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-full bg-paper/15 px-2 font-mono text-xs">{published.length}</span>
+                </span>
+              )}
+              {ctaStyle === 'glass' && (
+                // Button style 3: frosted panel with a title and the strands
+                <span className="flex flex-col items-center gap-1 rounded-2xl border border-white/40 bg-paper/70 px-8 py-5 text-center shadow-xl backdrop-blur-md transition-transform duration-300 group-hover:scale-[1.03]">
+                  <span className="font-serif text-2xl tracking-tight text-ink">Explore the Thought Lab</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">{published.length} entries · {strands}</span>
+                </span>
+              )}
+              {ctaStyle === 'circle' && (
+                // Button style 4: round badge, its ring of text turning slowly
+                <span className="relative flex h-32 w-32 items-center justify-center rounded-full bg-ink text-paper shadow-xl transition-colors group-hover:bg-accent md:h-36 md:w-36">
+                  <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full motion-safe:animate-[spin_24s_linear_infinite]" aria-hidden>
+                    <defs>
+                      <path id="cta-ring" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0" />
+                    </defs>
+                    <text className="fill-current font-mono text-[8px] uppercase">
+                      <textPath href="#cta-ring" textLength="228" lengthAdjust="spacing">
+                        Explore the Thought Lab · Explore the Thought Lab ·
+                      </textPath>
+                    </text>
+                  </svg>
+                  <ArrowUpRight size={26} className="transition-transform duration-300 group-hover:rotate-45" />
+                </span>
+              )}
+              {ctaStyle === 'white' && cta}
+            </div>
+          )}
         </button>
       );
     }

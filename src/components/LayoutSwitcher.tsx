@@ -8,13 +8,26 @@ const GROUPS = [
     param: 'lab',
     section: 'writing',
     title: 'Thought Lab',
-    fallback: 'bento',
+    fallback: 'marquee',
     options: [
       { id: 'bento', label: 'Current bento' },
       { id: 'wall', label: 'P · Tilted wall' },
       { id: 'marquee', label: 'Q · Sliding rows' },
       { id: 'collage', label: 'R · Collage' },
       { id: 'preview-all', label: 'L2 · Full list + preview' },
+    ],
+  },
+  {
+    param: 'cta',
+    section: 'writing',
+    title: 'Button (sliding rows)',
+    fallback: 'white',
+    options: [
+      { id: 'white', label: '1 · White pill (now)' },
+      { id: 'dark', label: '2 · Dark pill + count' },
+      { id: 'glass', label: '3 · Frosted panel' },
+      { id: 'circle', label: '4 · Round badge' },
+      { id: 'below', label: '5 · Line underneath' },
     ],
   },
   {
@@ -55,6 +68,35 @@ const Group: React.FC<(typeof GROUPS)[number]> = ({ param, section, title, fallb
   );
 };
 
+// Number setting saved in the URL like the layout choices, e.g. ?wash=20
+const Slider: React.FC<{ param: string; label: string; fallback: string; min: number; max: number; step: number }> = ({
+  param,
+  label,
+  fallback,
+  min,
+  max,
+  step,
+}) => {
+  const value = useVariant(param, fallback);
+  return (
+    <label className="block">
+      <span className="mb-1.5 flex justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
+        {label}
+        <span className="text-ink">{value}%</span>
+      </span>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => setVariant(param, e.target.value)}
+        className="w-full accent-[var(--color-accent)]"
+      />
+    </label>
+  );
+};
+
 const LayoutSwitcher: React.FC = () => {
   const [open, setOpen] = useState(true);
 
@@ -81,6 +123,8 @@ const LayoutSwitcher: React.FC = () => {
         {GROUPS.map((g) => (
           <Group key={g.param} {...g} />
         ))}
+        <Slider param="wash" label="Hover wash" fallback="20" min={0} max={70} step={5} />
+        <Slider param="hoverspeed" label="Hover speed (of normal)" fallback="35" min={0} max={100} step={5} />
       </div>
     </div>
   );
