@@ -217,6 +217,31 @@ export const PROJECTS: Project[] = [
       '89.66% validation accuracy (78 of 87 patients), 87.32% F1 score',
       'Adam optimizer with early stopping to prevent overfitting'
     ]
+  },
+  {
+    id: '5',
+    title: 'Automated Clothesline System',
+    description: 'A clothesline that senses rain or nightfall and pulls the clothes under a shelter on its own, with a switch and a phone app as overrides.',
+    longDescription: `Clothes hung outside to dry get caught by sudden rain or are left out after dark, and someone has to be home to bring them in. This four-person, third-year project at KDU built a clothesline that does it by itself.
+
+    An Arduino Uno watches a YL-83 rain sensor and an LDR. When either one detects rain or darkness, it drives a DC gear motor through an L298 driver, and a gear-and-belt mechanism slides the 15 roller hangers along aluminium railings under a polymer shelter. An ultrasonic sensor tracks a sheet that travels with the clothes and stops the motor at the end of the rail, so the hangers never overrun. A manual switch and an HC-05 Bluetooth link to a phone app can move the clothes in or out regardless of the weather.
+
+    I built the sensor and control setup; the wooden frame and shelter were fabricated by a teammate. The motor was sized from a friction model of 15 hangers carrying 0.4 kg of wet clothing each, which needs about 36 N of pull and 2.15 N·m at the 6 cm pulley. The work was presented as a poster at the KDU 16th International Research Conference in 2023.`,
+    tags: ['Arduino', 'Sensors', 'Bluetooth', 'Motor Control', 'Home Automation'],
+    gallery: [
+      `${import.meta.env.BASE_URL}projects/ID5/clothesline_photo.webp`,
+      `${import.meta.env.BASE_URL}projects/ID5/clothesline_demo.mp4`,
+      `${import.meta.env.BASE_URL}projects/ID5/final_design.webp`,
+      `${import.meta.env.BASE_URL}projects/ID5/control_system.webp`,
+    ],
+    details: [
+      'YL-83 rain sensor and LDR trigger retraction on rain or nightfall',
+      'Arduino Uno driving a DC gear motor through an L298 driver and a gear-and-belt drive',
+      'Ultrasonic end-of-travel stop so the hangers never overrun the rail',
+      'Manual switch and HC-05 Bluetooth phone app override the sensors',
+      'Motor sized for 15 hangers at 0.4 kg wet load: about 36 N and 2.15 N·m',
+      'Over 10 days of testing it brought the clothes in between 5:45 and 6:45 PM; the retract took 5.4 s on average over 20 runs'
+    ]
   }
 ];
 
