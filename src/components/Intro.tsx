@@ -62,6 +62,7 @@ const Intro: React.FC = () => {
           <p className="mt-5 font-serif text-[1.35rem] leading-snug text-ink/80 md:mt-6 md:text-[1.75rem]">
             {HERO_DATA.tagline}
           </p>
+          <p className="mt-3 text-[15px] font-medium text-accent md:text-base">{HERO_DATA.seeking}</p>
 
           <div className="mt-6 flex items-center gap-5 border-y border-rule py-3.5 md:hidden">
             <dl className="flex items-start gap-5">

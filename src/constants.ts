@@ -36,6 +36,8 @@ export const HERO_DATA = {
   affiliation: "Hype Insight Global",
   interests: ['Motion planning', 'Model predictive control', 'Perception-aware navigation', 'State estimation & SLAM', 'Multi-robot coordination'],
   tagline: "I build robots that walk, map and navigate.",
+  /** The PhD ask, shown under the tagline and in the contact footer */
+  seeking: "Seeking a funded PhD position in robot motion planning and navigation.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };
 
@@ -789,7 +791,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         {
           type: 'list',
           items: [
-            'Problem: grid planners such as A* expand the whole map even when the straight-line path is almost clear.',
+            'Problem: grid planners such as A* search cell by cell, so their work grows with map resolution and path length even when the straight line to the goal is almost clear.',
             'Built: a planner that starts from the straight line and pushes waypoints sideways only where the path hits an obstacle, released as an open-source ROS 2 Nav2 global planner in C++.',
             'Result: runs as a Nav2 global planner in ROS 2 Humble and has been tested on a 1.8 m-tall mobile robot. Compared qualitatively with A*/Dijkstra and potential fields below; no quantitative benchmark yet.',
             'Limitation: can fail in narrow corridors and around concave obstacles, paths are not globally optimal, and smoothing can clip obstacle edges.'
@@ -810,7 +812,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
             'Repeat until no failures remain.'
           ]
         },
-        { type: 'text', content: "This is not laziness as a shortcut. It is laziness as a design principle: spend zero computation on paths that might never be needed, and spend targeted computation only where the environment demands it. The result is a planner that is fast in open environments, highly interpretable, and whose behavior you can trace step by step without inspecting a heatmap." },
+        { type: 'text', content: "This is not laziness as a shortcut. It is laziness as a design principle: spend zero computation on paths that might never be needed, and spend targeted computation only where the environment demands it. The aim is a planner that is cheap in open environments, highly interpretable, and whose behavior you can trace step by step without inspecting a heatmap." },
 
         { type: 'heading', content: "Physical Foundation — Coulomb's Law", level: 2 },
         { type: 'text', content: "The correction mechanism is borrowed from electrostatics. Coulomb's Law describes the force between two point charges:" },
@@ -830,8 +832,8 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         {
           type: 'list',
           items: [
-            'Obstacle → Negative point charge (repeller)',
-            'Blocked waypoint → Positive test particle (repelled)',
+            'Obstacle → Point charge (source of repulsion)',
+            'Blocked waypoint → Test charge of the same sign (like charges repel, so it is pushed away)',
             'r → Distance from waypoint to obstacle boundary',
             'F → Displacement force applied to push waypoint clear'
           ]
@@ -940,23 +942,23 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         {
           type: 'list',
           items: [
-            'Search space — LCP: path segments only · A*/Dijkstra: full grid · Potential Fields: full grid',
-            'Computation on empty paths — LCP: minimal · A*/Dijkstra: full grid expansion · Potential Fields: full field computation',
-            'Local minima — LCP: not susceptible (perpendicular push) · A*/Dijkstra: not susceptible · Potential Fields: susceptible',
+            'Search space — LCP: path segments only · A*/Dijkstra: the grid graph, explored node by node · Potential Fields: a field defined over the grid',
+            'Computation on a clear path — LCP: one collision check along the straight line · A*: expands nodes mainly along the line with a good heuristic, more with a weak one · Dijkstra: expands outward in all directions · Potential Fields: field evaluated along the descent',
+            'Getting stuck — LCP: no potential to fall into, but a push can fail to clear a waypoint (narrow corridors, concave obstacles) · A*/Dijkstra: complete on the grid, so they find a path if one exists · Potential Fields: can stall in local minima',
             'Path interpretability — LCP: very high · A*/Dijkstra: moderate · Potential Fields: low',
             'Narrow corridors — LCP: struggles · A*/Dijkstra: handles well · Potential Fields: struggles',
-            'Dynamic replanning speed — LCP: fast (short paths re-plan quickly) · A*/Dijkstra: slow (re-expands grid) · Potential Fields: moderate',
+            'Replanning cost — LCP: not yet measured · A*/Dijkstra: replan from scratch, while incremental variants such as D* Lite reuse earlier work · Potential Fields: not measured here',
             'Optimality — LCP: not globally optimal · A*/Dijkstra: globally optimal (with admissible heuristic) · Potential Fields: not optimal',
             'Determinism — LCP: full (no randomness) · A*/Dijkstra: full · Potential Fields: full'
           ]
         },
-        { type: 'text', content: "LCP occupies a distinct niche: it is not trying to compete with A* on optimality. It trades global optimality for speed, interpretability, and computational locality. In open environments with scattered obstacles — which describes most outdoor robotics and warehouse navigation scenarios — LCP's straight-line-first assumption is correct most of the time, and corrections are cheap." },
+        { type: 'text', content: "LCP occupies a distinct niche: it is not trying to compete with A* on optimality. It trades global optimality for simplicity, interpretability and computational locality. Whether that also makes it faster than A* in practice is what the planned benchmark will measure. In open environments with scattered obstacles, LCP's straight-line-first assumption holds most of the time and only a few corrections are needed." },
 
         { type: 'divider' },
 
         { type: 'heading', content: 'Design Philosophy — Why "Lazy" is the Right Word', level: 2 },
-        { type: 'text', content: 'The name is not just a quip. There is a formal sense in which LCP embodies lazy evaluation from functional programming: computation is deferred until the result is demanded. A* eagerly evaluates the entire search space to find the optimal path. LCP evaluates nothing until a segment actually fails.' },
-        { type: 'text', content: "This has a useful property: if the environment is mostly open, LCP solves in very few iterations, potentially just one or two corrections. A* would still need to expand its full grid. In those cases, LCP's solution quality is essentially indistinguishable from optimal (a straight line with small detours), achieved at a fraction of the cost." },
+        { type: 'text', content: 'The name is not just a quip. There is a formal sense in which LCP embodies lazy evaluation from functional programming: computation is deferred until the result is demanded. A* searches outward from the start, expanding nodes in the order its heuristic suggests, until it reaches the goal. LCP evaluates nothing until a segment actually fails.' },
+        { type: 'text', content: "This has a useful property: if the environment is mostly open, LCP solves in very few iterations, potentially just one or two corrections. A* still expands nodes along the way, and many more if its heuristic is weak or obstacles block the direct line. In those cases LCP's path is a straight line with small detours, close to optimal, for very little computation. How that compares with A* in run time has not been measured yet." },
         { type: 'text', content: 'The flip side is honest: when the environment is dense, LCP may struggle to find corrections that work, and A* or Smac should be used. LCP is designed to know its own limits, which is why the Nav2 plugin documents its failure modes explicitly and recommends fallback strategies.' },
         { type: 'quote', content: 'Why plan ahead when physics can push you around?', author: 'Kaveesha Dhananjaya' },
 
