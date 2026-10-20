@@ -6,12 +6,10 @@ interface EmailLinkProps {
   children: React.ReactNode;
 }
 
-// mailto: does nothing on machines without a default mail app, so email links open
-// Gmail's compose window in a new tab with the address already in the To field.
-const GMAIL_COMPOSE = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(SOCIAL_LINKS.email)}`;
-
+// A plain mailto: link, so it opens whatever mail client the visitor uses (Outlook on
+// university mail, for example). The footer address can still be copied with one click.
 const EmailLink: React.FC<EmailLinkProps> = ({ className = '', children }) => (
-  <a href={GMAIL_COMPOSE} target="_blank" rel="noreferrer" className={className}>
+  <a href={`mailto:${SOCIAL_LINKS.email}`} className={className}>
     {children}
   </a>
 );
