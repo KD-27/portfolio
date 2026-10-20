@@ -4,6 +4,7 @@ import { PROJECTS } from '../constants';
 import { getYoutubeEmbedUrl, isVideo, isYoutube } from '../utils/media';
 import Contact from './Contact';
 import MediaThumb from './MediaThumb';
+import { ContentBlockRenderer } from './ThoughtLabArticlePage';
 
 interface ProjectPageProps {
   slug: string;
@@ -181,6 +182,13 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ slug, onBack, onSelectProject
           )}
 
           <div className={`${COLUMN} py-12 md:py-16`}>
+            {project.role && (
+              <div className="mb-12 border-l-2 border-accent pl-5">
+                <h2 className={`mb-2 ${LABEL}`}>My role</h2>
+                <p className="text-[15.5px] leading-relaxed text-ink/85">{project.role}</p>
+              </div>
+            )}
+
             <h2 className={`mb-4 ${LABEL}`}>Overview</h2>
             <div className="space-y-6 text-[17px] leading-[1.75] text-ink/85">
               {paragraphs.map((p) => (
@@ -200,6 +208,15 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ slug, onBack, onSelectProject
                   ))}
                 </ul>
               </>
+            )}
+
+            {project.sections && project.sections.length > 0 && (
+              <section className="mt-20" aria-label="In depth">
+                <h2 className={`-mb-8 ${LABEL}`}>In depth</h2>
+                {project.sections.map((block, i) => (
+                  <ContentBlockRenderer key={i} block={block} />
+                ))}
+              </section>
             )}
 
             {project.link && (

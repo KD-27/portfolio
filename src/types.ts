@@ -8,6 +8,10 @@ export interface Project {
   tags: string[]; 
   gallery?: string[];
   details: string[];
+  /** What I did on a team project, shown above the overview */
+  role?: string;
+  /** Long-form write-up below the key features, rendered with the Thought Lab content blocks */
+  sections?: ContentBlock[];
   link?: string;
 }
 
@@ -76,8 +80,14 @@ export interface Achievement {
  * 2. HEADING BLOCK - Section headers
  *    { type: 'heading', content: 'Section Title', level: 2 }  // level 2 or 3
  * 
+ * EQUATION BLOCK - spaces and 
+ line breaks are kept, so related equations can share a block
+ *    { type: 'equation', content: 'a = b + c
+d = e − f' }
+ *
  * 3. IMAGE BLOCK - Image with optional caption
  *    { type: 'image', src: '/path/to/image.jpg', caption: 'Description here', alt: 'Alt text' }
+ *    { type: 'image', src: '/path/to/small.jpg', narrow: true }  // small or tall figures, centred instead of full width
  * 
  * 4. VIDEO BLOCK - Video with optional caption (YouTube or local file)
  *    { type: 'video', src: 'https://youtube.com/watch?v=xxx', caption: 'Video description' }
@@ -142,7 +152,7 @@ export interface FlowOutput {
 export type ContentBlock =
   | { type: 'text'; content: string }
   | { type: 'heading'; content: string; level?: 2 | 3 | 4 }
-  | { type: 'image'; src: string; caption?: string; alt?: string }
+  | { type: 'image'; src: string; caption?: string; alt?: string; narrow?: boolean }
   | { type: 'video'; src: string; caption?: string; vertical?: boolean }
   | { type: 'quote'; content: string; author?: string }
   | { type: 'list'; items: string[]; ordered?: boolean }
