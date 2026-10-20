@@ -37,7 +37,7 @@ export const HERO_DATA = {
   interests: ['Motion planning', 'Model predictive control', 'Perception-aware navigation', 'State estimation & SLAM', 'Multi-robot coordination'],
   tagline: "I build robots that walk, map and navigate.",
   /** The PhD ask, shown under the tagline and in the contact footer */
-  seeking: "Seeking a funded PhD position in robot motion planning and navigation.",
+  seeking: "Seeking a funded PhD position in robot motion planning and navigation, starting January 2027.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };
 
