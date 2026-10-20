@@ -779,7 +779,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
       icon: 'Cpu',
       category: 'software',
       coverImage: `${import.meta.env.BASE_URL}thought_lab/lcp/Coverpage.webp`,
-      introduction: "The Lazy Coulomb Planner (LCP) treats navigation as a correction problem, not a search problem: start with a straight line from start to goal, and apply localized, physics-inspired corrections only where the path actually collides with an obstacle. Borrowing the inverse-square repulsion of Coulomb's Law from electrostatics, LCP aims for fast, interpretable path planning in open environments — implemented both as a JavaScript visualization and as a full ROS 2 Nav2 global planner plugin.",
+      introduction: "The Lazy Coulomb Planner (LCP) treats navigation as a correction problem, not a search problem: start with a straight line from start to goal, and apply localized, physics-inspired corrections only where the path actually collides with an obstacle. Inspired by the repulsion between like charges in Coulomb's Law, LCP aims for cheap, interpretable path planning in open environments — implemented both as a JavaScript visualization and as a full ROS 2 Nav2 global planner plugin.",
       tags: ['Path Planning', 'Physics-Inspired Robotics', 'ROS2 Nav2', 'Autonomous Navigation'],
       status: 'published',
       publishedDate: 'August 2026',
@@ -814,8 +814,8 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
         },
         { type: 'text', content: "This is not laziness as a shortcut. It is laziness as a design principle: spend zero computation on paths that might never be needed, and spend targeted computation only where the environment demands it. The aim is a planner that is cheap in open environments, highly interpretable, and whose behavior you can trace step by step without inspecting a heatmap." },
 
-        { type: 'heading', content: "Physical Foundation — Coulomb's Law", level: 2 },
-        { type: 'text', content: "The correction mechanism is borrowed from electrostatics. Coulomb's Law describes the force between two point charges:" },
+        { type: 'heading', content: "Physical Inspiration — Coulomb's Law", level: 2 },
+        { type: 'text', content: "The idea behind the correction comes from electrostatics. Coulomb's Law describes the force between two point charges:" },
         { type: 'equation', content: 'F = k · q₁q₂ / r²' },
         {
           type: 'list',
@@ -826,7 +826,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
             'r = distance between charges'
           ]
         },
-        { type: 'text', content: 'The critical insight is the r² denominator: force grows explosively as distance shrinks. An obstacle that is far away barely matters. An obstacle you are about to enter matters enormously. This is exactly the behavior you want from a repulsion mechanism in path planning.' },
+        { type: 'text', content: 'The r² denominator is what inspired the planner: repulsion is negligible far from a charge and dominant close to it. Carried over to planning, that says an obstacle far from the path should not matter, and the obstacle the path is actually entering should be the only one that acts on it.' },
 
         { type: 'heading', content: 'Mapping to Path Planning', level: 3 },
         {
@@ -834,11 +834,10 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
           items: [
             'Obstacle → Point charge (source of repulsion)',
             'Blocked waypoint → Test charge of the same sign (like charges repel, so it is pushed away)',
-            'r → Distance from waypoint to obstacle boundary',
-            'F → Displacement force applied to push waypoint clear'
+            'Force → The push that moves the waypoint clear: its direction comes from the analogy, its size does not'
           ]
         },
-        { type: 'text', content: 'LCP does not compute the full Coulomb sum over every obstacle in the environment. It applies the principle — nearby obstacles exert strong repulsion — at precisely the point where a path segment has entered collision.' },
+        { type: 'text', content: 'The analogy stops at the idea, not the formula. LCP never computes a Coulomb force: it does not sum over obstacles and 1/r² does not appear in the update. A blocked waypoint is pushed sideways in fixed steps of size α (section 5) until it is clear. What the analogy contributes is locality, since only the obstacle the path has entered acts on it, and the sign, since the push is always away from that obstacle. Making the step size depend on distance, which would bring the inverse-square law into the update itself, is listed under future work.' },
 
         { type: 'divider' },
 
@@ -979,7 +978,7 @@ export const THOUGHT_LAB_DATA: ThoughtLabData = {
           type: 'list',
           items: [
             'Hybrid fallback: detect narrow-corridor failure and switch to A* / Smac for that segment',
-            'Adaptive force scaling: increase α when far from free space, reduce it as the boundary approaches (analogous to variable step size in ODE solvers)',
+            'Distance-dependent push: replace the fixed step α with one that depends on the distance to free space, bringing the inverse-square idea into the update itself (analogous to variable step size in ODE solvers)',
             'Dynamic obstacle support: re-flag locked points as unlocked when the underlying cost map changes',
             'Post-lock shortcutting: after full solution, attempt to remove redundant locked points by checking if their neighboring segments are obstacle-free',
             'Smoothing re-validation: run a lightweight cost map check on the Chaikin-smoothed path and revert locally if violations are introduced'
