@@ -69,9 +69,10 @@ const HeadingBlock: React.FC<{ content: string; level?: 2 | 3 | 4 }> = ({ conten
   );
 };
 
+// Spaces and line breaks are kept, so several equations can sit in one block, one per line
 const EquationBlock: React.FC<{ content: string }> = ({ content }) => (
   <div className="my-8 overflow-x-auto rounded-sm border border-rule bg-card px-6 py-5">
-    <p className="whitespace-nowrap text-center font-mono text-[15px] text-ink md:text-base">{content}</p>
+    <p className="whitespace-pre text-center font-mono text-[15px] leading-loose text-ink md:text-base">{content}</p>
   </div>
 );
 
@@ -79,8 +80,8 @@ const Caption: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <figcaption className="mt-3 text-sm leading-relaxed text-faint">{children}</figcaption>
 );
 
-const ImageBlock: React.FC<{ src: string; caption?: string; alt?: string }> = ({ src, caption, alt }) => (
-  <figure className="my-10">
+const ImageBlock: React.FC<{ src: string; caption?: string; alt?: string; narrow?: boolean }> = ({ src, caption, alt, narrow }) => (
+  <figure className={`my-10 ${narrow ? 'mx-auto max-w-md' : ''}`}>
     <img
       src={src}
       alt={alt || caption || 'Article image'}
@@ -453,15 +454,15 @@ const TimelineBlock: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => (
   </div>
 );
 
-// Main content block renderer
-const ContentBlockRenderer: React.FC<{ block: ContentBlock }> = ({ block }) => {
+// Main content block renderer, also used for the project write-ups
+export const ContentBlockRenderer: React.FC<{ block: ContentBlock }> = ({ block }) => {
   switch (block.type) {
     case 'text':
       return <TextBlock content={block.content} />;
     case 'heading':
       return <HeadingBlock content={block.content} level={block.level} />;
     case 'image':
-      return <ImageBlock src={block.src} caption={block.caption} alt={block.alt} />;
+      return <ImageBlock src={block.src} caption={block.caption} alt={block.alt} narrow={block.narrow} />;
     case 'video':
       return <VideoBlock src={block.src} caption={block.caption} vertical={block.vertical} />;
     case 'quote':

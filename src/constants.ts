@@ -105,6 +105,9 @@ export const ACHIEVEMENTS: Achievement[] = [
   }
 ];
 
+// Figures and clips taken from each project's final presentation
+const DECK = (id: string, file: string) => `${import.meta.env.BASE_URL}projects/${id}/deck/${file}`;
+
 export const PROJECTS: Project[] = [
   {
     id: '1',
@@ -130,11 +133,135 @@ export const PROJECTS: Project[] = [
       'Five-bar parallel leg mechanism with curved links',
       'Variable Circle Method for real-time inverse kinematics',
       'Distributed ROS2 + MicroROS architecture (Raspberry Pi + ESP32)',
-      'ESP-NOW wireless communication with 120-130m range',
+      'ESP-NOW wireless link: 100–120 m in open space, 20–30 m in network-congested areas',
       'Trajectory optimization using weighted stability metric',
       'Active body leveling using MPU6050 IMU with complementary filtering',
       '20 cm/s locomotion speed, 30°/s rotation',
       'Custom Tkinter GUI for trajectory design and deployment'
+    ],
+    role: 'Final-year project with two teammates. I led it, developed the kinematic model and inverse kinematics, simulated the robot in Simscape, built the control system and the ROS 2 / ESP-NOW communication architecture, and designed both PCBs. Fabrication, assembly, budgeting and testing were shared across the team.',
+    sections: [
+      { type: 'heading', content: 'Choosing the leg' },
+      { type: 'text', content: 'We started by reviewing more than 25 papers and 25 patents on leg mechanisms, inverse kinematics, gait cycles and force distribution. Serial legs, where each motor carries the next one, kept running into load limits. A five-bar parallel leg puts both motors at the hip and shares the load between two chains, so it can carry more. What the literature had not done was optimise the five-bar itself, and that became the starting point.' },
+      { type: 'text', content: 'With the two motor shafts 40 mm apart, link lengths were swept against the reachable workspace. A 2:3 ratio, 60 mm upper links and 90 mm lower links, gave the largest workspace.' },
+      { type: 'image', src: DECK('ID1', 'leg_workspace.webp'), caption: 'Reachable foot workspace (blue) with 60 mm and 90 mm links and the active joints 40 mm apart.', narrow: true },
+      { type: 'text', content: 'A five-bar can be assembled in more than one working mode. We chose the "+ +" mode over "− +" for two reasons: its foot path is closer to the gait of a real quadruped, and it stays clear of the major singularity that sits inside the "− +" workspace, where the leg loses control of the foot.' },
+      {
+        type: 'gallery',
+        contain: true,
+        images: [
+          { src: DECK('ID1', 'working_modes.webp'), caption: 'Workspace of the two working modes' },
+          { src: DECK('ID1', 'singularity.webp'), caption: 'The major singularity of the − + mode' }
+        ]
+      },
+      { type: 'text', content: 'The links are curved rather than straight. Curved links wrap around the opposite joint instead of running into it, so the leg folds further at full retraction and reaches further at full extension, forwards and backwards.' },
+      { type: 'image', src: DECK('ID1', 'straight_vs_curved.webp'), caption: 'The same three poses with straight and with curved links.' },
+      { type: 'image', src: DECK('ID1', 'final_leg.webp'), caption: 'The final leg: two servos at the hip drive the curved five-bar linkage.', narrow: true },
+
+      { type: 'heading', content: 'Checking the parts with FEA' },
+      { type: 'text', content: 'The robot weighs 2.6 kg. The leg was analysed in the three extreme poses of its real configuration space, with a 15 N load in each and the acrylic motor bracket as the fixed support. The mesh size came from a convergence study: maximum stress and displacement were compared for element sizes from 1 to 6 mm, and 2 mm was used.' },
+      {
+        type: 'gallery',
+        contain: true,
+        images: [
+          { src: DECK('ID1', 'fea_configs.webp'), caption: 'The three extreme poses' },
+          { src: DECK('ID1', 'mesh_convergence.webp'), caption: 'Maximum stress and displacement against element size' },
+          { src: DECK('ID1', 'fea_mesh.webp'), caption: 'The 2 mm mesh' },
+          { src: DECK('ID1', 'fea_fos.webp'), caption: 'Factor of safety in each pose' }
+        ]
+      },
+      { type: 'text', content: 'The minimum factors of safety were 2.63, 1.19 and 1.07 in the three poses. All three stay above 1, but the last two leave little margin, which matters if the robot is ever asked to carry a heavier payload.' },
+
+      { type: 'heading', content: 'Inverse kinematics: the variable circle method' },
+      { type: 'text', content: 'Each motor sits at the centre of a fixed circle whose radius is the upper link, 60 mm. The foot target is the centre of a third, variable circle whose radius is the lower link, 90 mm. Where the variable circle crosses each fixed circle are the two knee points, A and B, and each motor angle follows from its knee with one arctangent. That is a square root and a few trigonometric functions per leg, which is why it runs in real time on the embedded controller.' },
+      { type: 'video', src: DECK('ID1', 'ik_variable_circle.mp4'), caption: 'The method in GeoGebra: as the foot target moves, the variable circle (red) moves with it, and its crossings with the two fixed circles give the knee points.' },
+      { type: 'image', src: DECK('ID1', 'ik_circles.webp'), caption: 'Finding a knee point from the intersection of two circles.', narrow: true },
+      { type: 'equation', content: 'α = tan⁻¹((x_A − x_C) / y_C)\nβ = tan⁻¹((x_B − x_D) / y_D)' },
+
+      { type: 'heading', content: 'Simulation in Simscape' },
+      { type: 'text', content: 'Before anything was cut, a single leg and then the whole robot were modelled in MATLAB Simscape Multibody. The trajectory generator and the inverse kinematics feed the mechanical model, so a gait could be tried in simulation with the same maths the robot would run.' },
+      { type: 'image', src: DECK('ID1', 'simscape_leg.webp'), caption: 'Single-leg Simscape model.' },
+      { type: 'text', content: 'The first test path was a semicircle on a straight base: the foot pushes back along the ground, then lifts and swings forward through the half circle.' },
+      { type: 'image', src: DECK('ID1', 'semicircle_trajectory.webp'), caption: 'The semicircular foot trajectory.' },
+      { type: 'video', src: DECK('ID1', 'leg_trajectory_sim.mp4'), caption: 'The simulated leg following that trajectory.' },
+      { type: 'text', content: 'The full-body model compared different phase delays between the legs, and a delay of three quarters of the gait cycle gave the steadiest walk. Tracking the centre of gravity also showed that big steps make the body sway, while small steps keep it steady. That is one reason the robot walks with short, deliberate steps.' },
+      { type: 'video', src: DECK('ID1', 'cog_fluctuation.mp4'), caption: 'Centre-of-gravity fluctuation in the full-body simulation.' },
+
+      { type: 'heading', content: 'Staying level on a slope' },
+      { type: 'text', content: 'The MPU6050 gives the body pitch and roll. From those, the height offset each foot needs to keep the body level is worked out from the body length and width, and added to or subtracted from the nominal foot height y0.' },
+      { type: 'equation', content: 'a = tan(Δpitch) · length / 2\nb = tan(Δroll) · width / 2' },
+      { type: 'equation', content: 'y11 = y0 + a + b    y12 = y0 + a − b\ny21 = y0 − a + b    y22 = y0 − a − b' },
+      {
+        type: 'gallery',
+        contain: true,
+        caption: 'A Python check of the model: the body plane (green) stays level while the ground plane (yellow) tilts.',
+        images: [
+          { src: DECK('ID1', 'incline_1.webp') },
+          { src: DECK('ID1', 'incline_2.webp') },
+          { src: DECK('ID1', 'incline_3.webp') },
+          { src: DECK('ID1', 'incline_4.webp') }
+        ]
+      },
+
+      { type: 'heading', content: 'Electronics and communication' },
+      { type: 'text', content: 'A Raspberry Pi 4 on the robot runs ROS 2 and reads the camera and the MPU6050. An ESP32 running micro-ROS drives the eight servos through a PCA9685 PWM board and runs a Nextion display. The handheld remote has its own ESP32, joystick and Nextion display, and talks to the robot over ESP-NOW. Whether the command comes from the joystick or from the direction and balancing logic, it goes through the same chain.' },
+      {
+        type: 'flow',
+        steps: [
+          { title: 'Input', detail: 'Joystick data, or direction and balancing commands', icon: 'Compass', phase: 'IN' },
+          { title: 'Control system', detail: 'Decides the gait and body pose', icon: 'Cpu', phase: 'PLAN' },
+          { title: 'Trajectory generation', detail: 'Foot path for each leg', icon: 'Footprints', phase: 'PLAN' },
+          { title: 'Inverse kinematics', detail: 'Variable circle method, two motor angles per leg', icon: 'Calculator', phase: 'PLAN' },
+          { title: 'PWM generation', detail: 'PCA9685 driving the eight servos', icon: 'Activity', phase: 'OUT' }
+        ],
+        caption: 'The control chain from command to motor.'
+      },
+      { type: 'text', content: 'The first remote link used an nRF24L01 radio. Its 32-byte payload holds only four float64 values, not enough for a full command. Switching to ESP-NOW between two ESP32s raised the payload to 250 bytes, about 30 float64 values per message, with no extra hardware. In testing the link reached 100–120 m in open space and 20–30 m in areas crowded by other networks.' },
+      { type: 'text', content: 'I designed the robot motherboard and the remote board in KiCad. Both circuits were built on dot board first to prove them.' },
+      {
+        type: 'gallery',
+        contain: true,
+        images: [
+          { src: DECK('ID1', 'motherboard_schematic.webp'), caption: 'Motherboard schematic' },
+          { src: DECK('ID1', 'motherboard_pcb.webp'), caption: 'Motherboard PCB' },
+          { src: DECK('ID1', 'motherboard_built.webp'), caption: 'Motherboard on dot board' },
+          { src: DECK('ID1', 'joystick_schematic.webp'), caption: 'Remote schematic' },
+          { src: DECK('ID1', 'joystick_pcb.webp'), caption: 'Remote PCB' },
+          { src: DECK('ID1', 'joystick_built.webp'), caption: 'Remote on dot board' }
+        ]
+      },
+      { type: 'text', content: 'The servos are the biggest load: about 2.5 A each at stall, or 20 A for all eight. Running for at least 15 minutes needs 5,000 mAh, so the robot carries a 6,200 mAh LiPo.' },
+
+      { type: 'heading', content: 'Fabrication' },
+      { type: 'text', content: 'The shafts were machined to a custom profile, the body shell and the remote housing were 3D printed, and the leg links were laser-cut from acrylic. The whole build cost about LKR 175,000.' },
+      { type: 'image', src: DECK('ID1', 'final_render.webp'), caption: 'The final design in SolidWorks.' },
+      {
+        type: 'gallery',
+        contain: true,
+        images: [
+          { src: DECK('ID1', 'machined_shaft.webp'), caption: 'Custom machined shaft' },
+          { src: DECK('ID1', 'printed_body.webp'), caption: '3D-printed body shell' },
+          { src: DECK('ID1', 'printed_controller.webp'), caption: '3D-printed remote housing' },
+          { src: DECK('ID1', 'acrylic_link_1.webp'), caption: 'Laser-cut acrylic leg link' }
+        ]
+      },
+
+      { type: 'heading', content: 'Problems and fixes' },
+      { type: 'text', content: 'Early on, the robot tended to tip forwards. Lowering the centre of mass or widening the support base would both help; we moved the front and rear legs further apart to widen the base.' },
+      { type: 'text', content: 'The legs also vibrated as they moved. Three things contributed: backlash in the servos, play where the acrylic met the servo horn, and the bearings carrying on turning. We also considered more mass at the foot and a lower sample rate, but springs across the linkage damped it.' },
+      { type: 'video', src: DECK('ID1', 'leg_vibration.mp4'), vertical: true, caption: 'The leg moving without springs.' },
+      { type: 'video', src: DECK('ID1', 'leg_damped.mp4'), vertical: true, caption: 'With springs added, the vibration is damped.' },
+
+      { type: 'heading', content: 'Choosing the foot trajectory' },
+      { type: 'text', content: 'I wrote a Tkinter GUI for drawing foot paths point by point, by clicking or typing coordinates, and publishing them to the robot over ROS 2. Paths can be saved and loaded, so ten trajectories were drawn and each one was tested on the robot.' },
+      { type: 'image', src: DECK('ID1', 'gui_annotated.webp'), caption: 'The trajectory generator: (1) touch pad, (2) mouse locator, (3) start, stop and refresh, (4) manual entry, (5) selected points, (6) save and load.' },
+      { type: 'image', src: DECK('ID1', 'trajectories.webp'), caption: 'The ten foot trajectories that were tested.' },
+      { type: 'text', content: 'Stability was scored from the IMU. Roll and pitch come from a complementary filter that blends the gyroscope and the accelerometer, and yaw integrates the gyroscope. Each sample combines the angle changes and accelerations into one weighted value S, and a run is scored by the average of S over time. A lower score means a steadier body.' },
+      { type: 'equation', content: 'θ = α·θ_gyro + (1 − α)·θ_accel\nφ = α·φ_gyro + (1 − α)·φ_accel\nψ = ψ_prev + gyro_z·Δt' },
+      { type: 'equation', content: 'S = √[ (w_r·Δθ)² + (w_p·Δφ)² + (w_y·Δψ)²\n     + (w_x·a_x)² + (w_y·a_y)² + (w_z·a_z)² ]' },
+      { type: 'equation', content: 'Stability score = (1/T) ∫₀ᵀ S dt' },
+      { type: 'image', src: DECK('ID1', 'avg_stability.webp'), caption: 'Average stability score of each trajectory over a 30 s run. Lower is steadier.' },
+      { type: 'text', content: 'Trajectories 1, 3 and 8 scored best. Trajectory 1 scored 987.9 and is the one used in the demonstrations; with it the robot walks at 20 cm/s and turns at 30°/s.' }
     ]
   },
   {
@@ -165,6 +292,66 @@ export const PROJECTS: Project[] = [
       'Extended Kalman Filter fuses IMU and wheel odometry into the smooth pose the planners use between scans',
       'ROS-based distributed architecture with Arduino interface',
       'Goal tolerance of 10 cm in position and 15° in heading'
+    ],
+    sections: [
+      { type: 'heading', content: 'From concept to chassis' },
+      { type: 'text', content: 'This was a four-person project supervised by Mr. I. U. E. Naotunna. The aim was a wheeled robot that uses LiDAR and SLAM on ROS to map a space, plan the shortest path between two points and drive it by itself, and that can also be driven by hand over rough ground. The legs went through two designs before the final one, and an early chassis idea was built from plastic pipes.' },
+      {
+        type: 'gallery',
+        contain: true,
+        images: [
+          { src: DECK('ID2', 'leg_concept_sketch.webp'), caption: 'Concept leg sketch' },
+          { src: DECK('ID2', 'leg_design_1.webp'), caption: 'Leg design 1' },
+          { src: DECK('ID2', 'leg_design_2.webp'), caption: 'Leg design 2' },
+          { src: DECK('ID2', 'chassis_concept.webp'), caption: 'Early chassis idea with plastic pipes' }
+        ]
+      },
+      { type: 'video', src: DECK('ID2', 'leg_design_2.mp4'), caption: 'Leg design 2 assembling in SolidWorks.' },
+      { type: 'text', content: 'The final chassis is an aluminium box-bar frame with six legs. Each leg has an encoder gear motor (JGA25-370, 12 V, 130 rpm) to drive its wheel and an MG996R servo, and the corner wheels steer. The electronics sit in a container on top, closed by a cover that was modelled first and then made in acrylic.' },
+      {
+        type: 'gallery',
+        contain: true,
+        images: [
+          { src: DECK('ID2', 'top_cover_cad.webp'), caption: 'Top cover in CAD' },
+          { src: DECK('ID2', 'top_cover_open.webp'), caption: 'Top cover, opened' },
+          { src: DECK('ID2', 'top_cover_acrylic.webp'), caption: 'Acrylic top cover' },
+          { src: DECK('ID2', 'top_cover_acrylic_open.webp'), caption: 'Acrylic top cover, opened' },
+          { src: DECK('ID2', 'wiring_1.webp'), caption: 'Wiring inside the body' },
+          { src: DECK('ID2', 'wiring_2.webp'), caption: 'Wiring inside the body' }
+        ]
+      },
+
+      { type: 'heading', content: 'Power and drivetrain' },
+      { type: 'text', content: 'Each leg draws up to 1 A for the motor and 0.9 A for the servo, about 2 A together, so 12 A for all six. Running for at least 30 minutes needs 6,000 mAh, and the rover carries a 6,200 mAh 3S 11.1 V LiPo.' },
+      { type: 'text', content: 'The drive needed a 3:5 gear pair (120:200) on a 32 mm centre distance. The two pitch diameters must add up to twice the centre distance and keep the 3:5 ratio, which gives 24 mm and 40 mm, with the module kept between 1 and 2.' },
+      { type: 'image', src: DECK('ID2', 'gears.webp'), caption: 'Pitch diameters and centre distance of the gear pair.', narrow: true },
+      { type: 'image', src: DECK('ID2', 'circuit.webp'), caption: 'Wiring diagram: two Arduino Megas, three L298N motor drivers, a PCA9685 servo driver, the six motors and the six servos.' },
+
+      { type: 'heading', content: 'Steering kinematics' },
+      { type: 'text', content: 'To turn on a circle of radius R at speed V, the body rotates at ω = V/R. With track width b, the wheels on each side travel at ω(R ± b/2), so the middle wheels, which do not steer, simply turn at those speeds. The corner wheels, a distance L ahead of or behind the middle, are also steered so each one points along its own circle around the instantaneous centre of rotation. Front and rear corners on the same side turn at the same speed with opposite steering angles.' },
+      {
+        type: 'gallery',
+        contain: true,
+        images: [
+          { src: DECK('ID2', 'icr.webp'), caption: 'Turning about the instantaneous centre of rotation (ICR)' },
+          { src: DECK('ID2', 'steering.webp'), caption: 'Six-wheel turning geometry' }
+        ]
+      },
+      { type: 'equation', content: 'ω_R = (V + ω·b/2) / r\nω_L = (V − ω·b/2) / r' },
+      { type: 'equation', content: 'ω_RF = (1/r)·√[ (Lω)² + (V + ωb/2)² ]\nδ_RF = tan⁻¹( L / (R + b/2) )' },
+      { type: 'equation', content: 'ω_LF = (1/r)·√[ (Lω)² + (V − ωb/2)² ]\nδ_LF = tan⁻¹( L / (R − b/2) )' },
+      { type: 'equation', content: 'ω_RB = ω_RF    δ_RB = −δ_RF\nω_LB = ω_LF    δ_LB = −δ_LF' },
+
+      { type: 'heading', content: 'Mapping with Hector SLAM' },
+      { type: 'text', content: 'A Jetson Nano runs ROS, and an RPLiDAR A1 provides the scans. Hector SLAM matches each new scan against the map built so far to estimate where the robot is, so it needs no wheel odometry, and it updates a 2D occupancy grid in real time. Separately, the Arduino publishes IMU and wheel odometry, and an Extended Kalman Filter fuses them into one smoother pose for the navigation stack. The rover was tested by mapping the electrical and electronic measurement lab.' },
+      { type: 'image', src: DECK('ID2', 'lab_map.webp'), caption: 'Occupancy grid map of the electrical and electronic measurement lab.' },
+      { type: 'video', src: DECK('ID2', 'mapping_run.mp4'), caption: 'A full mapping run: the map on the left grows as the rover drives through the lab.' },
+
+      { type: 'heading', content: 'Navigation' },
+      { type: 'text', content: 'On the saved map, a particle filter localises the rover and the planners work on a costmap in which every obstacle is inflated by the rover\'s footprint, so paths keep a safe margin. A* plans the global path: it scores each cell by the cost so far plus an estimate of the distance left, expands the cheapest cell first, and backtracks from the goal to recover the shortest path. DWA follows it locally: it samples velocity commands, predicts the short trajectory each would produce, throws out those that collide, and picks the one that best trades progress towards the goal against clearance from obstacles.' },
+      { type: 'image', src: DECK('ID2', 'costmap.webp'), caption: 'The costmap: inflated obstacles, the planned global path (blue line) and the particle cloud localising the rover (green).' },
+      { type: 'video', src: DECK('ID2', 'navigation_run.mp4'), caption: 'A full navigation run: the rover follows its planned path to the goal, with the map on the left.' },
+      { type: 'text', content: 'The rover mapped the lab and drove itself from point A to point B around obstacles, and under manual control it handled rough ground.' }
     ]
   },
   {
@@ -195,10 +382,10 @@ export const PROJECTS: Project[] = [
     id: '4',
     slug: 'cad-prediction',
     title: 'Coronary Artery Disease Prediction Using ANN',
-    description: 'A neural network that predicts coronary artery disease from clinical data, with 89.7% accuracy on 87 held-out patients.',
+    description: 'A neural network that predicts coronary artery disease from clinical data, with 89.7% accuracy on 87 validation samples.',
     longDescription: `Coronary Artery Disease (CAD) remains a leading cause of death worldwide, often developing silently until a critical event occurs. Early detection significantly improves outcomes, but traditional diagnostic methods can be invasive, expensive, or require specialized equipment not available in all clinical settings.
 
-    This project develops an Artificial Neural Network that analyzes clinical data—demographics, medical history, and diagnostic test results—to predict CAD. On 87 held-out patients it classified 78 correctly (89.66% accuracy). A screening aid like this could help flag at-risk individuals for earlier follow-up.
+    This project develops an Artificial Neural Network that analyzes clinical data—demographics, medical history, and diagnostic test results—to predict CAD. On 87 validation samples it classified 78 correctly (89.66% accuracy). A screening aid like this could help flag at-risk individuals for earlier follow-up.
 
     The model was built with direct input from cardiologists, ensuring the features it analyzes are clinically meaningful rather than just statistically convenient. It is a conference-scale study on a small dataset: the results are promising, but the model would need validation on larger, external cohorts before any clinical use.`,
     tags: ['Python', 'TensorFlow', 'Machine Learning', 'ANN', 'Healthcare', 'SMOTE'],
@@ -218,8 +405,45 @@ export const PROJECTS: Project[] = [
       'SMOTE for handling imbalanced medical datasets',
       'Clinician-guided feature selection for clinical relevance',
       'Stratified k-fold cross-validation for robust evaluation',
-      '89.66% validation accuracy (78 of 87 patients), 87.32% F1 score',
+      '89.66% validation accuracy (78 of 87 samples), 87.32% F1 score',
       'Adam optimizer with early stopping to prevent overfitting'
+    ],
+    role: 'First author. A team of four engineering students, supervised by Dr. Budditha Hettige of the Faculty of Computing, KDU. Presented at the KDU 17th International Research Conference in 2024.',
+    sections: [
+      { type: 'heading', content: 'The data' },
+      { type: 'text', content: 'The dataset comes from Alizadehsani et al. (2013): 303 patients, 216 with CAD and 87 without, each described by 53 features in four groups.' },
+      { type: 'image', src: DECK('ID4', 'dataset_split.webp'), caption: '303 patients, 216 with CAD and 87 without, 53 features each.' },
+      {
+        type: 'list',
+        items: [
+          'Demographic: age, weight, sex, BMI, diabetes, hypertension, smoking, family history, obesity, kidney failure, stroke, airway and thyroid disease, heart failure, dyslipidaemia',
+          'Symptoms and examination: blood pressure, pulse rate, oedema, peripheral pulse, lung rales, murmurs, chest pain types, dyspnoea, function class',
+          'Laboratory and echo: fasting blood sugar, creatinine, triglycerides, LDL, HDL, BUN, ESR, haemoglobin, potassium, sodium, white cells, lymphocytes, neutrophils, platelets, ejection fraction, regional wall motion, valvular heart disease',
+          'ECG: rhythm, Q wave, ST elevation and depression, T inversion, left ventricular hypertrophy, poor R progression'
+        ]
+      },
+
+      { type: 'heading', content: 'Cleaning and balancing' },
+      { type: 'text', content: 'Exploratory analysis came first: the shape of the data, unique values and which columns were categorical. Rows with missing values were removed and categorical columns were one-hot encoded. Two cardiologists, Dr. Nilupul Perera and Dr. Hashith Wijemanne, advised on the features, and 11 redundant ones were dropped on clinical grounds. A correlation heatmap and box plots were used to check what was left.' },
+      { type: 'text', content: 'With 216 positive and 87 negative cases, the classes are unbalanced. Undersampling the majority class left too little data and the model overfit, so the minority class was oversampled instead. SMOTE makes each synthetic sample on the line between a real sample and one of its neighbours, a random fraction λ of the way along. 129 synthetic samples brought both classes to 216.' },
+      { type: 'image', src: DECK('ID4', 'smote_interpolation.webp'), caption: 'SMOTE places each new point a random fraction λ (between 0 and 1) of the way from one real sample to a neighbour.', narrow: true },
+
+      { type: 'heading', content: 'The network' },
+      { type: 'text', content: 'The model is a small fully connected network built in Keras: the encoded clinical features feed two hidden layers of 12 and 8 ReLU neurons, and a single sigmoid neuron gives the probability of CAD. It was trained with Adam, and early stopping ended training once the validation loss stopped improving.' },
+      {
+        type: 'list',
+        items: [
+          'Learning rate 0.001, with β₁ = 0.9, β₂ = 0.999 and ε = 1e-7 for the Adam weight updates',
+          'Up to 256 epochs with a batch size of 10',
+          'Early-stopping patience of 20 epochs'
+        ]
+      },
+      { type: 'video', src: DECK('ID4', 'notebook_demo.mp4'), caption: 'A walkthrough of the notebook: data preparation, correlation analysis, the model and its evaluation.' },
+
+      { type: 'heading', content: 'Results' },
+      { type: 'text', content: 'Training accuracy was 93.62%. On the 87 validation samples the model reached 89.66% accuracy, 88.57% precision, 86.11% recall and an F1 score of 87.32%. In the confusion matrix, 47 and 31 samples were classified correctly in the two classes, and 4 and 5 were wrong.' },
+      { type: 'callout', variant: 'info', content: 'The split was made after SMOTE, so the 87 validation samples come from the balanced set of 432 and include synthetic ones. Before these numbers can be read as clinical performance, the model needs testing on real patients only, and on a larger outside cohort.' },
+      { type: 'text', content: 'The planned next step was a mobile app, so a clinician could enter a patient\'s data and get the prediction at the bedside.' }
     ]
   },
   {
@@ -231,7 +455,7 @@ export const PROJECTS: Project[] = [
 
     An Arduino Uno watches a YL-83 rain sensor and an LDR. When either one detects rain or darkness, it drives a DC gear motor through an L298 driver, and a gear-and-belt mechanism slides the 15 roller hangers along aluminium railings under a polymer shelter. An ultrasonic sensor tracks a sheet that travels with the clothes and stops the motor at the end of the rail, so the hangers never overrun. A manual switch and an HC-05 Bluetooth link to a phone app can move the clothes in or out regardless of the weather.
 
-    I built the sensor and control setup; the wooden frame and shelter were fabricated by a teammate. The motor was sized from a friction model of 15 hangers carrying 0.4 kg of wet clothing each, which needs about 36 N of pull and 2.15 N·m at the 6 cm pulley. The work was presented as a poster at the KDU 16th International Research Conference in 2023.`,
+    The motor was sized from a friction model of 15 hangers carrying 0.4 kg of wet clothing each, which needs about 36 N of pull and 2.15 N·m at the 6 cm pulley. The work was presented as a poster at the KDU 16th International Research Conference in 2023.`,
     tags: ['Arduino', 'Sensors', 'Bluetooth', 'Motor Control', 'Home Automation'],
     gallery: [
       `${import.meta.env.BASE_URL}projects/ID5/clothesline_photo.webp`,
@@ -246,6 +470,49 @@ export const PROJECTS: Project[] = [
       'Manual switch and HC-05 Bluetooth phone app override the sensors',
       'Motor sized for 15 hangers at 0.4 kg wet load: about 36 N and 2.15 N·m',
       'Over 10 days of testing it brought the clothes in between 5:45 and 6:45 PM; the retract took 5.4 s on average over 20 runs'
+    ],
+    role: 'I built the sensor and control setup: the rain sensor, LDR, ultrasonic end stop and Bluetooth link around the Arduino. The wooden frame and shelter were fabricated by a teammate.',
+    sections: [
+      { type: 'heading', content: 'Design' },
+      { type: 'text', content: 'The aim was a prototype that detects rain and darkness and gathers all the clothes under a shelter, can be run automatically or by hand, and can be controlled remotely. We sketched four concepts. The chosen design has three railings under a polymer roof on a wooden frame. The middle railing is the control rod: it is tied to a GT2 6 mm timing belt running on 40-tooth GT2 pulleys, and pulls the hangers along. An extra cross bar was added to the frame for stability.' },
+      {
+        type: 'gallery',
+        contain: true,
+        images: [
+          { src: DECK('ID5', 'concept_1.webp'), caption: 'Concept 1' },
+          { src: DECK('ID5', 'concept_2.webp'), caption: 'Concept 2' },
+          { src: DECK('ID5', 'concept_3.webp'), caption: 'Concept 3' },
+          { src: DECK('ID5', 'concept_4.webp'), caption: 'Concept 4' }
+        ]
+      },
+      { type: 'video', src: DECK('ID5', 'railing_sim.mp4'), caption: 'Simulation of the hangers sliding along the railing.' },
+
+      { type: 'heading', content: 'Sizing the motor' },
+      { type: 'text', content: 'Each hanger was assumed to carry at most 0.4 kg of wet clothing, with the hanger mass and air resistance ignored. The static friction coefficient between the aluminium and mild steel railing parts was taken as 0.61. Fifteen hangers then need about 36 N of pull, which at the 0.06 m pulley radius is 2.15 N·m of torque.' },
+      { type: 'image', src: DECK('ID5', 'force_sketch.webp'), caption: 'Free-body sketch of the hangers on the railing.' },
+      { type: 'equation', content: 'R = 0.4 × 9.81 = 3.924 N\nF = µR = 0.61 × 3.924 = 2.393 N per hanger' },
+      { type: 'equation', content: 'P = 15 × 2.393 = 35.9 N\nT = P × r = 35.9 × 0.06 = 2.15 N·m' },
+
+      { type: 'heading', content: 'Control logic' },
+      { type: 'text', content: 'When the main switch is on, the Arduino keeps reading the LDR and the rain sensor. A dark reading or rain sends the clothes to the shelter; light with no rain sends them back out. The thresholds are an LDR value of 500 and a rain value of 10.' },
+      { type: 'image', src: DECK('ID5', 'flowchart.webp'), caption: 'Flow chart of the control algorithm.', narrow: true },
+      { type: 'text', content: 'Two overrides sit on top of the sensors. A manual switch sends the clothes to the shelter when it is on and back out when it is off. Over Bluetooth, through an HC-05 module and a phone app, "0" sends them to the shelter and "1" sends them out. To stop at the end of the rail, a sheet fixed to the middle railing travels with the clothes, and the ultrasonic sensor stops the motor when the sheet reaches it.' },
+
+      { type: 'heading', content: 'Build' },
+      {
+        type: 'gallery',
+        contain: true,
+        images: [
+          { src: DECK('ID5', 'pulley_shaft.webp'), caption: 'Pulley shaft and bearing' },
+          { src: DECK('ID5', 'pulley_motor.webp'), caption: 'DC gear motor driving the pulley' },
+          { src: DECK('ID5', 'railings.webp'), caption: 'Joining the three railings' },
+          { src: DECK('ID5', 'motor_stop.webp'), caption: 'Ultrasonic end stop' },
+          { src: DECK('ID5', 'sensors.webp'), caption: 'Sensor assembly' },
+          { src: DECK('ID5', 'circuit.webp'), caption: 'Control circuit' }
+        ]
+      },
+      { type: 'image', src: DECK('ID5', 'finished.webp'), caption: 'The finished prototype.', narrow: true },
+      { type: 'text', content: 'The parts cost LKR 14,765 in total. The prototype met all three objectives: it shelters the clothes automatically on rain or nightfall, it can be switched between automatic and manual control, and it can be controlled remotely.' }
     ]
   }
 ];
