@@ -542,25 +542,6 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     tags: ['Multimodal Grasping', '6D Grasp Planning', 'Waste Sorting']
   },
   {
-    id: 'p1',
-    title: 'Design & Development of a Quadruped Robot for Inspection in Human-Inaccessible Structured Areas',
-    abstract: 'Quadruped robot platforms are attractive for inspection in human-inaccessible environments, but many focus on complex and dynamic locomotion with control rather than simple and reliable operation in structured environments. The aim of this study is to understand whether such a quadruped robot can be used as a practical inspection platform that can offer computationally efficient control and stable locomotion on flat terrains. To accomplish this goal, the robot was designed and developed using a five-bar parallel leg structure, and a geometric inverse kinematics method, adapted from a standard circle-circle intersection approach, was optimized for implementation on the embedded platform. Ten foot-trajectories were also compared for stability in this locomotion pattern. Experimental testing demonstrated that the robot could reach a linear velocity of 20 cm/s and rotational velocity of 30°/s, and that the optimized geometric inverse kinematics approach was able to work in real time. The results demonstrate the possibility of using the proposed parallel-leg quadruped for inspection tasks in structured, human-inaccessible spaces.',
-    image: `${import.meta.env.BASE_URL}research_papers/Quadruped_Robot.webp`,
-    link: '#',
-    publisher: 'International Journal of Control, Automation, and Systems (ICROS KIEE)',
-    venue: 'IJCAS',
-    authors: ['G. K. Dhananjaya', 'L. Wickramaarachchi', 'W. Silva', 'I. Naotunna', 'M. Dabare', 'S. Gaspe'],
-    contribution: 'First author: led the project, derived the inverse kinematics, wrote all the firmware and wrote the paper.',
-    date: 'Under Review',
-    summary: {
-      problem: 'Most quadrupeds target dynamic locomotion, not simple, reliable inspection in structured spaces.',
-      built: 'Five-bar parallel legs and a circle-intersection IK optimised to run on the embedded controller.',
-      result: 'Walks at 20 cm/s, turns at 30°/s, and solves its IK in real time on board.',
-      limitation: 'Tested on flat terrain only.'
-    },
-    tags: ['Five-bar parallel mechanism', 'Inverse kinematics', 'Quadruped robot', 'ROS2', 'Trajectory optimization']
-  },
-  {
     id: 'p2',
     title: 'Prediction of Coronary Artery Disease Using Artificial Neural Network',
     abstract: 'Machine learning techniques offer powerful tools for early prediction and diagnosis of Coronary Artery Disease (CAD), a major cause of global mortality, by analyzing complex medical data to recognize patterns that conventional methods might miss, potentially leading to timely interventions and reduced death rates. The objective of this study is to model an Artificial Neural Network for CAD diagnosis, achieving an accuracy of roughly 90%. The Synthetic Minority Over-sampling Technique was employed to address the problem of data imbalance. Leveraging the expertise of a cardiologist, we tuned the feature search to include key clinical characteristics only, such as basic demographics, clinical history, and diagnostic test results. This approach made the interpretations more feasible, and at the same time, improved the predictive efficiency of the model. Optimized tuning of the hyper parameters was done while designing the Artificial Neural Network and the use of dropout layers as an anti- over-fitting technique and batch normalization technique for stabilizing the training phase. To support the created model cross validation at a lower level named stratified k-fold cross validation was done. The model was accurate and reliable compared to conventional machine learning methods. Moreover, it was beneficial to combine clinical knowledge in qualitative feature reduction with the presented technical approach because it led to a more clinically pertinent and accurate model.',
