@@ -9,13 +9,17 @@ const LINKS = [
   { label: 'LinkedIn', href: SOCIAL_LINKS.linkedin },
 ];
 
-// Published and under-review papers are counted separately so neither reads as the other
-const underReview = RESEARCH_PAPERS.filter((p) => p.date.toLowerCase() === 'under review').length;
+// Published, accepted and under-review papers are counted separately so none reads as another
+const countDate = (date: string) => RESEARCH_PAPERS.filter((p) => p.date.toLowerCase() === date).length;
+const underReview = countDate('under review');
+const accepted = countDate('accepted');
 
-// `label` breaks onto two even lines under the photo; `short` fits the cramped phone row
+// `label` breaks onto two even lines under the photo; `short` fits the cramped phone row.
+// Accepted / under-review tiles only show when there is something to count.
 const STATS = [
-  { value: String(RESEARCH_PAPERS.length - underReview), label: 'Papers\npublished', short: 'Published' },
-  { value: String(underReview), label: 'Under\nreview', short: 'In review' },
+  { value: String(RESEARCH_PAPERS.length - underReview - accepted), label: 'Papers\npublished', short: 'Published' },
+  ...(accepted ? [{ value: String(accepted), label: 'Paper\naccepted', short: 'Accepted' }] : []),
+  ...(underReview ? [{ value: String(underReview), label: 'Under\nreview', short: 'In review' }] : []),
   { value: '3.91', label: 'CGPA,\nFirst Class', short: 'CGPA' },
 ];
 
