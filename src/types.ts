@@ -45,7 +45,7 @@ export interface ResearchPaper {
   authors: string[];
   /** Author position and exactly what I did, e.g. 'Second author: wrote the paper' */
   contribution: string;
-  /** Publication year, or 'Under Review' */
+  /** Publication year, 'Accepted', or 'Under Review' */
   date: string;
   /** Skimmable summary; result and limitation are left out where the paper gives none */
   summary: {

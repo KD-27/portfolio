@@ -533,7 +533,7 @@ export const RESEARCH_PAPERS: ResearchPaper[] = [
     venue: 'ACRA',
     authors: ['M. Thilakarathna', 'G. K. Dhananjaya', 'A. Wijesinghe', 'M. Vaszilijevics', 'E. Hood', 'D. Herath'],
     contribution: 'Second author: wrote the paper.',
-    date: 'Under Review',
+    date: 'Accepted',
     summary: {
       problem: 'Grasp planners trained on different sensing modalities score grasps on scales that cannot be compared.',
       built: 'A quantile-based harmonisation layer that fuses 6D grasp planners without retraining or labelled data.',

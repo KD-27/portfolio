@@ -5,6 +5,7 @@ import type { ResearchPaper } from '../types';
 import Section from './Section';
 
 const isUnderReview = (date: string) => date.toLowerCase() === 'under review';
+const isAccepted = (date: string) => date.toLowerCase() === 'accepted';
 
 const SUMMARY_ROWS = [
   ['problem', 'Problem'],
@@ -60,7 +61,7 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
                 className={`inline-flex items-center gap-1.5 font-medium ${pending ? 'text-warn' : 'text-ok'}`}
               >
                 <span className={`h-1.5 w-1.5 rounded-full ${pending ? 'bg-warn' : 'bg-ok'}`} />
-                {pending ? 'Under review' : paper.date}
+                {pending ? 'Under review' : isAccepted(paper.date) ? 'Accepted' : paper.date}
               </span>
               <span className="text-rule">/</span>
               <span className="font-mono text-xs uppercase tracking-wider text-faint">{paper.venue}</span>
@@ -147,11 +148,20 @@ const PaperRow: React.FC<{ paper: ResearchPaper }> = ({ paper }) => {
 
 const Research: React.FC = () => {
   const underReview = RESEARCH_PAPERS.filter((p) => isUnderReview(p.date)).length;
+  const accepted = RESEARCH_PAPERS.filter((p) => isAccepted(p.date)).length;
+  const counts = [
+    [RESEARCH_PAPERS.length - underReview - accepted, 'published'],
+    [accepted, 'accepted'],
+    [underReview, 'under review'],
+  ] as const;
 
   return (
     <Section id="research" label="Research" title="Publications">
       <p className="-mt-6 mb-8 md:mb-10 text-sm text-muted">
-        {RESEARCH_PAPERS.length - underReview} published · {underReview} under review
+        {counts
+          .filter(([n]) => n > 0)
+          .map(([n, label]) => `${n} ${label}`)
+          .join(' · ')}
       </p>
       <ol className="divide-y divide-rule">
         {RESEARCH_PAPERS.map((paper) => (
