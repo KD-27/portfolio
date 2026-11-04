@@ -35,15 +35,15 @@ export const HERO_DATA = {
   role: "Senior Robotics Engineer",
   affiliation: "Hype Insight Global",
   interests: ['Motion planning', 'Model predictive control', 'Perception-aware navigation', 'State estimation & SLAM', 'Multi-robot coordination'],
-  tagline: "I build robots that walk, map and navigate.",
+  tagline: "I design, build and control robots, from mechanism to autonomy.",
   /** The PhD ask, shown under the tagline and in the contact footer */
-  seeking: "Seeking a funded PhD position in robot motion planning and navigation, starting January 2027.",
+  seeking: "Seeking a fully funded PhD in robotics, starting January 2027, building on experience in mechanical design, control and autonomous systems.",
   intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
 };
 
 export const ABOUT_DATA = {
   photo: `${import.meta.env.BASE_URL}my_pic.webp`,
-  bio: `I've built a quadruped with five-bar parallel legs and a ROS2/MicroROS control stack, a six-wheeled rover that maps and navigates with LiDAR SLAM, and designed the Lazy Coulomb Planner, a physics-inspired path planner I released as a ROS 2 Nav2 plugin.
+  bio: `I work across mechanical design, fabrication, control and autonomy. I've built a quadruped with five-bar parallel legs and a ROS2/MicroROS control stack, for which I developed the kinematic model and inverse kinematics. I've also built a six-wheeled rover that maps and navigates with LiDAR SLAM, and designed the Lazy Coulomb Planner, a physics-inspired path planner I released as a ROS 2 Nav2 plugin.
 
 I graduated with First Class Honours in Mechatronics Engineering (CGPA 3.91) and now work on embodied AI for ground robots and drones at Hype Insight Global. My work spans the whole stack, from mechanism design and electronics to firmware and ROS nodes.`
 };
