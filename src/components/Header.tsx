@@ -3,6 +3,7 @@ import { ArrowUpRight, Download, Menu, X } from 'lucide-react';
 import { HERO_DATA, SOCIAL_LINKS } from '../constants';
 import { CONTAINER } from '../utils/layout';
 import ThemeToggle from './ThemeToggle';
+import { SECTION_ORDER, type HomeSection } from '../audience';
 import EmailLink from './EmailLink';
 
 interface HeaderProps {
@@ -77,11 +78,13 @@ const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingAc
     };
   }, [open]);
 
+  // Same order as the home page sections (see SECTION_ORDER), then Contact
+  const navLabels: Partial<Record<HomeSection, string>> = { research: 'Research', projects: 'Projects', writing: 'Side projects', experience: 'Experience' };
   const mobileItems = [
-    { label: 'Research', onClick: () => onSection('research') },
-    { label: 'Projects', onClick: () => onSection('projects') },
-    { label: 'Side projects', onClick: onWriting },
-    { label: 'Experience', onClick: () => onSection('experience') },
+    ...SECTION_ORDER.filter((id) => navLabels[id]).map((id) => ({
+      label: navLabels[id] as string,
+      onClick: id === 'writing' ? onWriting : () => onSection(id),
+    })),
     { label: 'Contact', onClick: () => onSection('contact') },
   ];
 
@@ -115,16 +118,15 @@ const Header: React.FC<HeaderProps> = ({ onHome, onSection, onWriting, writingAc
           </button>
 
           <nav className="hidden items-center gap-7 md:flex" aria-label="Main">
-            <button onClick={go(() => onSection('research'))} className={linkClass}>Research</button>
-            <button onClick={go(() => onSection('projects'))} className={linkClass}>Projects</button>
-            <button
-              onClick={go(onWriting)}
-              className={writingActive ? 'text-sm text-ink underline decoration-accent decoration-2 underline-offset-[6px]' : linkClass}
-            >
-              Side projects
-            </button>
-            <button onClick={go(() => onSection('experience'))} className={linkClass}>Experience</button>
-            <button onClick={go(() => onSection('contact'))} className={linkClass}>Contact</button>
+            {mobileItems.map((item) => (
+              <button
+                key={item.label}
+                onClick={go(item.onClick)}
+                className={item.label === 'Side projects' && writingActive ? 'text-sm text-ink underline decoration-accent decoration-2 underline-offset-[6px]' : linkClass}
+              >
+                {item.label}
+              </button>
+            ))}
             <a
               href={SOCIAL_LINKS.resume}
               download

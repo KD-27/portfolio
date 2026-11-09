@@ -87,7 +87,7 @@ const Intro: React.FC = () => {
           </div>
 
           <div className="mt-8">
-            <p className="mb-3 text-sm font-medium text-ink">Research interests</p>
+            <p className="mb-3 text-sm font-medium text-ink">{HERO_DATA.interestsLabel}</p>
             <ul className="flex flex-wrap gap-2">
               {HERO_DATA.interests.map((interest) => (
                 <li key={interest} className="rounded-full border border-rule bg-card px-3 py-1 text-sm text-muted">
