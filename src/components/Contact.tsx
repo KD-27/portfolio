@@ -19,7 +19,7 @@ const Contact: React.FC = () => (
             {HERO_DATA.seeking}
           </h2>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-            Also open to research collaborations in robotics, automation and embedded systems.
+            {HERO_DATA.contactNote}
           </p>
           <CopyEmail className="mt-8 inline-block cursor-copy break-all font-serif text-xl text-accent underline decoration-accent/30 underline-offset-[6px] hover:decoration-accent md:text-2xl" />
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">

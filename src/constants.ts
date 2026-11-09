@@ -17,6 +17,7 @@
  */
 
 import type { Project, SkillCategory, ProcessStep, ResearchPaper, Achievement, ThoughtLabData } from './types';
+import { IS_INDUSTRY } from './audience';
 
 // =========================================
 // 👤 PERSONAL LINKS & CONTACT
@@ -29,7 +30,7 @@ export const SOCIAL_LINKS = {
   resume: `${import.meta.env.BASE_URL}resume.pdf`
 };
 
-export const HERO_DATA = {
+const PHD_HERO = {
   name: "Kaveesha Dhananjaya",
   title: "Mechatronics Engineer",
   role: "Senior Robotics Engineer",
@@ -38,8 +39,23 @@ export const HERO_DATA = {
   tagline: "I design, build and control robots, from mechanism to autonomy.",
   /** The PhD ask, shown under the tagline and in the contact footer */
   seeking: "Seeking a fully funded PhD in robotics, starting January 2027, building on experience in mechanical design, control and autonomous systems.",
-  intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions."
+  intro: "Bridging the gap between mechanical design, electronics, and intelligent software. I turn complex problems into moving solutions.",
+  /** Heading above the `interests` chips in the intro */
+  interestsLabel: 'Research interests',
+  /** Line under the big `seeking` heading in the contact footer */
+  contactNote: 'Also open to research collaborations in robotics, automation and embedded systems.'
 };
+
+// The job-application build (kd-27.github.io/portfolio/robotics/) swaps in this copy; everything else is shared
+const INDUSTRY_HERO: Partial<typeof PHD_HERO> = {
+  tagline: "I build robots that map, plan and move, from mechanism to autonomy.",
+  seeking: "Open to robotics and autonomy engineering roles: ROS 2, navigation, motion planning and control.",
+  interestsLabel: 'What I work with',
+  interests: ['ROS 2 & Nav2', 'LiDAR SLAM & navigation', 'Motion planning', 'Kinematics & control', 'C++ & Python', 'micro-ROS & embedded', 'Gazebo simulation'],
+  contactNote: "I'm happy to talk about full-time robotics roles, from hardware bring-up to autonomy software."
+};
+
+export const HERO_DATA = IS_INDUSTRY ? { ...PHD_HERO, ...INDUSTRY_HERO } : PHD_HERO;
 
 export const ABOUT_DATA = {
   photo: `${import.meta.env.BASE_URL}my_pic.webp`,

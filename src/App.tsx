@@ -8,6 +8,7 @@ import Experience from './components/Experience';
 import Honours from './components/Honours';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
+import { SECTION_ORDER, type HomeSection } from './audience';
 
 const ThoughtLabPage = lazy(() => import('./components/ThoughtLabPage'));
 const ThoughtLabArticlePage = lazy(() => import('./components/ThoughtLabArticlePage'));
@@ -106,6 +107,16 @@ const App: React.FC = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // Order comes from SECTION_ORDER: research-first on the PhD site, projects-first on the job site
+  const homeSections: Record<HomeSection, React.ReactNode> = {
+    research: <Research />,
+    projects: <Projects onOpenProject={navigateToProject} />,
+    writing: <Writing onOpenLab={navigateToThoughtLab} />,
+    experience: <Experience />,
+    honours: <Honours onOpenAll={navigateToHonours} />,
+    skills: <Skills />,
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'thought-lab':
@@ -130,12 +141,7 @@ const App: React.FC = () => {
           <>
             <main>
               <Intro />
-              <Research />
-              <Projects onOpenProject={navigateToProject} />
-              <Writing onOpenLab={navigateToThoughtLab} />
-              <Experience />
-              <Honours onOpenAll={navigateToHonours} />
-              <Skills />
+              {SECTION_ORDER.map((id) => <React.Fragment key={id}>{homeSections[id]}</React.Fragment>)}
             </main>
             <Contact />
           </>
